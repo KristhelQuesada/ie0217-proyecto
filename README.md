@@ -2,8 +2,8 @@
 Repositorio de desarrollo del proyecto final del curso de Estructuras Abstractas de Datos y Algoritmos para Ingeniería, UCR
 
 ### Desarrolladores:
-1. Oscar Porras Silesky, 
-2. Anthony
+1. Oscar Porras Silesky, C16042
+2. Antony Brenes Rodríguez, C11238
 3. Kristhel Quesada Lopez, C06153
 
 ### Indice

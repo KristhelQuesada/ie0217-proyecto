@@ -30,7 +30,7 @@ El siguiente proyecto pretende implementar un diseño que cumpla con los siguien
 1. Crear una sistema de gestion bancaria enfocada al uso por parte de los __agentes de dicha institucion__ a traves de ventanilla.
 2. El sistema debe ser capaz de soportar dos modos de operacion: _atencion al cliente_ y _obtener informacion sobre prestamos (pesonales, prendario e hipotecarios)_.
 3. En el area de atención al cliente, el sistema debe:
-    - Poder agregar un nuevo cliente, agregar cuenta (colones o dólares) al cliente (maximo 1 por moneda), creación de préstamo o creación de Certificados de Depósito (CDP).
+    - Poder agregar un nuevo cliente, agregar cuenta (colones o dólares) al cliente (máximo 1 por moneda), creación de préstamo o creación de Certificados de Depósito (CDP).
     - Además, debe poder permitir transacciones como depósitos, retiros, transferencias y abonos a préstamos entre cuentas personales o de terceros, siempre y cuando sea entre cuentas pertenecientes a la misma entidad bancaria.
     - Finalmente, el sistema debe ser capaz de entregar reportes como lo son: Registro de transacciones y Reporte de Préstamos (tabla de amortizacion).
 4. El sistema debe ser capaz de gestionar la información requerida mediante bases de datos SQL.
@@ -102,7 +102,7 @@ El siguiente proyecto pretende implementar un diseño que cumpla con los siguien
 ### Préstamos y tipos de interés
 Un préstamo, bajo el contexto del proyecto, se define como el proceso mediante el cual una entidad bancaria presta y entrega de un monto completo de dinero que el cliente solicite, todo a cambio de un compromiso por parte del cliente de delvolver el dinero solicitado a cambio de pagos de mensuales de menor cantidad (cuotas) a un plazo acordado entre el cliente y el banco, hasta que complete la cantidad solicitada mas intereses.
 
-Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variacion esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. Tambien, se dice que para acceder a ello, el cliente puede tener maximo hasta el 50\% de su salario neto libre para prestamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
+Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variación esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. Tambien, se dice que para acceder a ello, el cliente puede tener máximo hasta el 50\% de su salario neto libre para préstamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
 
 #### A. __Préstamo Personal__
 Un prestamo personal pueden ser solicitados para una amplia variedad de fines personales, como consolidar deudas, cubrir gastos médicos, financiar viajes, etc. Este se carcateriza por:
@@ -115,17 +115,17 @@ Un prestamo personal pueden ser solicitados para una amplia variedad de fines pe
 Esta clase de creditos tienden a ser solicitados para la compra de bienes específicos, como vehículos o maquinaria. Entre sus caracteristicas se encuentran:
 
 - Requieren una garantía (colateral), que usualmente es el bien que se está adquiriendo, de tal forma que el prestamista (entidad bancaria) puede tomar posesión del colateral si el cliente no cumple con los pagos.
-- Su plazo puede extenderse hasta 8 años, aunque el plazo tiende a estar delimitado por la vida útil del bien que se esta adquiriendo. Por ejemplo, un vehiculo se dice que aproximadamente pierde su valor a los 5 años dependiendo del modelo y sus especificaciones, por lo que el banco debe asegurarse que en caso que se requiera tomar posesion del bien, el vehiculo no este a punto de entrar en periodo de desvalorizacion. En resumen, se define plazos de maximo la vida útil del bien.
-- Sus montos (cantidad que solicita el cliente) suelen ser de magnitud intermedia, razon por la cual se requiere usualmente de un fiador o garantia.
+- Su plazo puede extenderse hasta 8 años, aunque el plazo tiende a estar delimitado por la vida útil del bien que se esta adquiriendo. Por ejemplo, un vehículo se dice que aproximadamente pierde su valor a los 5 años dependiendo del modelo y sus especificaciones, por lo que el banco debe asegurarse que en caso que se requiera tomar posesión del bien, el vehículo no esté a punto de entrar en periodo de desvalorización. En resumen, se define plazos de máximo la vida útil del bien.
+- Sus montos (cantidad que solicita el cliente) suelen ser de magnitud intermedia, razón por la cual se requiere usualmente de un fiador o garantía.
 - Se requiere de buen record crediticio, una garantía y ser asalariado por consecuencia.
 
 
 #### C. __Préstamo Hipotecario__
-Este tipo de prestamos se solicitan usualmente al requerir de la compra o desarrollo de bienes inmuebles como lotes, casas o propiedades comerciales. Entre sus principales caracteristicas destacan:
+Este tipo de préstamos se solicitan usualmente al requerir de la compra o desarrollo de bienes inmuebles como lotes, casas o propiedades comerciales. Entre sus principales características destacan:
 
-- Requieren una garantía que viene siendo el bien inmueble como tal, donde el prestamista toma posecion del mismo. Para ello se requiere de una evaluacion del bien mediante un perito que determine si dicho bien es capaz de cubrir el prestamo solicitado en caso de que no pueda ser cubierto.
-- Su plazo puede extenderse hasta 40 años dependiendo, ya que al igual que los prendarios, este depende de la vida útil del bien inmueble que se esta adquiriendo. Usualmente, la vida útil de una casa por ejemplo, ronda los 40-50 años, po lo que su plazo máximo suele ser menor a eso.
-- Sus montos (cantidad que solicita el cliente) suelen ser altos, razon por la cual se requiere usualmente de un estrictamente de una garantía y estudio detallado del valor del bien.
+- Requieren una garantía que viene siendo el bien inmueble como tal, donde el prestamista toma posesión del mismo. Para ello se requiere de una evaluación del bien mediante un perito que determine si dicho bien es capaz de cubrir el préstamo solicitado en caso de que no pueda ser cubierto.
+- Su plazo puede extenderse hasta 40 años dependiendo, ya que al igual que los prendarios, este depende de la vida útil del bien inmueble que se esta adquiriendo. Usualmente, la vida útil de una casa por ejemplo, ronda los 40-50 años, por lo que su plazo máximo suele ser menor a eso.
+- Sus montos (cantidad que solicita el cliente) suelen ser altos, razón por la cual se requiere usualmente de un estrictamente de una garantía y estudio detallado del valor del bien.
 - Se requiere de buen record crediticio, una garantía hipotecaria, una tasación del inmueble y ser asalariado por consecuencia.
 
 

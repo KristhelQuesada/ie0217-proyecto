@@ -27,9 +27,9 @@ Para la administración de las tareas, se plantea un cronograma de actividades. 
 ## Descripción General
 El siguiente proyecto pretende implementar un diseño que cumpla con los siguientes objetivos:
 
-1. Crear una sistema de gestión bancaria enfocada al uso por parte de los __agentes de dicha institución__ a traves de ventanilla.
+1. Crear una sistema de gestión bancaria enfocada al uso por parte de los __agentes de dicha institución__ a través de ventanilla.
 2. El sistema debe ser capaz de soportar dos modos de operacion: _atencion al cliente_ y _obtener información sobre prestamos (pesonales, prendario e hipotecarios)_.
-3. En el area de atención al cliente, el sistema debe:
+3. En el área de atención al cliente, el sistema debe:
     - Poder agregar un nuevo cliente, agregar cuenta (colones o dólares) al cliente (máximo 1 por moneda), creación de préstamo o creación de Certificados de Depósito (CDP).
     - Además, debe poder permitir transacciones como depósitos, retiros, transferencias y abonos a préstamos entre cuentas personales o de terceros, siempre y cuando sea entre cuentas pertenecientes a la misma entidad bancaria.
     - Finalmente, el sistema debe ser capaz de entregar reportes como lo son: Registro de transacciones y Reporte de Préstamos (tabla de amortización).
@@ -58,7 +58,7 @@ El siguiente proyecto pretende implementar un diseño que cumpla con los siguien
 - Monto que el cliente desea depositar.
 - Concepto y motivo que corresponde al detalle de la transacción.
 
-<p style="text-indent: 2em;"> En el programa, la funcionalidad de depósito es esencial ya que permite la transacción de dinero a una cuenta de un cliente. Para llevar a cabo esto el sistema procesa y registra el ingreso de fondos a la cuenta que se desea depositar el dinero, verificando que el monto sea válido y sumándolo al monto actual de la cuenta del cliente. El depósito se registra en la base de datos del sistema, incluyendo detalles como el ID de la cuenta, el monto depositado y la fecha de la transacción.
+<p style="text-indent: 2em;"> En el programa, la funcionalidad de depósito es esencial ya que permite la transacción de dinero a una cuenta de un cliente. Para llevar a cabo esto, el sistema procesa y registra el ingreso de fondos a la cuenta que se desea depositar el dinero, verificando que el monto sea válido y sumándolo al monto actual de la cuenta del cliente. El depósito se registra en la base de datos del sistema, incluyendo detalles como el ID de la cuenta, el monto depositado y la fecha de la transacción.
 
 3. __Retiro:__ Un retiro es una operación bancaria donde un cliente puede realizar una extracción de dinero de su propia cuenta bancaria. Esta transacción se puede realizar mediante un sistema bancario y para llevarla a cabo es necesario que el cliente posea una cuenta registrada, de lo contrario no se podría efectuar.
 
@@ -100,12 +100,12 @@ El siguiente proyecto pretende implementar un diseño que cumpla con los siguien
 <br>
 
 ### Préstamos y tipos de interés
-Un préstamo, bajo el contexto del proyecto, se define como el proceso mediante el cual una entidad bancaria presta y entrega de un monto completo de dinero que el cliente solicite, todo a cambio de un compromiso por parte del cliente de delvolver el dinero solicitado a cambio de pagos de mensuales de menor cantidad (cuotas) a un plazo acordado entre el cliente y el banco, hasta que complete la cantidad solicitada mas intereses.
+Un préstamo, bajo el contexto del proyecto, se define como el proceso mediante el cual una entidad bancaria presta y entrega de un monto completo de dinero que el cliente solicite, todo a cambio de un compromiso por parte del cliente de delvolver el dinero solicitado a cambio de pagos de mensuales de menor cantidad (cuotas) a un plazo acordado entre el cliente y el banco, hasta que complete la cantidad solicitada más intereses.
 
-Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variación esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. También, se dice que para acceder a ello, el cliente puede tener máximo hasta el 50\% de su salario neto libre para préstamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
+Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variación esta sujeta a la Tasa Basica Pasiva adicional a un márgen adicional que define la entidad bancaria. También, se dice que para acceder a ello, el cliente puede tener máximo hasta el 50\% de su salario neto libre para préstamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
 
 #### A. __Préstamo Personal__
-Un préstamo personal pueden ser solicitados para una amplia variedad de fines personales, como consolidar deudas, cubrir gastos médicos, financiar viajes, etc. Este se carcateriza por:
+Un préstamo personal puede ser solicitado para una amplia variedad de fines personales, como consolidar deudas, cubrir gastos médicos, financiar viajes, entre otros. Este se carcateriza por:
 
 - Para solicitarlos usualmente no se requiere de una garantia adicional pero requiere que el solicitante sea asalariado con mínimo 1 año desde que inició o continuidad laboral pero con cese menor a 3 meses entre trabajo.
 - Su plazo puede extenderse dependiendo del sector en el cual trabaje, por ejemplo: hasta 5 años para un empleado privado y hasta 8 años para un empleado público.

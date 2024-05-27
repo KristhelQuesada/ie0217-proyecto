@@ -45,9 +45,9 @@ El siguiente proyecto pretende implementar un diseño que cumpla con los siguien
 
 <!-- Investigacion referente a conceptos del proceso bancario -->
 ### Operaciones bancarias y sus funciones
-1. __Transaccion:__  Al definir las operaciones bancarias, es importante saber el significado de una transacción. Una transacción es cualquier entrada o salida de dinero de una cuenta de un cliente de una entidad bancaria. Entre las operaciones bancarias que se realizan en ventanilla y algunos beneficios bancarios a los cuales los clientes pueden estar subscritos con sus cuentas, se describen los siguientes:
+1. __Transacción:__  Al definir las operaciones bancarias, es importante saber el significado de una transacción. Una transacción es cualquier entrada o salida de dinero de una cuenta de un cliente de una entidad bancaria. Entre las operaciones bancarias que se realizan en ventanilla y algunos beneficios bancarios a los cuales los clientes pueden estar subscritos con sus cuentas, se describen los siguientes:
 
-2. __Deposito:__ Un depósito es un proceso bancario donde un cliente puede realizar un ingreso manual de dinero a una cuenta de un cliente de un banco. Este método de transacción se puede efectuar de forma electrónica a través de un sistema. Para este tipo de transacción no es necesario que el cliente posea una cuenta bancaria a su nombre debido a que solo ocupa dinero en efectivo para llevar a cabo dicha acción.
+2. __Depósito:__ Un depósito es un proceso bancario donde un cliente puede realizar un ingreso manual de dinero a una cuenta de un cliente de un banco. Este método de transacción se puede efectuar de forma electrónica a través de un sistema. Para este tipo de transacción no es necesario que el cliente posea una cuenta bancaria a su nombre debido a que solo ocupa dinero en efectivo para llevar a cabo dicha acción.
 
 <p style="text-indent: 2em;">Para realizar este tipo de transacción, el cliente debe brindar al sistema los siguientes datos para que se realice correctamente:
 
@@ -99,7 +99,7 @@ El siguiente proyecto pretende implementar un diseño que cumpla con los siguien
 
 <br>
 
-### Préstamos y tipos de interes
+### Préstamos y tipos de interés
 Un préstamo, bajo el contexto del proyecto, se define como el proceso mediante el cual una entidad bancaria presta y entrega de un monto completo de dinero que el cliente solicite, todo a cambio de un compromiso por parte del cliente de delvolver el dinero solicitado a cambio de pagos de mensuales de menor cantidad (cuotas) a un plazo acordado entre el cliente y el banco, hasta que complete la cantidad solicitada mas intereses.
 
 Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variacion esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. Tambien, se dice que para acceder a ello, el cliente puede tener maximo hasta el 50\% de su salario neto libre para prestamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
@@ -129,7 +129,7 @@ Este tipo de prestamos se solicitan usualmente al requerir de la compra o desarr
 - Se requiere de buen record crediticio, una garantía hipotecaria, una tasación del inmueble y ser asalariado por consecuencia.
 
 
-#### Resumen de Solicitudes de Prestamos segun el tipo
+#### Resumen de Solicitudes de Préstamos según el tipo
 | Característica      | Préstamo Personal              | Préstamo Prendario               | Préstamo Hipotecario               |
 |---------------------|--------------------------------|----------------------------------|------------------------------------|
 | **Propósito**       | Variado                        | Compra de bienes específicos     | Compra de inmuebles                |
@@ -141,9 +141,9 @@ Este tipo de prestamos se solicitan usualmente al requerir de la compra o desarr
 <br>
 
 ### Tipos de Cambio
-Un cliente de una entidad bancaria puede tener distintas cuentas con tipos de moneda distinta. Por tanto, un mismo cliente puede tener una cuenta en colones y otra en dolares por ejemplo. El tipo de cambio suele estar especificado por la entidad bancaria, donde para el caso de Costa Rica, el Banco Central de Costa Rica se encarga de fijar un valor base que utilizan el resto de Bancos como referencia. El tipo de cambio basicamente se define como el precio de una unidad monetaria de un país, expresado en términos de una moneda distinta y suelen determinarse dos tipos de cambio distintos: uno para venta y otro para compra.
+Un cliente de una entidad bancaria puede tener distintas cuentas con tipos de moneda distinta. Por tanto, un mismo cliente puede tener una cuenta en colones y otra en dólares, por ejemplo. El tipo de cambio suele estar especificado por la entidad bancaria, donde para el caso de Costa Rica, el Banco Central de Costa Rica se encarga de fijar un valor base que utilizan el resto de Bancos como referencia. El tipo de cambio básicamente se define como el precio de una unidad monetaria de un país, expresado en términos de una moneda distinta y suelen determinarse dos tipos de cambio distintos: uno para venta y otro para compra.
 
-Para el desarrollo del presente proyecto, se utilizarán conversiones de dólares a colones y viceversa, en casos cuando se desee realizar un abono en dolares a una cuenta en colones o cualquier otra transacción que requiera dos tipos de moneda distintas. La conversion de cada una estara dada por las siguientes formulas:
+Para el desarrollo del presente proyecto, se utilizarán conversiones de dólares a colones y viceversa, en casos cuando se desee realizar un abono en dólares a una cuenta en colones o cualquier otra transacción que requiera dos tipos de moneda distintas. La conversión de cada una estará dada por las siguientes fórmulas:
 
 <div style="text-align:center;">
 
@@ -168,9 +168,9 @@ A continuación se plantea el esquema de diseño de la composición de las diver
 <br>
 
 ### Diseño del Programa
-En lo que respecta al diseño del programa, para este se plantean las diversas clases con sus respectivos atributos, al igual que las funciones que tendrá el programa. Asimismo, se plantea un primer acercamiento sobre como piensa interconectarse cada elemento del programa. Para ello se implementan dos tablas y dos imagenes.
+En lo que respecta al diseño del programa, para este se plantean las diversas clases con sus respectivos atributos, al igual que las funciones que tendrá el programa. Asimismo, se plantea un primer acercamiento sobre cómo piensa interconectarse cada elemento del programa. Para ello se implementan dos tablas y dos imágenes.
 
-La primera Tabla describe todas las clases con su respectivo nombre, atributos, metodos y descripcion asociada con el fun de comprender el proposito de cada uno. La segunda Tabla describe las funciones que tendrán cada una de las clases, tal que se describe los parámetros que recibe y retorna.
+La primera Tabla describe todas las clases con su respectivo nombre, atributos, métodos y descripción asociada con el fin de comprender el propósito de cada uno. La segunda Tabla describe las funciones que tendrán cada una de las clases, tal que se describe los parámetros que recibe y retorna.
 
 
 #### Tabla de las clases a utilizar
@@ -222,7 +222,7 @@ La primera Tabla describe todas las clases con su respectivo nombre, atributos, 
 
 <br>
 
-Adicional a las tablas agregadas, se plantean diagramas con el fin de mostrar la interaccion de cada uno de los elementos planteados. De tal manera que los recuadros encerrados representan la acción o el uso de clases con sus respectivos métodos, los cuales no se agregan con el fin de simplificar los diagramas. Así, el primer diagrama muestra a grandes rasgos la implementación de las clases y funciones, mientras que el segundo diagrama muestra la clase `DBManager` que se encarga de gestionar y brindar la cominucación de la base de datos a manejar, con el programa implementado.
+Adicional a las tablas agregadas, se plantean diagramas con el fin de mostrar la interacción de cada uno de los elementos planteados. De tal manera que los recuadros encerrados representan la acción o el uso de clases con sus respectivos métodos, los cuales no se agregan con el fin de simplificar los diagramas. Así, el primer diagrama muestra a grandes rasgos la implementación de las clases y funciones, mientras que el segundo diagrama muestra la clase `DBManager` que se encarga de gestionar y brindar la cominucación de la base de datos a manejar, con el programa implementado.
 
 
 #### Diagrama del funcionamiento del sistema.

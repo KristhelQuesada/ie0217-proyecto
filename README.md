@@ -187,6 +187,7 @@ La primera Tabla describe todas las clases con su respectivo nombre, atributos, 
 | Transferencia   | id_transaccion, cuenta_origen, cuenta_destino, monto, moneda, balance_anterior, balance_posterior, detalle | realizarTransferencia()                         | Facilita la transferencia de fondos entre cuentas.            |
 | Abono_prestamo| id_transaccion, monto, moneda, cuenta_destino, detalle, balance_anterior, balance_posterior | realizarAbono()                                   | Gestiona los abonos realizados a los préstamos existentes.    |
 | DBManager       | cadena_conexion                     | conectar(), ejecutarSQL(), manejarErrores()       | Proporciona la conexión y gestión de la base de datos del sistema. |
+| Certificado_deposito       | id_cdp, id_cuenta, plazo, monto, interes_aplicado, frecuencia_capital, penalizacion, valor_acumulado                     | certificarDep()       | Realiza el certificado de depósito por un plazo. |
 
 > Nota: `balance_anterior` y `balance_posterior` para el caso de `Abono_prestamo` dichas variables se autocompletan obteniendo la información de la tabla de Préstamos, tal que `balance_anterior` sea `monto_actual` y `balance_posterior` sea `monto_actual` menos `monto*cuota`.
 

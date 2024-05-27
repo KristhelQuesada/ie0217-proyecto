@@ -163,3 +163,57 @@ $\text{Monto en CRC} \ (compra) = \text{Monto en USD} \times \text{Tipo de Cambi
 <br>
 
 ### Diseño del Programa
+
+#### Tabla de las clases a utilizar
+
+| Nombre          | Atributos                           | Métodos                                           | Descripción                                                  |
+|-----------------|-------------------------------------|---------------------------------------------------|--------------------------------------------------------------|
+| Sistema         | database (string) | atencionCliente(), solicitarInfo(), crear(), obtenerRegTrans(), obtenerRepPrest() | Sistema central que gestiona las operaciones del banco.       |
+| Cliente         | id_cliente, nombre_cliente, apellido_cliente, ID_cuenta_en_colones, ID_cuenta_en_dolares               | actualizarDatos(), obtenerInfo()                  | Representa a un cliente del banco con sus datos personales.   |
+| Cuenta          | id_cuenta, nombre_cliente, tipo_de_cuenta, moneda, saldo, estado, fecha_de_apertura       | actualizarDatos(), obtenerInfo()              | Gestiona las cuentas de los clientes, incluyendo saldos. |
+| Prestamo        | id_prestamo, id_cliente, tipo_de_prestamo, monto_prestamo, cuotas_meses, tipo_tasa_interes, interes_aplicado (%), monto_por_cuota, monto_total_pagar , monto_actual_pagar | calcularPago(), obtenerInfo()                 | Maneja los detalles de los préstamos otorgados a los clientes.|
+| Transaccion     | id_transaccion, fecha_y_hora, tipo, monto, moneda, cuenta_origen, cuenta_destino, detalle, balance_anterior, balance_posterior         | ejecutarTrans(), solicitarInfo()                  | Clase abstracta para manejar diferentes tipos de transacciones. |
+| Deposito        | id_transaccion, monto, moneda, cuenta_destino, balance_anterior, balance_posterior, detalle   | realizarDeposito()                                | Gestiona los depósitos en cuentas específicas.                |
+| Retiro          | id_transaccion, monto, moneda, cuenta_origen, balance_anterior, balance_posterior, detalle     | realizarRetiro()                                  | Permite a los clientes retirar fondos de sus cuentas.         |
+| Transferencia   | id_transaccion, cuenta_origen, cuenta_destino, monto, moneda, balance_anterior, balance_posterior, detalle | realizarTransferencia()                         | Facilita la transferencia de fondos entre cuentas.            |
+| Abono_prestamo| id_transaccion, monto, moneda, cuenta_destino, detalle, balance_anterior, balance_posterior | realizarAbono()                                   | Gestiona los abonos realizados a los préstamos existentes.    |
+| DBManager       | cadena_conexion                     | conectar(), ejecutarSQL(), manejarErrores()       | Proporciona la conexión y gestión de la base de datos del sistema. |
+
+Nota: `balance_anterior` y `balance_posterior` para el caso de `Abono_prestamo` dichas variables se autocompletan obteniendo la información de la tabla de Préstamos, tal que `balance_anterior` sea `monto_actual` y `balance_posterior` sea `monto_actual` menos `monto*cuota`.
+
+
+---
+
+#### Tabla de las funciones a utilizar
+
+
+| Nombre              | Pertenencia       | Argumentos                                  | Retorno        |
+|---------------------|-------------------|---------------------------------------------|----------------|
+| atencionCliente     | Sistema           |                             | None           |
+| solicitarInfo       | Sistema           | tipo_info: string                           | string         |
+| crear               | Sistema           | id_cliente: int        | object         |
+| obtenerRegTrans     | Sistema           | id_cliente: int        | object           |
+| obtenerRepPrest     | Sistema           | id_prestamo: int                                           | object           |
+| actualizarDatos     | Cliente           | nuevos_datos: dict                          | None           |
+| obtenerInfo         | Cliente           |                                            | dict           |
+| actualizarDatos     | Cuenta            | nuevos_datos: dict                                | None          |
+| obtenerInfo         | Cuenta            |                                | dict          |
+| calcularPago        | Prestamo          |                                            | float          |
+| obtenerInfo         | Prestamo          |                                            | dict           |
+| ejecutarTrans       | Transaccion       |                                            | bool           |
+| solicitarInfo       | Transaccion       |                                            | dict           |
+| realizarDeposito    | Deposito          | monto: float, cuenta_destino: int           | bool           |
+| realizarRetiro      | Retiro            | monto: float, cuenta_origen: int            | bool           |
+| realizarTransferencia| Transferencia    | cuenta_origen: int, cuenta_destino: int, monto: float | bool  |
+| realizarAbono       | Abono_prestamo  | prestamo_id: int, monto: float              | bool           |
+| conectar            | DBManager         |                                            | connection     |
+| ejecutarSQL         | DBManager         | consulta: string                            | result_set     |
+| manejarErrores      | DBManager         | error_code: int                             | None           |
+
+#### Diagrama del funcionamiento del sistema.
+
+![Digrama del funcionamiento del sistema](images/diagrama_sistema.png)
+
+#### Diagrama del funcionamiento de la base de datos.
+
+![Digrama del funcionamiento de la base de datos.](images/SQL_database.png)

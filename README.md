@@ -27,12 +27,12 @@ Para la administración de las tareas, se plantea un cronograma de actividades. 
 ## Descripción General
 El siguiente proyecto pretende implementar un diseño que cumpla con los siguientes objetivos:
 
-1. Crear una sistema de gestion bancaria enfocada al uso por parte de los __agentes de dicha institucion__ a traves de ventanilla.
-2. El sistema debe ser capaz de soportar dos modos de operacion: _atencion al cliente_ y _obtener informacion sobre prestamos (pesonales, prendario e hipotecarios)_.
+1. Crear una sistema de gestión bancaria enfocada al uso por parte de los __agentes de dicha institución__ a traves de ventanilla.
+2. El sistema debe ser capaz de soportar dos modos de operacion: _atencion al cliente_ y _obtener información sobre prestamos (pesonales, prendario e hipotecarios)_.
 3. En el area de atención al cliente, el sistema debe:
     - Poder agregar un nuevo cliente, agregar cuenta (colones o dólares) al cliente (máximo 1 por moneda), creación de préstamo o creación de Certificados de Depósito (CDP).
     - Además, debe poder permitir transacciones como depósitos, retiros, transferencias y abonos a préstamos entre cuentas personales o de terceros, siempre y cuando sea entre cuentas pertenecientes a la misma entidad bancaria.
-    - Finalmente, el sistema debe ser capaz de entregar reportes como lo son: Registro de transacciones y Reporte de Préstamos (tabla de amortizacion).
+    - Finalmente, el sistema debe ser capaz de entregar reportes como lo son: Registro de transacciones y Reporte de Préstamos (tabla de amortización).
 4. El sistema debe ser capaz de gestionar la información requerida mediante bases de datos SQL.
 5. La implementación y desarrollo del problema a resolver debe ser realizado mediante el uso de C++ utilizando el paradigma de programación de Programación Orientada a Objetos, al igual que el uso de estructuras, defines, o enumeraciones.
 6. Asimismo, se solicita que la documentación del mismo sea implementada correctamente y utilizada en conjunto con el generador de Doxygen.
@@ -95,24 +95,24 @@ El siguiente proyecto pretende implementar un diseño que cumpla con los siguien
 
 6. __Certificado de deposito a plazo:__ Un certificado de depósito (CDP) es un producto financiero ofrecido por los bancos donde una persona deposita una cantidad específica de dinero en una cuenta de ahorro por un período de tiempo acordado, que puede variar desde unos pocos meses hasta varios años. Durante este período, el banco paga intereses sobre el dinero depositado. Los CDP suelen ofrecer tasas de interés más altas que las cuentas de ahorro estándar, pero a cambio, el dinero no se puede retirar hasta que el plazo del CDP haya vencido sin incurrir en penalizaciones.
 
-<p style="text-indent: 2em;">En el programa, los clientes pueden abrir un CDP seleccionando el monto y el plazo deseado. El sistema calcula automáticamente los intereses y gestiona las restricciones de retiro durante el período. Al vencimiento, el cliente puede retirar el dinero con los intereses o renovar el CD. Es una forma segura y rentable de ahorrar a largo plazo.
+<p style="text-indent: 2em;">En el programa, los clientes pueden abrir un CDP seleccionando el monto y el plazo deseado. El sistema calcula automáticamente los intereses y gestiona las restricciones de retiro durante el período. Al vencimiento, el cliente puede retirar el dinero con los intereses o renovar el CD.
 
 <br>
 
 ### Préstamos y tipos de interés
 Un préstamo, bajo el contexto del proyecto, se define como el proceso mediante el cual una entidad bancaria presta y entrega de un monto completo de dinero que el cliente solicite, todo a cambio de un compromiso por parte del cliente de delvolver el dinero solicitado a cambio de pagos de mensuales de menor cantidad (cuotas) a un plazo acordado entre el cliente y el banco, hasta que complete la cantidad solicitada mas intereses.
 
-Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variación esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. Tambien, se dice que para acceder a ello, el cliente puede tener máximo hasta el 50\% de su salario neto libre para préstamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
+Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variación esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. También, se dice que para acceder a ello, el cliente puede tener máximo hasta el 50\% de su salario neto libre para préstamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
 
 #### A. __Préstamo Personal__
-Un prestamo personal pueden ser solicitados para una amplia variedad de fines personales, como consolidar deudas, cubrir gastos médicos, financiar viajes, etc. Este se carcateriza por:
+Un préstamo personal pueden ser solicitados para una amplia variedad de fines personales, como consolidar deudas, cubrir gastos médicos, financiar viajes, etc. Este se carcateriza por:
 
-- Para solicitarlos usualmente no se requiere de una garantia adicional pero requiere que el solicitante sea asalariado con minimo 1 año desde que inicio o continuidad laboral pero con cese menor a 3 meses entre trabajo.
-- Su plazo puede extenderse dependiendo del sector en el cual trabaje, por ejemplo: hasta 5 años para un empleado privado y hasta 8 años para un empleado publico.
-- Sus montos no suelen ser elevados pero podrian serlo aceptando garantías.
+- Para solicitarlos usualmente no se requiere de una garantia adicional pero requiere que el solicitante sea asalariado con mínimo 1 año desde que inició o continuidad laboral pero con cese menor a 3 meses entre trabajo.
+- Su plazo puede extenderse dependiendo del sector en el cual trabaje, por ejemplo: hasta 5 años para un empleado privado y hasta 8 años para un empleado público.
+- Sus montos no suelen ser elevados pero podrían serlo aceptando garantías.
 
 #### B. __Préstamo Prendario__
-Esta clase de creditos tienden a ser solicitados para la compra de bienes específicos, como vehículos o maquinaria. Entre sus caracteristicas se encuentran:
+Esta clase de créditos tienden a ser solicitados para la compra de bienes específicos, como vehículos o maquinaria. Entre sus características se encuentran:
 
 - Requieren una garantía (colateral), que usualmente es el bien que se está adquiriendo, de tal forma que el prestamista (entidad bancaria) puede tomar posesión del colateral si el cliente no cumple con los pagos.
 - Su plazo puede extenderse hasta 8 años, aunque el plazo tiende a estar delimitado por la vida útil del bien que se esta adquiriendo. Por ejemplo, un vehículo se dice que aproximadamente pierde su valor a los 5 años dependiendo del modelo y sus especificaciones, por lo que el banco debe asegurarse que en caso que se requiera tomar posesión del bien, el vehículo no esté a punto de entrar en periodo de desvalorización. En resumen, se define plazos de máximo la vida útil del bien.
@@ -126,7 +126,7 @@ Este tipo de préstamos se solicitan usualmente al requerir de la compra o desar
 - Requieren una garantía que viene siendo el bien inmueble como tal, donde el prestamista toma posesión del mismo. Para ello se requiere de una evaluación del bien mediante un perito que determine si dicho bien es capaz de cubrir el préstamo solicitado en caso de que no pueda ser cubierto.
 - Su plazo puede extenderse hasta 40 años dependiendo, ya que al igual que los prendarios, este depende de la vida útil del bien inmueble que se esta adquiriendo. Usualmente, la vida útil de una casa por ejemplo, ronda los 40-50 años, por lo que su plazo máximo suele ser menor a eso.
 - Sus montos (cantidad que solicita el cliente) suelen ser altos, razón por la cual se requiere usualmente de un estrictamente de una garantía y estudio detallado del valor del bien.
-- Se requiere de buen record crediticio, una garantía hipotecaria, una tasación del inmueble y ser asalariado por consecuencia.
+- Se requiere de buen récord crediticio, una garantía hipotecaria, una tasación del inmueble y ser asalariado por consecuencia.
 
 
 #### Resumen de Solicitudes de Préstamos según el tipo

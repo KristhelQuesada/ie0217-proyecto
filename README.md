@@ -3,15 +3,18 @@ Repositorio de desarrollo del proyecto final del curso de Estructuras Abstractas
 
 ### Desarrolladores:
 1. Oscar Porras Silesky, C16042
-2. Anthony Brenes Rodriguez, C11238
-3. Kristhel Quesada Lopez, C06153
+2. Antony Brenes Rodriguez, C11238
+3. Kristhel Quesada López, C06153
+
+### Cronograma de Actividades
+Para la administración de las tareas, se plantea un cronograma de actividades. Para ello, puede consultarlo en el siguiente obtenido de [enlace](https://docs.google.com/spreadsheets/d/1mPE6jiAj3QWYv3zHUNRwJNxZAZ0zDU7AJWiWEDiOWts/edit#gid=884262323).
 
 ### Indice
 1. [Descripción General](#descripcion-general)
 2. [Investigación Previa](#investigacion-previa)
 
     - [Operaciones Bancarias](#operaciones-bancarias-y-sus-funciones)
-    - [Prestamos e Intereses](prestamos-y-tipos-de-interes)
+    - [Préstamos e Intereses](prestamos-y-tipos-de-interes)
     - [Tipos de Cambio](#tipos-de-cambio)
 
 3. [Descripción de Diseño](#descripcion-de-diseño)
@@ -21,24 +24,24 @@ Repositorio de desarrollo del proyecto final del curso de Estructuras Abstractas
 
 
 <!-- Inicio del Contenido -->
-## Descripcion General
-El siguiente proyecto pretende implementar un dise;o que cumpla con los siguientes objetivos:
+## Descripción General
+El siguiente proyecto pretende implementar un diseño que cumpla con los siguientes objetivos:
 
 1. Crear una sistema de gestion bancaria enfocada al uso por parte de los __agentes de dicha institucion__ a traves de ventanilla.
 2. El sistema debe ser capaz de soportar dos modos de operacion: _atencion al cliente_ y _obtener informacion sobre prestamos (pesonales, prendario e hipotecarios)_.
-3. En el area de atencion al cliente, el sistema debe:
-    - Poder agregar un nuevo cliente, agregar cuenta (colones o dolares) al cliente (maximo 1 por moneda), creacion de prestamo o creacion de Certificados de Deposito (CDP).
-    - Ademas debe poder permitir transacciones como depositos, retiros, transferencias y abonos a prestamos entre cuentas personales o de terceros, siempre y cuando sea entre cuentas pertenecientes a la misma entidad bancaria.
-    - Finalmente el sistema debe ser capaz de entregar reportes como lo son: Registro de transacciones y Reporte de Prestamos (tabla de amortizacion).
-4. El sistema debe ser capaz de gestionar la informacion requerida mediante bases de datos SQL.
-5. La implementacion y desarrollo del problema a resolver debe ser realizado mediante el uso de C++ utilizando el paradigma de programacion de Programacion Orientada a Objetos, al igual que el uso de estructuras, defines, o enumeraciones.
-6. Asimismo, se solicita que la documentacion del mismo sea implementada correctamente y utilizada en conjunto con el generador de Doxygen.
+3. En el area de atención al cliente, el sistema debe:
+    - Poder agregar un nuevo cliente, agregar cuenta (colones o dólares) al cliente (maximo 1 por moneda), creación de préstamo o creación de Certificados de Depósito (CDP).
+    - Además, debe poder permitir transacciones como depósitos, retiros, transferencias y abonos a préstamos entre cuentas personales o de terceros, siempre y cuando sea entre cuentas pertenecientes a la misma entidad bancaria.
+    - Finalmente, el sistema debe ser capaz de entregar reportes como lo son: Registro de transacciones y Reporte de Préstamos (tabla de amortizacion).
+4. El sistema debe ser capaz de gestionar la información requerida mediante bases de datos SQL.
+5. La implementación y desarrollo del problema a resolver debe ser realizado mediante el uso de C++ utilizando el paradigma de programación de Programación Orientada a Objetos, al igual que el uso de estructuras, defines, o enumeraciones.
+6. Asimismo, se solicita que la documentación del mismo sea implementada correctamente y utilizada en conjunto con el generador de Doxygen.
 
 <br>
 
 
 
-## Investigacion Previa
+## Investigación Previa
 
 <!-- Investigacion referente a conceptos del proceso bancario -->
 ### Operaciones bancarias y sus funciones
@@ -96,34 +99,34 @@ El siguiente proyecto pretende implementar un dise;o que cumpla con los siguient
 
 <br>
 
-### Prestamos y tipos de interes
-Un prestamo, bajo el contexto del proyecto, se define como el proceso mediante el cual una entidad bancaria presta y entrega de un monto completo de dinero que el cliente solicite, todo a cambio de un compromiso por parte del cliente de delvolver el dinero solicitado a cambio de pagos de mensuales de menor cantidad (cuotas) a un plazo acordado entre el cliente y el banco, hasta que complete la cantidad solicitada mas intereses.
+### Préstamos y tipos de interes
+Un préstamo, bajo el contexto del proyecto, se define como el proceso mediante el cual una entidad bancaria presta y entrega de un monto completo de dinero que el cliente solicite, todo a cambio de un compromiso por parte del cliente de delvolver el dinero solicitado a cambio de pagos de mensuales de menor cantidad (cuotas) a un plazo acordado entre el cliente y el banco, hasta que complete la cantidad solicitada mas intereses.
 
-Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variacion esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de prestamos, entre ellos, se destacan los siguientes:
+Ahora, estos intereses pueden ser fijos o pueden ser variables de tal manera que, en Costa Rica, dicha variacion esta sujeta a la Tasa Basica Pasiva adicional a un margen adicional que define la entidad bancaria. Tambien, se dice que para acceder a ello, el cliente puede tener maximo hasta el 50\% de su salario neto libre para prestamos; por tanto, para acceder a un tipo de crédito debe disponerse de una capacidad de pago tal, que la cuota a pagar mensualmente, sea menor al 50\% y se compruebe que que el salario neto menos gastos de vida es considerablemente mayor a la cuota a pagar. Adicionalmente, las entidades bancarias pueden emitir diferentes tipos de préstamos, entre ellos, se destacan los siguientes:
 
-#### A. __Prestamo Personal__
+#### A. __Préstamo Personal__
 Un prestamo personal pueden ser solicitados para una amplia variedad de fines personales, como consolidar deudas, cubrir gastos médicos, financiar viajes, etc. Este se carcateriza por:
 
-- Para solicitarlos usualmente no se requiere de una garantia adicional pero requiere que el solicitante sea asalariado con minimo 1 año desde que inicio o 
+- Para solicitarlos usualmente no se requiere de una garantia adicional pero requiere que el solicitante sea asalariado con minimo 1 año desde que inicio o continuidad laboral pero con cese menor a 3 meses entre trabajo.
 - Su plazo puede extenderse dependiendo del sector en el cual trabaje, por ejemplo: hasta 5 años para un empleado privado y hasta 8 años para un empleado publico.
-- Sus montos no suelen ser elevados pero podrian serlo aceptando garantias.
+- Sus montos no suelen ser elevados pero podrian serlo aceptando garantías.
 
-#### B. __Prestamo Prendario__
+#### B. __Préstamo Prendario__
 Esta clase de creditos tienden a ser solicitados para la compra de bienes específicos, como vehículos o maquinaria. Entre sus caracteristicas se encuentran:
 
-- Requieren una garantía (colateral), que usualmente es el bien que se está adquiriendo, de tal forma que el prestammista (entidad bancaria) puede tomar posesión del colateral si el cliente no cumple con los pagos.
-- Su plazo puede extenderse hasta 8 años, aunque el plazo tiende a estar delimitado por la vida util del bien que se esta adquiriendo. Por ejemplo, un vehiculo se dice que aproximadamente pierde su valor a los 5 años dependiendo del modelo y sus especificaciones, por lo que el banco debe asegurarse que en caso que se requiera tomar posesion del bien, el vehiculo no este a punto de entrar en periodo de desvalorizacion. En resumen, se define plazos de maximo la vida util del bien.
+- Requieren una garantía (colateral), que usualmente es el bien que se está adquiriendo, de tal forma que el prestamista (entidad bancaria) puede tomar posesión del colateral si el cliente no cumple con los pagos.
+- Su plazo puede extenderse hasta 8 años, aunque el plazo tiende a estar delimitado por la vida útil del bien que se esta adquiriendo. Por ejemplo, un vehiculo se dice que aproximadamente pierde su valor a los 5 años dependiendo del modelo y sus especificaciones, por lo que el banco debe asegurarse que en caso que se requiera tomar posesion del bien, el vehiculo no este a punto de entrar en periodo de desvalorizacion. En resumen, se define plazos de maximo la vida útil del bien.
 - Sus montos (cantidad que solicita el cliente) suelen ser de magnitud intermedia, razon por la cual se requiere usualmente de un fiador o garantia.
-- Se requiere de buen record crediticio, una garantia y ser asalariado por consecuencia.
+- Se requiere de buen record crediticio, una garantía y ser asalariado por consecuencia.
 
 
-#### C. __Prestamo Hipotecario__
+#### C. __Préstamo Hipotecario__
 Este tipo de prestamos se solicitan usualmente al requerir de la compra o desarrollo de bienes inmuebles como lotes, casas o propiedades comerciales. Entre sus principales caracteristicas destacan:
 
 - Requieren una garantía que viene siendo el bien inmueble como tal, donde el prestamista toma posecion del mismo. Para ello se requiere de una evaluacion del bien mediante un perito que determine si dicho bien es capaz de cubrir el prestamo solicitado en caso de que no pueda ser cubierto.
-- Su plazo puede extenderse hasta 40 años dependiendo, ya que al igual que los prendarios, este depende de la vida util del bien inmueble que se esta adquiriendo. Usualmente, la vida util de una casa por ejemplo, ronda los 40-50 años, po lo que su plazo maximo suele ser menor a eso.
-- Sus montos (cantidad que solicita el cliente) suelen ser altos, razon por la cual se requiere usualmente de un estrictamente de una garantia y estudio detallado del valor del bien.
-- Se requiere de buen record crediticio, una garantia hipotecaria, una tasación del inmueble y ser asalariado por consecuencia.
+- Su plazo puede extenderse hasta 40 años dependiendo, ya que al igual que los prendarios, este depende de la vida útil del bien inmueble que se esta adquiriendo. Usualmente, la vida útil de una casa por ejemplo, ronda los 40-50 años, po lo que su plazo máximo suele ser menor a eso.
+- Sus montos (cantidad que solicita el cliente) suelen ser altos, razon por la cual se requiere usualmente de un estrictamente de una garantía y estudio detallado del valor del bien.
+- Se requiere de buen record crediticio, una garantía hipotecaria, una tasación del inmueble y ser asalariado por consecuencia.
 
 
 #### Resumen de Solicitudes de Prestamos segun el tipo
@@ -140,7 +143,7 @@ Este tipo de prestamos se solicitan usualmente al requerir de la compra o desarr
 ### Tipos de Cambio
 Un cliente de una entidad bancaria puede tener distintas cuentas con tipos de moneda distinta. Por tanto, un mismo cliente puede tener una cuenta en colones y otra en dolares por ejemplo. El tipo de cambio suele estar especificado por la entidad bancaria, donde para el caso de Costa Rica, el Banco Central de Costa Rica se encarga de fijar un valor base que utilizan el resto de Bancos como referencia. El tipo de cambio basicamente se define como el precio de una unidad monetaria de un país, expresado en términos de una moneda distinta y suelen determinarse dos tipos de cambio distintos: uno para venta y otro para compra.
 
-Para el desarrollo del presente proyecto, se utilizaran conversiones de dolares a colones y viceversa, en casos cuando se desee realizar un abono en dolares a una cuenta en colones o cualquier otra transaccion que requiera dos tipos de moneda distintas. La conversion de cada una estara dada por las siguientes formulas:
+Para el desarrollo del presente proyecto, se utilizarán conversiones de dólares a colones y viceversa, en casos cuando se desee realizar un abono en dolares a una cuenta en colones o cualquier otra transacción que requiera dos tipos de moneda distintas. La conversion de cada una estara dada por las siguientes formulas:
 
 <div style="text-align:center;">
 
@@ -156,13 +159,19 @@ $\text{Monto en CRC} \ (compra) = \text{Monto en USD} \times \text{Tipo de Cambi
 <br>
 
 
-## Descripcion de Diseño
+## Descripción de Diseño
 ### Diseño de la Base de Datos
+A continuación se plantea el esquema de diseño de la composición de las diversas tablas que incluirá la base de datos. En esta se definen 6 Tablas que recopilan la información más importante de cada grupo de datos. Asimismo, se detalla cómo cada Tabla se comunica y obtiene atributos de otras.
+
 ![Esquema de base de datos](images/esquema.png)
 
 <br>
 
 ### Diseño del Programa
+En lo que respecta al diseño del programa, para este se plantean las diversas clases con sus respectivos atributos, al igual que las funciones que tendrá el programa. Asimismo, se plantea un primer acercamiento sobre como piensa interconectarse cada elemento del programa. Para ello se implementan dos tablas y dos imagenes.
+
+La primera Tabla describe todas las clases con su respectivo nombre, atributos, metodos y descripcion asociada con el fun de comprender el proposito de cada uno. La segunda Tabla describe las funciones que tendrán cada una de las clases, tal que se describe los parámetros que recibe y retorna.
+
 
 #### Tabla de las clases a utilizar
 
@@ -179,7 +188,7 @@ $\text{Monto en CRC} \ (compra) = \text{Monto en USD} \times \text{Tipo de Cambi
 | Abono_prestamo| id_transaccion, monto, moneda, cuenta_destino, detalle, balance_anterior, balance_posterior | realizarAbono()                                   | Gestiona los abonos realizados a los préstamos existentes.    |
 | DBManager       | cadena_conexion                     | conectar(), ejecutarSQL(), manejarErrores()       | Proporciona la conexión y gestión de la base de datos del sistema. |
 
-Nota: `balance_anterior` y `balance_posterior` para el caso de `Abono_prestamo` dichas variables se autocompletan obteniendo la información de la tabla de Préstamos, tal que `balance_anterior` sea `monto_actual` y `balance_posterior` sea `monto_actual` menos `monto*cuota`.
+> Nota: `balance_anterior` y `balance_posterior` para el caso de `Abono_prestamo` dichas variables se autocompletan obteniendo la información de la tabla de Préstamos, tal que `balance_anterior` sea `monto_actual` y `balance_posterior` sea `monto_actual` menos `monto*cuota`.
 
 
 ---
@@ -209,6 +218,12 @@ Nota: `balance_anterior` y `balance_posterior` para el caso de `Abono_prestamo` 
 | conectar            | DBManager         |                                            | connection     |
 | ejecutarSQL         | DBManager         | consulta: string                            | result_set     |
 | manejarErrores      | DBManager         | error_code: int                             | None           |
+
+
+<br>
+
+Adicional a las tablas agregadas, se plantean diagramas con el fin de mostrar la interaccion de cada uno de los elementos planteados. De tal manera que los recuadros encerrados representan la acción o el uso de clases con sus respectivos métodos, los cuales no se agregan con el fin de simplificar los diagramas. Así, el primer diagrama muestra a grandes rasgos la implementación de las clases y funciones, mientras que el segundo diagrama muestra la clase `DBManager` que se encarga de gestionar y brindar la cominucación de la base de datos a manejar, con el programa implementado.
+
 
 #### Diagrama del funcionamiento del sistema.
 

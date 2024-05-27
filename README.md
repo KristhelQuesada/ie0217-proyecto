@@ -28,7 +28,7 @@ Para la administración de las tareas, se plantea un cronograma de actividades. 
 El siguiente proyecto pretende implementar un diseño que cumpla con los siguientes objetivos:
 
 1. Crear una sistema de gestión bancaria enfocada al uso por parte de los __agentes de dicha institución__ a través de ventanilla.
-2. El sistema debe ser capaz de soportar dos modos de operacion: _atencion al cliente_ y _obtener información sobre prestamos (pesonales, prendario e hipotecarios)_.
+2. El sistema debe ser capaz de soportar dos modos de operación: _atención al cliente_ y _obtener información sobre préstamos (pesonales, prendario e hipotecarios)_.
 3. En el área de atención al cliente, el sistema debe:
     - Poder agregar un nuevo cliente, agregar cuenta (colones o dólares) al cliente (máximo 1 por moneda), creación de préstamo o creación de Certificados de Depósito (CDP).
     - Además, debe poder permitir transacciones como depósitos, retiros, transferencias y abonos a préstamos entre cuentas personales o de terceros, siempre y cuando sea entre cuentas pertenecientes a la misma entidad bancaria.

@@ -232,3 +232,13 @@ Adicional a las tablas agregadas, se plantean diagramas con el fin de mostrar la
 #### Diagrama del funcionamiento de la base de datos.
 
 ![Digrama del funcionamiento de la base de datos.](images/SQL_database.png)
+
+## Referencias
+
+- BBVA México. (s/f). Cuenta digital: Diferencia entre depósito y transferencia. Recuperado el 26 de mayo de 2024, de [https://www.bbva.mx/educacion-financiera/banca-digital/cuenta-digital-diferencia-entre-deposito-y-transferencia.html](https://www.bbva.mx/educacion-financiera/banca-digital/cuenta-digital-diferencia-entre-deposito-y-transferencia.html)
+
+- Financial Crime Academy. (s/f). ¿Qué es una transacción? Recuperado de [https://financialcrimeacademy.org/es/que-es-una-transaccion/](https://financialcrimeacademy.org/es/que-es-una-transaccion/)
+
+- Rankia. (s/f). Retiro bancario. Recuperado de [https://www.rankia.com/diccionario/banca/retiro-bancario](https://www.rankia.com/diccionario/banca/retiro-bancario)
+
+- Prousuario. (s/f). ¿Quieres hacer un abono al capital o saldo anticipado de tu crédito? Toma esto en cuenta. Recuperado de [https://prousuario.gob.do/educacion-financiera/blog/quieres-hacer-un-abono-al-capital-o-saldo-anticipado-de-tu-cr%C3%A9dito-toma-esto-en-cuenta/](https://prousuario.gob.do/educacion-financiera/blog/quieres-hacer-un-abono-al-capital-o-saldo-anticipado-de-tu-cr%C3%A9dito-toma-esto-en-cuenta/)

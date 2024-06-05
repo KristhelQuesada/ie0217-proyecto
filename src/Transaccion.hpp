@@ -11,7 +11,7 @@ protected:
     std::string detalle;
 
 public:
-    Transaccion(int id, double monto, const std::string& moneda, const std::string& detalle);
+    Transaccion(int id, double monto, const std::string& moneda, const std::string& detalle="");
     virtual void ejecutar() = 0; // Método virtual puro para ser implementado por clases derivadas
 };
 

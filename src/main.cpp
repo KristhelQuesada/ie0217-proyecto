@@ -9,6 +9,7 @@ int main() {
     // Instancia de DBManager
     DBManager mydb("Hola");
     mydb.ejecutarConsulta("SELECT * FROM Client");
+    mydb.exportLoanReport();
     
     return 0;
 }

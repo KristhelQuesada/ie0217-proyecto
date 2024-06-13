@@ -5,7 +5,6 @@
 
 // Librerias convecinales de C++
 #include <string>
-#include <iostream>
 #include <stdexcept>
 
 // Librerías necesarias para la conexión con la base de datos como <mysql/mysql.h> para MySQL
@@ -34,6 +33,9 @@ public:
     std::string ejecutarConsulta(const std::string& consulta);
     void ejecutarSQL(const std::string& comandoSQL);
     void manejarErrores(const std::exception& e);
+
+    // Funcion adicional al funcionamiento basico
+    void exportLoanReport();
 };
 
 #endif // DBMANAGER_HPP

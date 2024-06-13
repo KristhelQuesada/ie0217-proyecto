@@ -1,16 +1,17 @@
 #include "DBManager.hpp"
-#include <mysql_driver.h>
-#include <mysql_connection.h>
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
 #include <iostream>
 using namespace std;
 using namespace sql;
 
 DBManager::DBManager(const std::string& connStr) : connectionString(connStr) {
-    DBManager.conectar();
+    cout << connStr << endl;
+    this->conectar();
+}
+
+DBManager::~DBManager() {
+    // Elimina la conexion
+    cout << "Base de datos desconectada." << endl;
+    delete con;
 }
 
 void DBManager::conectar() {
@@ -19,36 +20,15 @@ void DBManager::conectar() {
   
     // Si se usa MySQL, se inicia la conexión aquí
     try {
-        sql::mysql::MySQL_Driver *driver;
-        sql::Connection *con;
-        sql::Statement *stmt;
-        sql::ResultSet *res;
-
         // Conexion con la base de datos
         driver = sql::mysql::get_mysql_driver_instance();
-        con = driver->connect("localhost:3306", "kris", "electricA2409"); // local
-        //con = driver->connect("database-ie0217.c1y4e4ecsmip.us-east-2.rds.amazonaws.com:3306", "admin", "electricA2409"); // Amazon RDS
+        con = driver->connect("project-ie0217-db.c1y4e4ecsmip.us-east-2.rds.amazonaws.com:3306", "admin", "electricA2409");
 
         // Seleccionar la base de datos
-        con->setSchema("Local_Bank_Test");
+        con->setSchema("project-ie0217-db");
 
-
-        // Query de Prueba para ir validando conexion. Solo despliega todos los datos de la Tabla Cliente
-        stmt = con->createStatement();
-        
-        res = stmt->executeQuery("SELECT * FROM Cliente");
-        while (res->next()) {
-            cout << "id = " << res->getInt("id_client");
-            cout << ", client_name = " << res->getString("client_name");
-            cout << ", client_lastname = " << res->getString("client_lastname");
-            cout << ", colones_account = " << res->getInt("colones_account");
-            cout << ", dolares_account = " << res->getInt("dolares_account") << endl;
-        }   
-
-
-        delete res;
-        delete stmt;
-        delete con;
+        // Mensaje de Exito
+        cout << "Conexión establecida exitosamente." << endl;
 
     } catch (sql::SQLException &e) {
         cout << "ERR: SQLException in " << __FILE__;
@@ -63,6 +43,34 @@ void DBManager::conectar() {
 std::string DBManager::ejecutarConsulta(const std::string& consulta) {
     // Este método ejecuta una consulta SQL y devuelve el resultado
     std::cout << "Ejecutando consulta: " << consulta << std::endl;
+
+    // Se prueba con el ejemplo inicial de la tabla Client
+    try {
+        sql::Statement *stmt = con->createStatement();
+        sql::ResultSet *res = res = stmt->executeQuery(consulta);
+
+
+        // Query de Prueba para ir validando conexion. Solo despliega todos los datos de la Tabla Cliente
+        while (res->next()) {
+            cout << "id = " << res->getInt("id_client");
+            cout << ", client_name = " << res->getString("client_name");
+            cout << ", client_lastname = " << res->getString("client_lastname");
+            cout << ", id_colones_account = " << res->getInt("id_colones_account");
+            cout << ", id_dolares_account = " << res->getInt("id_dolares_account") << endl;
+        }   
+
+
+        delete res;
+        delete stmt;
+        
+    } catch (sql::SQLException &e) {
+        cout << "ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+        cout << "ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }  
+
     // Se supone que devuelve un resultado de ejemplo
     return "Resultado de la consulta";
 }

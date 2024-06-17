@@ -10,8 +10,7 @@ private:
     double balancePosterior;
 
 public:
-    Deposito(int id, double monto, const std::string& moneda, const std::string& detalle,
-             int cuentaDestino, double balanceAnterior, double balancePosterior);
+    Deposito(int id_client, DBManager& db);
 
     void ejecutar() override; // Implementa el método de depósito
 };

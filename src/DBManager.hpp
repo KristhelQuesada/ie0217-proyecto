@@ -1,5 +1,3 @@
-
-
 #ifndef DBMANAGER_HPP
 #define DBMANAGER_HPP
 
@@ -36,6 +34,12 @@ public:
 
     // Funcion adicional al funcionamiento basico
     void exportLoanReport();
+\
+    // Funciones para el manejo de la base de datos
+    std::map<std::string, std::string> ejecutarConsultaRetiroDeposito(const std::string& consulta);
+
+    // Funcion de pruebas de vinculacion
+    void testingVinculo();
 };
 
 #endif // DBMANAGER_HPP

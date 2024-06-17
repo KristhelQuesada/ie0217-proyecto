@@ -18,9 +18,8 @@ DBManager::~DBManager() {
 
 void DBManager::conectar() {
     // Aquí va el código para establecer una conexión con la base de datos
-    std::cout << "Conectando a la base de datos con la cadena: " << connectionString << std::endl;
+    std::cout << "Conectando a la base de datos: " << connectionString << std::endl;
   
-    // Si se usa MySQL, se inicia la conexión aquí
     try {
         // Conexion con la base de datos
         driver = sql::mysql::get_mysql_driver_instance();
@@ -77,10 +76,53 @@ std::string DBManager::ejecutarConsulta(const std::string& consulta) {
     return "Resultado de la consulta";
 }
 
-void DBManager::ejecutarSQL(const std::string& comandoSQL) {
+
+std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta) {
+    std::map<std::string, std::string> datosConsulta;
+    cout << "Ejecutando consulta: " << consulta << endl;
+
+    try {
+        Statement *stmt = con->createStatement();
+        ResultSet *res = stmt->executeQuery(consulta);
+
+        // Asumimos que solo nos interesa la primera fila para el retiro
+        if (res->next()) {
+            datosConsulta["balance"] = to_string(res->getDouble("balance"));
+            datosConsulta["tipoCuenta"] = res->getString("tipoCuenta");
+        }
+
+        delete res;
+        delete stmt;
+    } catch (SQLException &e) {
+        cerr << "ERR: SQLException in " << __FILE__;
+        cerr << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+        cerr << "ERR: " << e.what();
+        cerr << " (MySQL error code: " << e.getErrorCode();
+        cerr << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }
+
+    return datosConsulta;
+}
+
+void DBManager::ejecutarSQL(const std::string& consulta) {
     // Este método ejecuta un comando SQL que no devuelve un conjunto de resultados
-    std::cout << "Ejecutando SQL: " << comandoSQL << std::endl;
-    // Ejecuta el comando utilizando la librería de conexión a la base de datos
+    std::cout << "Ejecutando SQL: " << consulta << std::endl;
+    
+    
+    try {
+        sql::Statement *stmt = con->createStatement();
+        sql::ResultSet *res = res = stmt->executeQuery(consulta);
+
+        delete res;
+        delete stmt;
+        
+    } catch (sql::SQLException &e) {
+        cout << "ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+        cout << "ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+    } 
 }
 
 void DBManager::manejarErrores(const std::exception& e) {
@@ -95,7 +137,7 @@ void DBManager::exportLoanReport() {
     cout << "Ejecutando exportacion del Reporte de Prestamos: " << endl;
 
     // Query que genera la tabla temporal (aun tengo que agregarle un where para que se genere para un unico cliente)
-    string tempTableQuery = "CREATE TEMPORARY TABLE loanreport "
+    string tempTableQuery = "CREATE TEMPORARY TABLE `loanreport` "
                             "SELECT "
                             "Client.id_client, "
                             "CONCAT(client_name, ' ', client_lastname) AS full_name, "
@@ -197,4 +239,10 @@ void DBManager::exportLoanReport() {
         cout << " (MySQL error code: " << e.getErrorCode();
         cout << ", SQLState: " << e.getSQLState() << " )" << endl;
     }
+}
+
+
+// FUNCION QUE PRUEBA QUE SE PUEDEN UTILIZAR LOS METODOS DE LA BASE DE DATOS
+void DBManager::testingVinculo() {
+    cout << "Has establecido conexion con la DB." << endl;
 }

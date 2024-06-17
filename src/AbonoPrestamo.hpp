@@ -4,15 +4,8 @@
 #include "Transaccion.hpp"
 
 class AbonoPrestamo : public Transaccion {
-private:
-    int idPrestamo;
-    double balanceAnterior;
-    double balancePosterior;
-
 public:
-    AbonoPrestamo(int id, double monto, const std::string& moneda, int idPrestamo,
-             double balanceAnterior, double balancePosterior);
-
+    AbonoPrestamo(int id_client, DBManager& db);
     void ejecutar() override; // Implementa el método de depósito
 };
 

@@ -1,4 +1,7 @@
 #include "Transaccion.hpp"
+#include <iostream>
+using namespace std;
 
-Transaccion::Transaccion(int id, double monto, const std::string& moneda, const std::string& detalle)
-    : idTransaccion(id), monto(monto), moneda(moneda), detalle(detalle) {}
+
+// Constructor
+Transaccion::Transaccion(int id_client, DBManager& db) : id_client(id_client), db(db) {};

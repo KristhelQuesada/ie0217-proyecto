@@ -2,9 +2,9 @@
 #define SISTEMA_HPP
 
 #include <string>
-//#include "Cliente.hpp"
-//#include "Cuenta.hpp"
-//#include "Prestamo.hpp"
+#include "Cliente.hpp"
+#include "Cuenta.hpp"
+#include "Prestamo.hpp"
 #include "Transaccion.hpp"
 #include "DBManager.hpp"
 
@@ -19,10 +19,12 @@ public:
     // Métodos centrados en las operaciones principales del sistema
     void atencionCliente();
     std::string solicitarInfo(const std::string& tipoInfo);
-    void crear(ObjectType type, const std::string& data);
+    void crear();
     void obtenerRe();
+    void handleTransactions();
     std::string obtenerRegTrans(int idCliente);
     std::string obtenerRepPrest(int idPrestamo);
+    std::string calcularCuotasYPago(int idPrestamo);
 };
 
 #endif // SISTEMA_HPP

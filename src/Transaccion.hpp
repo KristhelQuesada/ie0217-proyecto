@@ -1,17 +1,15 @@
 #ifndef TRANSACCION_HPP
 #define TRANSACCION_HPP
 
-#include <string>
+#include "DBManager.hpp"
 
 class Transaccion {
 protected:
-    int idTransaccion;
-    double monto;
-    std::string moneda;
-    std::string detalle;
+    int id_client;
+    DBManager& db;
 
 public:
-    Transaccion(int id, double monto, const std::string& moneda, const std::string& detalle="");
+    Transaccion(int id_client, DBManager& db);
     virtual void ejecutar() = 0; // Método virtual puro para ser implementado por clases derivadas
 };
 

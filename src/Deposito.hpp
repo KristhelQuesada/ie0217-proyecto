@@ -11,8 +11,10 @@ private:
 
 public:
     Deposito(int id_client, DBManager& db);
-
-    void ejecutar() override; // Implementa el método de depósito
+    // Se implementa el método de depósito
+    void ejecutar() override; 
 };
 
 #endif // DEPOSITO_HPP
+
+

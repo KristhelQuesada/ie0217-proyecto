@@ -5,22 +5,28 @@
 using namespace std;
 using namespace sql;
 
+// CONSTRUCTOR QUE CONECTA CON LA DB AL INICIAR UNA INSTANCIA
 DBManager::DBManager(const std::string& connStr) : connectionString(connStr) {
     cout << connStr << endl;
     this->conectar();
 }
 
+
+
+// DESTRUCTOR QUE FINALIZA LA CONEXION CON LA DB AL FINALIZAR EL PROGRAMA
 DBManager::~DBManager() {
     // Elimina la conexion
     cout << "Base de datos desconectada." << endl;
     delete con;
 }
 
+
+
+// FUNCION QUE CONTIENE LA LOGICA PARA IMPLEMENTAR LA CONEXION A LA DB
 void DBManager::conectar() {
     // Aquí va el código para establecer una conexión con la base de datos
-    std::cout << "Conectando a la base de datos con la cadena: " << connectionString << std::endl;
+    std::cout << "Conectando a la base de datos: " << connectionString << std::endl;
   
-    // Si se usa MySQL, se inicia la conexión aquí
     try {
         // Conexion con la base de datos
         driver = sql::mysql::get_mysql_driver_instance();
@@ -33,17 +39,44 @@ void DBManager::conectar() {
         cout << "Conexión establecida exitosamente." << endl;
 
     } catch (sql::SQLException &e) {
-        cout << "ERR: SQLException in " << __FILE__;
-        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
-        cout << "ERR: " << e.what();
-        cout << " (MySQL error code: " << e.getErrorCode();
-        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
-    }  
-
+        this->manejarErrores(e);
+    }
 }
 
-std::string DBManager::ejecutarConsulta(const std::string& consulta) {
-    // Este método ejecuta una consulta SQL y devuelve el resultado
+
+
+// Este método ejecuta una consulta SQL y devuelve el resultado
+//std::string DBManager::ejecutarConsulta(const std::string& consulta) {
+//    std::cout << "Ejecutando consulta: " << consulta << std::endl;
+//
+//    // Se prueba con el ejemplo inicial de la tabla Client
+//    try {
+//        sql::Statement *stmt = con->createStatement();
+//        sql::ResultSet *res = res = stmt->executeQuery(consulta);
+//
+//
+//        // Query de Prueba para ir validando conexion. Solo despliega todos los datos de la Tabla Cliente
+//        // Mientras siga habiendo un record en la tabla consultada entonces ejecute
+//        while (res->next()) {
+//            cout << "id = " << res->getInt("id_client");
+//            cout << ", client_name = " << res->getString("client_name");
+//            cout << ", client_lastname = " << res->getString("client_lastname");
+//            cout << ", id_colones_account = " << res->getInt("id_colones_account");
+//            cout << ", id_dolares_account = " << res->getInt("id_dolares_account") << endl;
+//        }   
+//
+//        delete res;
+//        delete stmt;
+//        
+//    } catch (sql::SQLException &e) {
+//        this->manejarErrores(e);
+//    }  
+//
+//    // Se supone que devuelve un resultado de ejemplo
+//    return "Resultado de la consulta";
+//}
+
+std::string DBManager::ejecutarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo) {
     std::cout << "Ejecutando consulta: " << consulta << std::endl;
 
     // Se prueba con el ejemplo inicial de la tabla Client
@@ -51,42 +84,85 @@ std::string DBManager::ejecutarConsulta(const std::string& consulta) {
         sql::Statement *stmt = con->createStatement();
         sql::ResultSet *res = res = stmt->executeQuery(consulta);
 
-
+        // Crear un iterador del mapa que viene por paramtero
+        map<string, string>::iterator it_map = tableInfo.begin();
         // Query de Prueba para ir validando conexion. Solo despliega todos los datos de la Tabla Cliente
+        // Mientras siga habiendo un record en la tabla consultada entonces ejecute
         while (res->next()) {
-            cout << "id = " << res->getInt("id_client");
-            cout << ", client_name = " << res->getString("client_name");
-            cout << ", client_lastname = " << res->getString("client_lastname");
-            cout << ", id_colones_account = " << res->getInt("id_colones_account");
-            cout << ", id_dolares_account = " << res->getInt("id_dolares_account") << endl;
+            while (it_map != tableInfo.end()) {
+                cout << it_map->first << ": " << res->getString(it_map->first) << endl;
+                ++it_map;
+            }
         }   
-
 
         delete res;
         delete stmt;
         
     } catch (sql::SQLException &e) {
-        cout << "ERR: SQLException in " << __FILE__;
-        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
-        cout << "ERR: " << e.what();
-        cout << " (MySQL error code: " << e.getErrorCode();
-        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+        this->manejarErrores(e);
     }  
 
     // Se supone que devuelve un resultado de ejemplo
     return "Resultado de la consulta";
 }
 
-void DBManager::ejecutarSQL(const std::string& comandoSQL) {
-    // Este método ejecuta un comando SQL que no devuelve un conjunto de resultados
-    std::cout << "Ejecutando SQL: " << comandoSQL << std::endl;
-    // Ejecuta el comando utilizando la librería de conexión a la base de datos
+std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta) {
+    std::map<std::string, std::string> datosConsulta;
+    cout << "Ejecutando consulta: " << consulta << endl;
+
+    try {
+        Statement *stmt = con->createStatement();
+        ResultSet *res = stmt->executeQuery(consulta);
+
+        // Asumimos que solo nos interesa la primera fila para el retiro
+        if (res->next()) {
+            datosConsulta["balance"] = to_string(res->getDouble("balance"));
+            datosConsulta["tipoCuenta"] = res->getString("tipoCuenta");
+        }
+
+        delete res;
+        delete stmt;
+    } catch (SQLException &e) {
+        cerr << "ERR: SQLException in " << _FILE_;
+        cerr << "(" << _FUNCTION_ << ") on line " << _LINE_ << endl;
+        cerr << "ERR: " << e.what();
+        cerr << " (MySQL error code: " << e.getErrorCode();
+        cerr << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }
+
+    return datosConsulta;
 }
 
-void DBManager::manejarErrores(const std::exception& e) {
-    // Este método maneja errores de la base de datos
-    std::cerr << "Error en la base de datos: " << e.what() << std::endl;
+// Este método ejecuta un comando SQL que no devuelve un conjunto de resultados
+void DBManager::ejecutarSQL(const std::string& consulta) {
+    std::cout << "Ejecutando SQL: " << consulta << std::endl;
+    
+    
+    try {
+        sql::Statement *stmt = con->createStatement();
+        sql::ResultSet *res = res = stmt->executeQuery(consulta);
+
+        delete res;
+        delete stmt;
+        
+    } catch (sql::SQLException &e) {
+        this->manejarErrores(e);
+    } 
 }
+
+
+
+// Este método maneja errores de la base de datos
+void DBManager::manejarErrores(const sql::SQLException &e) {
+    //std::cerr << "Error en la base de datos: " << e.what() << std::endl;
+    cout << "ERR: SQLException in " << __FILE__;
+    cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+    cout << "ERR: " << e.what();
+    cout << " (MySQL error code: " << e.getErrorCode();
+    cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+}
+
+
 
 // Funcion que permite generar el reporte de prestamos, por el momento, solo falta agregarle un where
 // al query y parametrizar para que quede general y se consulte por persona.
@@ -191,10 +267,13 @@ void DBManager::exportLoanReport() {
         delete stmt;
 
     } catch (sql::SQLException& e) {
-        cout << "ERR: SQLException in " << __FILE__;
-        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
-        cout << "ERR: " << e.what();
-        cout << " (MySQL error code: " << e.getErrorCode();
-        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+        this->manejarErrores(e);
     }
+}
+
+
+
+// FUNCION QUE PRUEBA QUE SE PUEDEN UTILIZAR LOS METODOS DE LA BASE DE DATOS
+void DBManager::testingVinculo() {
+    cout << "Has establecido conexion con la DB." << endl;
 }

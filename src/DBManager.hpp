@@ -14,6 +14,7 @@
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
+#include <map>
 
 class DBManager {
 private:
@@ -30,12 +31,16 @@ public:
 
     // Funciones personalizadas
     void conectar();
-    std::string ejecutarConsulta(const std::string& consulta);
+    std::string ejecutarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo);
+    std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta)
     void ejecutarSQL(const std::string& comandoSQL);
-    void manejarErrores(const std::exception& e);
+    void manejarErrores(const sql::SQLException &e);
 
     // Funcion adicional al funcionamiento basico
     void exportLoanReport();
+
+    // Funcion de pruebas de vinculacion
+    void testingVinculo();
 };
 
 #endif // DBMANAGER_HPP

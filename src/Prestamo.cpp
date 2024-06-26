@@ -13,10 +13,26 @@ enum loanFilters {
     MAX_FILTER // para saber cuantas opciones tenemos
 };
 
-// Constructor
-Prestamo::Prestamo(int id_client, DBManager& db) : id_client(id_client), db(db) {};
+// CONSTRUCTOR DE LA CLASE PRESTAMO
+Prestamo::Prestamo(int id_client, DBManager& db) : id_client(id_client), db(db) {
+    string id_client_str = to_string(id_client);
+
+    relatedInfo["id_loan"]         = "";
+    relatedInfo["id_client"]       = id_client_str;
+    relatedInfo["loan_term"]       = "";
+    relatedInfo["creation_date"]   = "";
+    relatedInfo["id_loan_type"]    = "";
+    relatedInfo["currency"]        = "";
+    relatedInfo["principal"]       = "";
+    relatedInfo["interest_rate"]   = "";
+    relatedInfo["monthly_payment"] = "";
+    relatedInfo["total_repayment"] = "";
+    relatedInfo["actual_debt"]     = "";
+};
 
 
+
+// METODO QUE PERMITE CREAR UN TIPO DE PRESTAMO
 void Prestamo::createLoan() {
     // Variables
     string final_query;
@@ -35,8 +51,7 @@ void Prestamo::createLoan() {
           << data["monthly_payment"] << ", "
           << data["total_repayment"] << ", "
           << data["total_repayment"] << ");"; // al inicio actual_debt = total_repayment
-
-    final_query = query.str();
+    final_query = query.str();                // pasa el objeto stringstream -> string
 
     // Ejecucion del query
     db.ejecutarSQL(final_query);
@@ -58,7 +73,7 @@ void Prestamo::viewAll() {
     final_query = query.str();
 
     // Ejecucion del query
-    db.ejecutarConsulta(final_query);
+    db.ejecutarConsulta(final_query, this->relatedInfo);
 }
 
 
@@ -90,28 +105,28 @@ void Prestamo::searchLoans() {
     switch (option) {
         case ID_FILTER:
             cout << "Indique el ID del prestamo: ";
-            cin >> input;
+            cin >> filter;
             cin.ignore();
             query << "SELECT * FROM Loan WHERE id_client=" << this->id_client
                   << " AND id_loan=" << filter << ";";
             break;
         case LOANTYPE_FILTER:
             cout << "Indique el tipo de prestamo [PE/PR/HP]: ";
-            cin >> input;
+            cin >> filter;
             cin.ignore();
             query << "SELECT * FROM Loan WHERE id_client=" << this->id_client
                   << " AND id_loan_type=" << filter << ";";
             break;
         case YEAR_FILTER:
         cout << "Indique el anio de creacion del prestamo: ";
-            cin >> input;
+            cin >> filter;
             cin.ignore();
             query << "SELECT * FROM Loan WHERE id_client=" << this->id_client
                   << " AND YEAR(creation_date)=" << filter << ";";
             break;
         case CURRENCY_FILTER:
             cout << "Indique la divisa del prestamo: ";
-            cin >> input;
+            cin >> filter;
             cin.ignore();
             query << "SELECT * FROM Loan WHERE id_client=" << this->id_client
                   << " AND currency=" << filter << ";";
@@ -124,6 +139,6 @@ void Prestamo::searchLoans() {
     final_query = query.str();
 
     // Ejecucion del query
-    db.ejecutarConsulta(final_query);
+    db.ejecutarConsulta(final_query, this->relatedInfo);
     
 }

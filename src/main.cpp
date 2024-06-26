@@ -50,7 +50,7 @@ int main() {
         switch (operacion) {
             case ATENCION_CLIENTE: {
                 cout << "hola" << endl;
-                goMenuCS(db);
+                menuCS(db);
                 break;
             }
             case INFO_PRESTAMOS: {

@@ -10,10 +10,11 @@ private:
     double balancePosterior;
 
 public:
-    Retiro(int id, double monto, const std::string& moneda, const std::string& detalle,
-           int cuentaOrigen, double balanceAnterior, double balancePosterior);
-
-    void ejecutar() override; // Implementa el método de retiro
+    Retiro(int id_client, DBManager& db);
+    // Se implementa el método de retiro
+    void ejecutar() override; 
 };
 
 #endif // RETIRO_HPP
+
+

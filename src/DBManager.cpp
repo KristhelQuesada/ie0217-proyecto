@@ -106,6 +106,8 @@ std::string DBManager::ejecutarConsulta(const std::string& consulta, std::map<st
     return "Resultado de la consulta";
 }
 
+
+
 std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta) {
     std::map<std::string, std::string> datosConsulta;
     cout << "Ejecutando consulta: " << consulta << endl;
@@ -123,15 +125,13 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(con
         delete res;
         delete stmt;
     } catch (SQLException &e) {
-        cerr << "ERR: SQLException in " << _FILE_;
-        cerr << "(" << _FUNCTION_ << ") on line " << _LINE_ << endl;
-        cerr << "ERR: " << e.what();
-        cerr << " (MySQL error code: " << e.getErrorCode();
-        cerr << ", SQLState: " << e.getSQLState() << " )" << endl;
+        this->manejarErrores(e);
     }
 
     return datosConsulta;
 }
+
+
 
 // Este método ejecuta un comando SQL que no devuelve un conjunto de resultados
 void DBManager::ejecutarSQL(const std::string& consulta) {
@@ -171,7 +171,7 @@ void DBManager::exportLoanReport() {
     cout << "Ejecutando exportacion del Reporte de Prestamos: " << endl;
 
     // Query que genera la tabla temporal (aun tengo que agregarle un where para que se genere para un unico cliente)
-    string tempTableQuery = "CREATE TEMPORARY TABLE loanreport "
+    string tempTableQuery = "CREATE TEMPORARY TABLE `loanreport` "
                             "SELECT "
                             "Client.id_client, "
                             "CONCAT(client_name, ' ', client_lastname) AS full_name, "

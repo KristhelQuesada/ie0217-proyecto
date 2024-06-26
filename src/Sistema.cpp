@@ -27,7 +27,7 @@ void Sistema::atencionCliente() {
             std::cout << "Ingrese el tipo de objeto a crear (Cliente, Cuenta, Préstamo, CDP):\n";
             std::cin >> type;
 
-            crear(type, data);
+            crear();
             break;
         case 2:
             // Proceso para obtener información
@@ -42,7 +42,7 @@ void Sistema::atencionCliente() {
     }
 }
 
-void Sistema::crear(ObjectType type, const std::string& data) {
+void Sistema::crear() {
     int opcion;
     std::string data;
     std::cout << "Seleccione el tipo de objeto a crear:\n";
@@ -101,7 +101,7 @@ void Sistema::handleTransactions() {
     // Se instancia un objeto de la clase Transaccion
     // y se llama al método ejecutar
     Transaccion transaccion;
-    transaccion.ejecutarTrans();
+    transaccion.ejecutar();
 }
 
 std::string Sistema::solicitarInfo(const std::string& tipoInfo) {

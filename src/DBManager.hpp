@@ -1,5 +1,3 @@
-
-
 #ifndef DBMANAGER_HPP
 #define DBMANAGER_HPP
 
@@ -32,12 +30,14 @@ public:
     // Funciones personalizadas
     void conectar();
     std::string ejecutarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo);
-    std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta)
     void ejecutarSQL(const std::string& comandoSQL);
     void manejarErrores(const sql::SQLException &e);
 
     // Funcion adicional al funcionamiento basico
     void exportLoanReport();
+
+    // Funciones para el manejo de la base de datos
+    std::map<std::string, std::string> ejecutarConsultaRetiroDeposito(const std::string& consulta);
 
     // Funcion de pruebas de vinculacion
     void testingVinculo();

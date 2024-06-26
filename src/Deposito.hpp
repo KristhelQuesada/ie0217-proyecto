@@ -10,10 +10,11 @@ private:
     double balancePosterior;
 
 public:
-    Deposito(int id, double monto, const std::string& moneda, const std::string& detalle,
-             int cuentaDestino, double balanceAnterior, double balancePosterior);
-
-    void ejecutar() override; // Implementa el método de depósito
+    Deposito(int id_client, DBManager& db);
+    // Se implementa el método de depósito
+    void ejecutar() override; 
 };
 
 #endif // DEPOSITO_HPP
+
+

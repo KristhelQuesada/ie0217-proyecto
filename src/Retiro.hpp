@@ -11,7 +11,10 @@ private:
 
 public:
     Retiro(int id_client, DBManager& db);
-    void ejecutar() override; // Implementa el método de retiro
+    // Se implementa el método de retiro
+    void ejecutar() override; 
 };
 
 #endif // RETIRO_HPP
+
+

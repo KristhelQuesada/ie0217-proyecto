@@ -18,26 +18,34 @@ class DBManager {
 private:
     // Atributos previo
     std::string connectionString;
+
     // Aributos para mantener la sesion activa
     sql::mysql::MySQL_Driver* driver;
     sql::Connection* con;
 
 public:
-    // Constructor y Destructor
+    // Funciones para la conexion
     DBManager(const std::string& connStr); // Permite la conexion con el servidor al instanciase
     ~DBManager();                          // Cierra la conexion con el servidor
-
-    // Funciones personalizadas
     void conectar();
-    std::string ejecutarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo);
+
+    // Funciones para visualizacion sin retorno de datos
+    void desplegarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo);
+    void desplegarPrestamos(const std::string& consulta);
+
+    // Funciones que permiten retornar datos (unico o completo)
+    std::string ejecutarConsulta(const std::string& consulta, std::string& columna);
+    std::map<std::string, std::string> ejecutarConsultaRetiroDeposito(const std::string& consulta);
+    std::map<std::string, std::string> cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo);
+
+    // Funcion que permite ejecucion de queries CIUD sin retorno
     void ejecutarSQL(const std::string& comandoSQL);
+
+    // Funcion para el manejo de errores
     void manejarErrores(const sql::SQLException &e);
 
-    // Funcion adicional al funcionamiento basico
+    // Funcion para exportar datos asociados a prestamos
     void exportLoanReport();
-
-    // Funciones para el manejo de la base de datos
-    std::map<std::string, std::string> ejecutarConsultaRetiroDeposito(const std::string& consulta);
 
     // Funcion de pruebas de vinculacion
     void testingVinculo();

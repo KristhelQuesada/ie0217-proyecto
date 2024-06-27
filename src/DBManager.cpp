@@ -5,6 +5,12 @@
 using namespace std;
 using namespace sql;
 
+
+/*
+------------------------------------------------------------------------------------
+              Funciones que permiten la conexion y desconexion de la DB
+------------------------------------------------------------------------------------
+*/
 // CONSTRUCTOR QUE CONECTA CON LA DB AL INICIAR UNA INSTANCIA
 DBManager::DBManager(const std::string& connStr) : connectionString(connStr) {
     cout << connStr << endl;
@@ -45,54 +51,34 @@ void DBManager::conectar() {
 
 
 
-// Este método ejecuta una consulta SQL y devuelve el resultado
-//std::string DBManager::ejecutarConsulta(const std::string& consulta) {
-//    std::cout << "Ejecutando consulta: " << consulta << std::endl;
-//
-//    // Se prueba con el ejemplo inicial de la tabla Client
-//    try {
-//        sql::Statement *stmt = con->createStatement();
-//        sql::ResultSet *res = res = stmt->executeQuery(consulta);
-//
-//
-//        // Query de Prueba para ir validando conexion. Solo despliega todos los datos de la Tabla Cliente
-//        // Mientras siga habiendo un record en la tabla consultada entonces ejecute
-//        while (res->next()) {
-//            cout << "id = " << res->getInt("id_client");
-//            cout << ", client_name = " << res->getString("client_name");
-//            cout << ", client_lastname = " << res->getString("client_lastname");
-//            cout << ", id_colones_account = " << res->getInt("id_colones_account");
-//            cout << ", id_dolares_account = " << res->getInt("id_dolares_account") << endl;
-//        }   
-//
-//        delete res;
-//        delete stmt;
-//        
-//    } catch (sql::SQLException &e) {
-//        this->manejarErrores(e);
-//    }  
-//
-//    // Se supone que devuelve un resultado de ejemplo
-//    return "Resultado de la consulta";
-//}
 
-std::string DBManager::ejecutarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo) {
-    std::cout << "Ejecutando consulta: " << consulta << std::endl;
 
-    // Se prueba con el ejemplo inicial de la tabla Client
+
+/*
+------------------------------------------------------------------------------------
+      Funciones que permiten desplegar informacion sin retorno de datos
+------------------------------------------------------------------------------------
+*/
+// Analizar si es util o no
+void DBManager::desplegarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo) {
+    // Esto debe comentarse tras la verificacion
+    std::cout << "Ejecutando consulta: " << consulta << "\n" << std::endl;
+
     try {
         sql::Statement *stmt = con->createStatement();
-        sql::ResultSet *res = res = stmt->executeQuery(consulta);
+        sql::ResultSet *res = stmt->executeQuery(consulta);
 
         // Crear un iterador del mapa que viene por paramtero
         map<string, string>::iterator it_map = tableInfo.begin();
-        // Query de Prueba para ir validando conexion. Solo despliega todos los datos de la Tabla Cliente
-        // Mientras siga habiendo un record en la tabla consultada entonces ejecute
+
+        // Siempre que haya records asociados a la consulta
         while (res->next()) {
+            cout << "---------------------------------------------" << endl;
             while (it_map != tableInfo.end()) {
-                cout << it_map->first << ": " << res->getString(it_map->first) << endl;
+                cout << "> " << it_map->second << ": " << res->getString(it_map->first) << endl;
                 ++it_map;
             }
+            cout << "---------------------------------------------" << endl;
         }   
 
         delete res;
@@ -100,14 +86,111 @@ std::string DBManager::ejecutarConsulta(const std::string& consulta, std::map<st
         
     } catch (sql::SQLException &e) {
         this->manejarErrores(e);
-    }  
+    }
+}
 
-    // Se supone que devuelve un resultado de ejemplo
-    return "Resultado de la consulta";
+
+// Este método ejecuta una consulta SQL y devuelve el resultado
+void DBManager::desplegarPrestamos(const std::string& consulta) {
+    std::cout << "Ejecutando consulta: " << consulta << std::endl; // pending to delete/comment
+
+    try {
+        sql::Statement *stmt = con->createStatement();
+        sql::ResultSet *res = stmt->executeQuery(consulta);
+
+        int contador = 1; // Lleva la cuenta de la cantidad de Prestamos del Cliente
+
+        while (res->next()) {
+            cout << "-------------- Prestamo " << contador << " --------------" << endl;
+            cout << "  - ID del Préstamo       : " << res->getString("id_loan") << endl;
+            cout << "  - ID del Cliente        : " << res->getString("id_client") << endl;
+            cout << "  - Fecha de Creación     : " << res->getString("creation_date") << endl;
+            cout << "  - Tipo de Préstamo      : " << res->getString("id_loan_type") << endl;
+            cout << "  - Divisa                : " << res->getString("currency") << endl;
+            cout << "  - Monto Solicitado      : " << res->getString("principal") << endl;
+            cout << "  - Tasa de Interés       : " << res->getString("interest_rate") << endl;
+            cout << "  - Plazo                 : " << res->getString("loan_term") << endl;
+            cout << "  - Cuota Mensual         : " << res->getString("monthly_payment") << endl;
+            cout << "  - Monto Total a Pagar   : " << res->getString("total_repayment") << endl;
+            cout << "  - Monto Actual Pagado   : " << res->getString("actual_debt") << "\n" << endl;
+            contador++;
+        }   
+
+        delete res;
+        delete stmt;
+        
+    } catch (sql::SQLException &e) {
+        this->manejarErrores(e);
+    }
 }
 
 
 
+
+/*
+------------------------------------------------------------------------------------
+        Funciones que permiten retornar informacion, de a dato o completo
+------------------------------------------------------------------------------------
+*/
+// Funcion que retorna un unico dato consultado
+std::string DBManager::ejecutarConsulta(const std::string& consulta, std::string& columna) {
+    std::cout << "Ejecutando consulta: " << consulta << "\n" << std::endl;
+    std::string data;
+
+    // Se prueba con el ejemplo inicial de la tabla Client
+    try {
+        sql::Statement *stmt = con->createStatement();
+        sql::ResultSet *res = stmt->executeQuery(consulta);
+
+        // Mientras siga habiendo un record en la tabla consultada entonces ejecute
+        while (res->next()) {
+            data = res->getString(columna);
+        }
+
+        return data;
+        delete res;
+        delete stmt;
+        
+    } catch (sql::SQLException &e) {
+        this->manejarErrores(e);
+        data = "Hubo un error en la consulta.";
+    }
+
+    return data;
+}
+
+
+// Funcion que permite cargar datos asociados a un record de tabla por completo
+std::map<std::string, std::string> DBManager::cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo) {
+    // Eliminar/Comentar esto cuando se hayan realizado todas las pruebas
+    cout << "Ejecutando consulta: " << consulta << endl;
+
+    std::map<std::string, std::string> datosConsulta; // Mapa de retorno
+    map<string, string>::iterator it_map = tableInfo.begin();// Iterador del mapa argumento
+
+    try {
+        Statement *stmt = con->createStatement();
+        ResultSet *res = stmt->executeQuery(consulta);
+
+        if (res->next()) { // Se espera que solo se ejecute una vez
+            while (it_map != tableInfo.end()) { // mientras haya aun info ejecute
+                datosConsulta[it_map->first] = res->getString(it_map->first); // ingresar datos
+                ++it_map;
+            }
+        }
+
+        delete res;
+        delete stmt;
+
+    } catch (SQLException &e) {
+        this->manejarErrores(e);
+    }
+
+    return datosConsulta;
+}
+
+
+// Funcion util para las clases Retiro y Deposito
 std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta) {
     std::map<std::string, std::string> datosConsulta;
     cout << "Ejecutando consulta: " << consulta << endl;
@@ -133,16 +216,22 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(con
 
 
 
-// Este método ejecuta un comando SQL que no devuelve un conjunto de resultados
+
+
+/*
+------------------------------------------------------------------------------------
+     Funcion que permite ejecutar queries como CREATE, INSERT, UPDATE y DELETE
+                  es decir, que no requieren retorno de datos
+------------------------------------------------------------------------------------
+*/
 void DBManager::ejecutarSQL(const std::string& consulta) {
+    // Funciona, al correr todas las pruebas se debe eliminar/comentar esta linea
     std::cout << "Ejecutando SQL: " << consulta << std::endl;
     
     
     try {
         sql::Statement *stmt = con->createStatement();
-        sql::ResultSet *res = res = stmt->executeQuery(consulta);
-
-        delete res;
+        stmt->executeUpdate(consulta);  // para sentencias INSERT, UPDATE, DELETE
         delete stmt;
         
     } catch (sql::SQLException &e) {
@@ -152,7 +241,13 @@ void DBManager::ejecutarSQL(const std::string& consulta) {
 
 
 
-// Este método maneja errores de la base de datos
+
+/*
+------------------------------------------------------------------------------------
+        Funcion que permite deplegar la informacion asociada al error que
+                    pueda generarse al ejecutar un query
+------------------------------------------------------------------------------------
+*/
 void DBManager::manejarErrores(const sql::SQLException &e) {
     //std::cerr << "Error en la base de datos: " << e.what() << std::endl;
     cout << "ERR: SQLException in " << __FILE__;
@@ -164,8 +259,15 @@ void DBManager::manejarErrores(const sql::SQLException &e) {
 
 
 
-// Funcion que permite generar el reporte de prestamos, por el momento, solo falta agregarle un where
-// al query y parametrizar para que quede general y se consulte por persona.
+
+/*
+------------------------------------------------------------------------------------
+      Funciones que permiten ejecutar el reporte de prestamos. Se implementa
+         de manera individual porque se requiere de exportacion de datos
+------------------------------------------------------------------------------------
+*/
+// Solo falta agregarle un WHERE al query y parametrizar para que quede general y se
+//  consulte por persona.
 void DBManager::exportLoanReport() {
     // Impresion inicial
     cout << "Ejecutando exportacion del Reporte de Prestamos: " << endl;
@@ -272,8 +374,13 @@ void DBManager::exportLoanReport() {
 }
 
 
-
-// FUNCION QUE PRUEBA QUE SE PUEDEN UTILIZAR LOS METODOS DE LA BASE DE DATOS
+/*
+------------------------------------------------------------------------------------
+        Funcion que prueba si el vinculo  ha sido establecido sin necesidad
+         de ejecutar otras funciones mas complejar. Si esta sirve se asume
+                               que el resto tambien
+------------------------------------------------------------------------------------
+*/
 void DBManager::testingVinculo() {
     cout << "Has establecido conexion con la DB." << endl;
 }

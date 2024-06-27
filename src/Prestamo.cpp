@@ -17,17 +17,17 @@ enum loanFilters {
 Prestamo::Prestamo(int id_client, DBManager& db) : id_client(id_client), db(db) {
     string id_client_str = to_string(id_client);
 
-    relatedInfo["id_loan"]         = "";
-    relatedInfo["id_client"]       = id_client_str;
-    relatedInfo["loan_term"]       = "";
-    relatedInfo["creation_date"]   = "";
-    relatedInfo["id_loan_type"]    = "";
-    relatedInfo["currency"]        = "";
-    relatedInfo["principal"]       = "";
-    relatedInfo["interest_rate"]   = "";
-    relatedInfo["monthly_payment"] = "";
-    relatedInfo["total_repayment"] = "";
-    relatedInfo["actual_debt"]     = "";
+    relatedInfo["id_loan"]         = "ID Prestamo";
+    relatedInfo["id_client"]       = "ID Cliente";
+    relatedInfo["loan_term"]       = "Plazo";
+    relatedInfo["creation_date"]   = "Fecha de Creacion";
+    relatedInfo["id_loan_type"]    = "Tipo de Prestamo";
+    relatedInfo["currency"]        = "Divisa";
+    relatedInfo["principal"]       = "Monto Solicitado";
+    relatedInfo["interest_rate"]   = "Tasa de Interés";
+    relatedInfo["monthly_payment"] = "Cuota Mensual";
+    relatedInfo["total_repayment"] = "Monto total a pagar";
+    relatedInfo["actual_debt"]     = "Monto actual pagado";
 };
 
 
@@ -55,6 +55,7 @@ void Prestamo::createLoan() {
 
     // Ejecucion del query
     db.ejecutarSQL(final_query);
+    cout << "\nEl prestamo ha sido creado con exito!" <<  endl;
 }
 
 
@@ -73,7 +74,7 @@ void Prestamo::viewAll() {
     final_query = query.str();
 
     // Ejecucion del query
-    db.ejecutarConsulta(final_query, this->relatedInfo);
+    db.desplegarPrestamos(final_query);
 }
 
 
@@ -115,7 +116,7 @@ void Prestamo::searchLoans() {
             cin >> filter;
             cin.ignore();
             query << "SELECT * FROM Loan WHERE id_client=" << this->id_client
-                  << " AND id_loan_type=" << filter << ";";
+                  << " AND id_loan_type='" << filter << "';";
             break;
         case YEAR_FILTER:
         cout << "Indique el anio de creacion del prestamo: ";
@@ -139,6 +140,48 @@ void Prestamo::searchLoans() {
     final_query = query.str();
 
     // Ejecucion del query
-    db.ejecutarConsulta(final_query, this->relatedInfo);
+    db.desplegarPrestamos(final_query);
     
+}
+
+
+void Prestamo::extractOneData() {
+    string columna = "principal";
+    std::stringstream query;
+    string data, final_query;
+
+    // Construccion del query
+    query << "SELECT " << columna 
+          << " FROM Loan WHERE id_client=" 
+          << this->id_client;
+    
+
+    // Fin de la funcion
+    final_query = query.str();
+    data = db.ejecutarConsulta(final_query, columna);
+    cout << "Data de OneData: " << data << endl;
+}
+
+
+void Prestamo::extractAllData() {
+    std::stringstream query;
+    std::string loanID, final_query;
+
+    cout << "Seleccione el ID del Prestamos: ";
+    cin >> loanID;
+    cin.ignore();
+
+    // Construccion del query
+    query << "SELECT * FROM Loan WHERE id_loan=" 
+          << loanID;
+    
+
+    // Fin de la funcion
+    final_query = query.str();
+    this->loadedValues = db.cargarDatos(final_query, this->relatedInfo);
+    
+    // Imprimir datos
+    for (const auto& pair : this->loadedValues) {
+        std::cout << pair.first << " : " << pair.second << std::endl;
+    }
 }

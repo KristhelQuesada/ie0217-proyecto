@@ -145,6 +145,7 @@ void Prestamo::searchLoans() {
 }
 
 
+// Metodos por validar
 void Prestamo::extractOneData() {
     string columna = "principal";
     std::stringstream query;
@@ -158,7 +159,7 @@ void Prestamo::extractOneData() {
 
     // Fin de la funcion
     final_query = query.str();
-    data = db.ejecutarConsulta(final_query, columna);
+    data = db.ejecutarConsulta(final_query);
     cout << "Data de OneData: " << data << endl;
 }
 

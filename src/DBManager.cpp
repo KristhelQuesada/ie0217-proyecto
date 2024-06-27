@@ -164,7 +164,7 @@ void DBManager::desplegarCDP(const std::string& consulta) {
 ------------------------------------------------------------------------------------
 */
 // Funcion que retorna un unico dato consultado
-std::string DBManager::ejecutarConsulta(const std::string& consulta, std::string& columna) {
+std::string DBManager::ejecutarConsulta(const std::string& consulta) {
     std::cout << "Ejecutando consulta: " << consulta << "\n" << std::endl;
     std::string data;
 
@@ -175,7 +175,7 @@ std::string DBManager::ejecutarConsulta(const std::string& consulta, std::string
 
         // Mientras siga habiendo un record en la tabla consultada entonces ejecute
         while (res->next()) {
-            data = res->getString(columna);
+            data = res->getString(1); // 1 indica primera columna
         }
 
         return data;

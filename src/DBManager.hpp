@@ -35,7 +35,7 @@ public:
     void desplegarCDP(const std::string& consulta);
     
     // Funciones que permiten retornar datos (unico o completo)
-    std::string ejecutarConsulta(const std::string& consulta, std::string& columna);
+    std::string ejecutarConsulta(const std::string& consulta);
     std::map<std::string, std::string> ejecutarConsultaRetiroDeposito(const std::string& consulta);
     std::map<std::string, std::string> cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo);
 

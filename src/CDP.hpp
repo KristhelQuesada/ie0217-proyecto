@@ -6,11 +6,12 @@
 
 class CDP {
 private:
+    int id_account;
     int id_client;
     DBManager& db;
     // Atributo que contiene la informacion de un cdp en especifico
     std::map<std::string, std::string> relatedInfo;
-
+    
 public:
     CDP(int id_client, DBManager& db);
 

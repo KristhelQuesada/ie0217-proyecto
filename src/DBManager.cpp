@@ -124,7 +124,38 @@ void DBManager::desplegarPrestamos(const std::string& consulta) {
     }
 }
 
+// Este método ejecuta una consulta SQL y devuelve el resultado
+void DBManager::desplegarCDP(const std::string& consulta) {
+    std::cout << "Ejecutando consulta: " << consulta << std::endl; // Considerar eliminar/comentar
 
+    try {
+        sql::Statement *stmt = con->createStatement();
+        sql::ResultSet *res = stmt->executeQuery(consulta);
+
+        int contador = 1; // Lleva la cuenta de la cantidad de CDP del Cliente
+
+        while (res->next()) {
+            std::cout << "-------------- CDP " << contador << " --------------" << std::endl;
+            std::cout << "  - ID del Certificado   : " << res->getString("id_deposit_certificate") << std::endl;
+            std::cout << "  - ID de la Cuenta       : " << res->getString("id_account") << std::endl;
+            std::cout << "  - Plazo               : " << res->getString("cdp_term") << std::endl;
+            std::cout << "  - Fecha de Creación     : " << res->getString("startline") << std::endl;
+            std::cout << "  - Fecha de Vencimiento  : " << res->getString("deadline") << std::endl;
+            std::cout << "  - Capital Principal     : " << res->getString("principal") << std::endl;
+            std::cout << "  - Tasa de Interés       : " << res->getString("interest_rate") << std::endl;
+            std::cout << "  - Frecuencia de Cap.    : " << res->getString("capitalization_freq") << std::endl;
+            std::cout << "  - Penalización de Int.  : " << res->getString("interest_penalty") << std::endl;
+            std::cout << "  - Monto Final           : " << res->getString("final_amount") << "\n" << std::endl;
+            contador++;
+        }
+
+        delete res;
+        delete stmt;
+
+    } catch (sql::SQLException &e) {
+        this->manejarErrores(e);
+    }
+}
 
 
 /*

@@ -156,3 +156,47 @@ map<string, string> calculateLoan(){
     // Retornar la cuota
     return data;
 }
+
+map<string, string> calculateCDP() {
+    // Variables
+    double principal, interest_rate, months, total_repayment;  // inputs y outputs
+    string currency, creation_date, maturity_date;             // str inputs
+    map<string, string> data;                                  // return data
+
+    // Solicitud de datos del CDP
+    cout << "\n-----------------------------------------------------" << endl;
+    cout << "|           DATOS DEL CERTIFICADO DE DEPÓSITO       |" << endl;
+    cout << "-----------------------------------------------------" << endl;
+    cout << "Tipo de cambio (USD/CRC): ";
+    cin >> currency;
+    cin.ignore();
+    cout << "Monto del depósito (" << currency << "): ";
+    cin >> principal;
+    cout << "Plazo (meses): ";
+    cin >> months;
+    cout << "Tasa de interés (%): ";
+    cin >> interest_rate;
+    cout << "Fecha de creación (YYYY-MM-DD): ";
+    cin >> creation_date;
+    cout << "Fecha de vencimiento (YYYY-MM-DD): ";
+    cin >> maturity_date;
+
+    // Calculo del monto total a pagar (total_repayment)
+    total_repayment = principal * pow((1 + interest_rate / 100), months / 12);
+
+    // Impresion de resultados
+    cout << "\n>> LOS RESULTADOS DEL CDP SON:" << endl;
+    cout << "- Monto total a recibir: "
+         << to_string_with_precision(total_repayment, 2) << " (" << currency << ")." << endl;
+
+    // Creacion del mapa
+    data["creation_date"] = creation_date;
+    data["maturity_date"] = maturity_date;
+    data["interest_rate"] = to_string_with_precision(interest_rate, 2);
+    data["principal"] = to_string_with_precision(principal, 2);
+    data["total_repayment"] = to_string_with_precision(total_repayment, 2);
+    data["currency"] = currency;
+
+    // Retornar los datos calculados
+    return data;
+}

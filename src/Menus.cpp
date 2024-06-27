@@ -2,6 +2,7 @@
 #include "Transaccion.hpp"
 #include "AbonoPrestamo.hpp"
 #include "Prestamo.hpp"
+#include "Menus.hpp"
 
 
 

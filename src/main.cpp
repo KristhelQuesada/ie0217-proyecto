@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Funciones.hpp"
 //#include "Prestamo.hpp"
+#include "Menus.hpp"
 using namespace std;
 
 // Inclusion de Enums

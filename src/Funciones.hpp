@@ -81,4 +81,15 @@ std::map<std::string, std::string> calculateLoan();                 // FUncion d
 
 
 
+/**
+ * @brief Funcion que se encarga de revisar la entrada de un usuario
+ * para validar su opcion en el menu.
+ * @param input Entrada tipo string recibida del usuario
+ * @return Un valor entero fuera del rango de las opciones permitidas
+ * del menu
+ */
+std::map<std::string, std::string> calculateCDP();                 // FUncion del menu principal
+
+
+
 #endif // FUNCIONES_HPP

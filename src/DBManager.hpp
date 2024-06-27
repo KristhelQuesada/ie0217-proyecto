@@ -32,7 +32,8 @@ public:
     // Funciones para visualizacion sin retorno de datos
     void desplegarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo);
     void desplegarPrestamos(const std::string& consulta);
-
+    void desplegarCDP(const std::string& consulta);
+    
     // Funciones que permiten retornar datos (unico o completo)
     std::string ejecutarConsulta(const std::string& consulta, std::string& columna);
     std::map<std::string, std::string> ejecutarConsultaRetiroDeposito(const std::string& consulta);

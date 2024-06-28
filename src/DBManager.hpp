@@ -37,6 +37,7 @@ public:
     // Funciones que permiten retornar datos (unico o completo)
     std::string ejecutarConsulta(const std::string& consulta, std::string& columna);
     std::map<std::string, std::string> ejecutarConsultaRetiroDeposito(const std::string& consulta);
+    double obtenerTipoDeCambio(const std::string& monedaOrigen, const std::string& monedaDestino);
     std::map<std::string, std::string> cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo);
 
     // Funcion que permite ejecucion de queries CIUD sin retorno

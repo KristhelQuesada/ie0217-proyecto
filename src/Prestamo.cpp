@@ -13,6 +13,18 @@ enum loanFilters {
     MAX_FILTER // para saber cuantas opciones tenemos
 };
 
+std::pair<float, float> getInterestRateRange(const string& loanType) {
+    if (loanType == "HP") { // Préstamos Hipotecarios
+        return {0.10, 0.12};
+    } else if (loanType == "PR") { // Préstamos Prendarios
+        return {0.15, 0.18};
+    } else if (loanType == "PE") { // Préstamos Personales
+        return {0.20, 0.25};
+    } else {
+        throw std::invalid_argument("Tipo de préstamo no válido");
+    }
+}
+
 // CONSTRUCTOR DE LA CLASE PRESTAMO
 Prestamo::Prestamo(int id_client, DBManager& db) : id_client(id_client), db(db) {
     string id_client_str = to_string(id_client);
@@ -38,8 +50,31 @@ void Prestamo::createLoan() {
     string final_query;
     stringstream query;
     map<string, string> data = calculateLoan();
-
-    // Creacion del del query
+    
+    // Obtener el rango de tasas de interés basado en el tipo de préstamo
+    auto interestRateRange = getInterestRateRange(data["id_loan_type"]);
+    float defaultInterestRate = (interestRateRange.first + interestRateRange.second) / 2;
+    
+    // Solicitar al usuario que seleccione una tasa de interés
+    float interestRate;
+    cout << "Seleccione una tasa de interés entre " << interestRateRange.first * 100 << "% y " 
+         << interestRateRange.second * 100 << "% (deje en blanco para usar la tasa predeterminada de " 
+         << defaultInterestRate * 100 << "%): ";
+    string input;
+    getline(cin, input);
+    
+    if (input.empty()) {
+        interestRate = defaultInterestRate;
+    } else {
+        interestRate = stof(input) / 100.0;
+        if (interestRate < interestRateRange.first || interestRate > interestRateRange.second) {
+            cout << "La tasa de interés seleccionada está fuera del rango permitido. Usando la tasa predeterminada de " 
+                 << defaultInterestRate * 100 << "%." << endl;
+            interestRate = defaultInterestRate;
+        }
+    }
+    
+    // Crear el query
     query << "INSERT INTO Loan(id_client, loan_term, id_loan_type, currency, principal, "
           << "interest_rate, monthly_payment, total_repayment, actual_debt) VALUES ("
           << this->id_client << ", "
@@ -47,18 +82,16 @@ void Prestamo::createLoan() {
           << data["id_loan_type"] << "', '"
           << data["currency"] << "', "
           << data["principal"] << ", "
-          << data["interest_rate"] << ", "
+          << interestRate << ", "
           << data["monthly_payment"] << ", "
           << data["total_repayment"] << ", "
           << data["total_repayment"] << ");"; // al inicio actual_debt = total_repayment
     final_query = query.str();                // pasa el objeto stringstream -> string
 
-    // Ejecucion del query
+    // Ejecución del query
     db.ejecutarSQL(final_query);
-    cout << "\nEl prestamo ha sido creado con exito!" <<  endl;
+    cout << "\nEl préstamo ha sido creado con éxito!" <<  endl;
 }
-
-
 
 // METODO QUE MUESTRA LA INFORMACION ACTUAL DE TODOS LOS PRESTAMOS ASOCIADOS AL CLIENTE
 void Prestamo::viewAll() {

@@ -246,7 +246,15 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(con
 }
 
 
-
+/*
+------------------------------------------------------------------------------------
+              Implementación de obtenerTipoDeCambio
+------------------------------------------------------------------------------------
+*/
+double DBManager::obtenerTipoDeCambio(const std::string& monedaOrigen, const std::string& monedaDestino) {
+    // Caso ideal para pruebas: siempre devolver un tipo de cambio de 1.1
+    return 1.1;
+}
 
 
 /*

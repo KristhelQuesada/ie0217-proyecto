@@ -233,7 +233,7 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(con
         // Asumimos que solo nos interesa la primera fila para el retiro
         if (res->next()) {
             datosConsulta["balance"] = to_string(res->getDouble("balance"));
-            datosConsulta["tipoCuenta"] = res->getString("tipoCuenta");
+            datosConsulta["currency"] = res->getString("currency");
         }
 
         delete res;

@@ -9,9 +9,32 @@ Retiro::Retiro(int id_client, DBManager& db) : Transaccion(id_client, db) {}
 void Retiro::ejecutar() {
     double monto;
     std::string moneda;
-    std::string cuentaOrigen;
+    int cuentaOrigen;
+    std::string detalles;
     std::string beginTransactionSQL = "START TRANSACTION; ";
     std::string endTransactionSQL   = "COMMIT; ";
+
+    // Solicitar y validar el número de cuenta de origen
+    while (true) {
+        std::cout << "Ingrese el número de cuenta del cliente: ";
+        std::cin >> cuentaOrigen;
+        if (std::cin.fail() || cuentaOrigen <= 0) {
+            std::cin.clear(); // Limpiar el estado de error
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max()); // Limpiar el buffer
+            std::cout << "Número de cuenta inválido. Inténtelo de nuevo.\n";
+        } else {
+            std::cin.ignore(); // Limpiar el buffer
+            break;
+        }
+    }
+
+    // Solicitar y validar la moneda
+    std::cout << "Ingrese la moneda: ";
+    std::cin >> moneda;
+    if (moneda.empty()) {
+        std::cout << "Moneda inválida. Inténtelo de nuevo.\n";
+        return;
+    }
 
     // Solicitar y validar el monto
     while (true) {
@@ -19,31 +42,18 @@ void Retiro::ejecutar() {
         std::cin >> monto;
         if (std::cin.fail() || monto <= 0) {
             std::cin.clear(); // Limpiar el estado de error
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer
+            std::cin.ignore(); // Limpiar el buffer
             std::cout << "Monto inválido. Inténtelo de nuevo.\n";
         } else {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer
+            std::cin.ignore(); // Limpiar el buffer
             break;
         }
     }
 
-    // Solicitar y validar la moneda
-    std::cout << "Ingrese la moneda: ";
-    std::getline(std::cin, moneda);
-    if (moneda.empty()) {
-        std::cout << "Moneda inválida. Inténtelo de nuevo.\n";
-        return;
-    }
-
-    // Solicitar y validar el número de cuenta de origen
-    std::cout << "Ingrese el número de cuenta de origen: ";
-    std::getline(std::cin, cuentaOrigen);
-    if (cuentaOrigen.empty()) {
-        std::cout << "Número de cuenta inválido. Inténtelo de nuevo.\n";
-        return;
-    }
-
-    std::string consulta = "SELECT balance, tipoCuenta FROM Cuentas WHERE origin_account = '" + cuentaOrigen + "'";
+    // Solicitar detalles de la transacción
+    std::cout << "Ingrese detalles de la transacción (opcional): ";
+    std::getline(std::cin, detalles);
+    std::string consulta = "SELECT balance, currency FROM BankAccount WHERE id_account = " + std::to_string(cuentaOrigen);
     auto datos = db.ejecutarConsultaRetiroDeposito(consulta);
 
     if (datos.empty()) {
@@ -61,17 +71,15 @@ void Retiro::ejecutar() {
         std::cout << "Balance de la cuenta fuera de rango.\n";
         return;
     }
-    std::string tipoCuenta = datos["tipoCuenta"];
-
-    std::cout << "Realizando retiro de " << monto << " " << moneda
-              << " de la cuenta " << cuentaOrigen << ". Balance anterior: " << balanceAnterior
-              << ".\n";
+    std::string tipoCuenta = datos["currency"];
 
     // Conversión de moneda si es necesario
     if (moneda != tipoCuenta) {
         double tipoDeCambio = db.obtenerTipoDeCambio(moneda, tipoCuenta);
         monto *= tipoDeCambio;
         std::cout << "Monto convertido a " << tipoCuenta << ": " << monto << std::endl;
+    } else {
+        std::cout << "Monto en " << tipoCuenta << ": " << monto << std::endl;
     }
 
     // Verificar que el monto a retirar no exceda el balance de la cuenta
@@ -81,19 +89,25 @@ void Retiro::ejecutar() {
     }
 
     double balancePosterior = balanceAnterior - monto;
-    std::cout << "Balance posterior al retiro: " << balancePosterior << std::endl;
+    std::cout << "Realizando retiro de " << monto << " " << tipoCuenta
+              << " de la cuenta " << cuentaOrigen << ". Balance anterior: " << balanceAnterior
+              << ", Balance posterior: " << balancePosterior << std::endl;
 
     db.ejecutarSQL(beginTransactionSQL);
-    //db.ejecutarSQL(endTransactionSQL);
 
     // Actualizar el balance en la base de datos
-    std::string comandoSQL = "UPDATE Cuentas SET balance = " + std::to_string(balancePosterior) +
-                             " WHERE target_account = '" + cuentaOrigen + "'";
+    std::string comandoSQL = "UPDATE BankAccount SET balance = " + std::to_string(balancePosterior) +
+                             " WHERE id_account = " + std::to_string(cuentaOrigen) + ";";
     db.ejecutarSQL(comandoSQL);
 
     // Registrar la transacción
-    std::string registrarTransaccion = "INSERT INTO Transacciones (tipo, cuenta, monto, fecha) VALUES ('retiro', '" +
-                                       cuentaOrigen + "', " + std::to_string(monto) + ", NOW())";
+    std::string registrarTransaccion = "INSERT INTO Transaction (transaction_type, currency, "
+                                       "transaction_amount, origin_account, target_account, detail, "
+                                       "previous_qty, present_qty) VALUES ('RT', '" + moneda + "', "
+                                       + std::to_string(monto) + ", " + std::to_string(cuentaOrigen) + ", " 
+                                       + std::to_string(cuentaOrigen) + ", '" + detalles + "', " 
+                                       + std::to_string(balanceAnterior) + ", "
+                                       + std::to_string(balancePosterior) + ")";
     db.ejecutarSQL(registrarTransaccion);
 
     db.ejecutarSQL(endTransactionSQL);

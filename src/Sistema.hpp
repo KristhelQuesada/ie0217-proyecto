@@ -16,6 +16,9 @@ private:
 public:
     Sistema(const std::string& dbPath);
 
+    int inicializarSistema();
+/*
+
     // Métodos centrados en las operaciones principales del sistema
     void atencionCliente();
     std::string solicitarInfo(const std::string& tipoInfo);
@@ -25,6 +28,8 @@ public:
     std::string obtenerRegTrans(int idCliente);
     std::string obtenerRepPrest(int idPrestamo);
     std::string calcularCuotasYPago(int idPrestamo);
+
+*/
 };
 
 #endif // SISTEMA_HPP

@@ -47,9 +47,8 @@ void Deposito::ejecutar() {
         }
     }
 
-    DBManager dbManager("tu_cadena_de_conexion");
     std::string consulta = "SELECT balance, tipoCuenta FROM Cuentas WHERE origin_account = " + std::to_string(cuentaDestino);
-    auto datos = dbManager.ejecutarConsultaRetiroDeposito(consulta);
+    auto datos = db.ejecutarConsultaRetiroDeposito(consulta);
 
     if (datos.empty()) {
         std::cout << "Cuenta no encontrada.\n";
@@ -70,7 +69,7 @@ void Deposito::ejecutar() {
 
     // Convertir el monto si las monedas son diferentes
     if (moneda != tipoCuenta) {
-        double tipoDeCambio = dbManager.obtenerTipoDeCambio(moneda, tipoCuenta);
+        double tipoDeCambio = db.obtenerTipoDeCambio(moneda, tipoCuenta);
         monto = monto * tipoDeCambio;
         std::cout << "Monto convertido a " << tipoCuenta << ": " << monto << std::endl;
     }
@@ -84,12 +83,12 @@ void Deposito::ejecutar() {
     // Actualizar el balance en la base de datos
     std::string comandoSQL = "UPDATE Cuentas SET balance = " + std::to_string(balancePosterior) +
                              " WHERE target_account = " + std::to_string(cuentaDestino);
-    dbManager.ejecutarSQL(comandoSQL);
+    db.ejecutarSQL(comandoSQL);
 
     // Registrar la transacción
     std::string registrarTransaccion = "INSERT INTO Transacciones (tipo, cuenta, monto, fecha) VALUES ('deposito', '" +
                                        std::to_string(cuentaDestino) + "', " + std::to_string(monto) + ", NOW())";
-    dbManager.ejecutarSQL(registrarTransaccion);
+    db.ejecutarSQL(registrarTransaccion);
 
     std::cout << "Depósito realizado y base de datos actualizada correctamente." << std::endl;
 }

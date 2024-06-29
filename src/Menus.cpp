@@ -4,7 +4,9 @@
 #include "Prestamo.hpp"
 #include "Menus.hpp"
 
-
+#include "Deposito.hpp"
+#include "Retiro.hpp"
+#include "Transferencia.hpp"
 
 /*
 ----------------------------------------
@@ -193,11 +195,11 @@ void menuTransactions(int id_client, DBManager& db) {
     switch (option) {
         case DEPOSIT:
             cout << "Opcion 1" << endl;
-            // transaccion = new Deposito(id_client, db);
+            transaccion = new Deposito(id_client, db);
             break;
         case WITHDRAWAL:
             cout << "Opcion 2" << endl;
-            // transaccion = new Retiro(id_client, db);
+            transaccion = new Retiro(id_client, db);
             break;
         case TRANSFER:
             cout << "Opcion 3" << endl;

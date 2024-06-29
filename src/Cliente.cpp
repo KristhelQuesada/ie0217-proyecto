@@ -1,266 +1,459 @@
-#include <vector>
-#include <algorithm>
-#include <iostream>
-#include <stdexcept>
-#include <unordered_map>
-#include <map>
-
-#include "Cliente.hpp"
+#include <iostream>     // Directiva que proporciona funcionalidades para la entrada y salida estándar en consola 
+#include <stdexcept>    // Directiva que incluye clases para el manejo de excepciones estándar 
+#include <chrono>       // Directiva que permite trabajar con funciones y estructuras relacionadas con el tiempo 
+#include <ctime>        // Directiva que permite trabajar con funciones y estructuras relacionadas con el tiempo 
+#include <sstream>      // Directiva que facilita trabajar con cadenas de flujo 
 
 
-template<typename T>
-Cliente<T>::Cliente(int idCliente, const std::string& nombre, const std::string& apellido, int idCuentaColones, int idCuentaDolares) {
-    informacion["idCliente"] = idCliente;
-    informacion["nombreCliente"] = nombre;
-    informacion["apellidoCliente"] = apellido;
-    informacion["idCuentaColonesCliente"] = idCuentaColones;
-    informacion["idCuentaDolaresCliente"] = idCuentaColones;
+#include "Cliente.hpp"  // Incluir el archivo de encabezado de la clase Cliente
+
+
+// Constructor por defecto
+Cliente::Cliente() {
+
+    nombre = "";
+    apellido = "";
+    idCliente = 0;
+    idCuentaColones = 0;
+    idCuentaDolares = 0;
+    
+
 }
 
-// Métodos para obtener y establecer el ID del cliente
-template<typename T>
-T Cliente<T>::getIdCliente() const {
-    return informacion.at("idCliente");
-}
 
-template<typename T>
-void Cliente<T>::setIdCliente(T idCliente) {
-    // Validar tipo de dato
-    if (typeid(idCliente) != typeid(T)) {
-        throw std::invalid_argument("El ID de cliente debe ser un dato tipo entero");
+
+// Inicialización del constructor de la clase cliente
+Cliente::Cliente(int idCliente, const std::string& nombre, const std::string& apellido, int idCuentaColones, int idCuentaDolares)
+    : idCliente(idCliente), nombre(nombre), apellido(apellido), idCuentaColones(idCuentaColones), idCuentaDolares(idCuentaDolares) {}
+
+
+
+// Método que solicita los datos del cliente y los almacena en la base de datos
+void Cliente::obtenerInformacion(DBManager dbManager) {
+
+    // Limpiar el buffer de entrada antes de pedir datos
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // Obtener ID del cliente
+    while (true) {
+        try {
+            std::cout << "Ingrese el ID del cliente (maximo 9 digitos): ";
+            std::string input;
+            std::getline(std::cin, input);
+        
+            // Verificar tipo de dato (debe ser un entero)
+            std::stringstream ss(input);
+            int temp;
+            if (!(ss >> temp) || !ss.eof()) {
+                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+            }
+
+            // Verificar tamaño de dato
+            if (idCliente < 0 || idCliente > 999999999) {
+                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
+            }
+
+            idCliente = temp; // Asignar el valor convertido a int a idCliente
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    // Validar rango (ejemplo de rango)
-    if (idCliente < 0 || idCliente > 999999999) {
-        throw std::out_of_range("ID de cliente fuera del rango permitido (0, 999999999)");
+    // Obtener nombre
+    while (true) {
+        try {
+            std::cout << "Ingrese el nombre del cliente (maximo 50 caracteres): ";
+            std::getline(std::cin, nombre);
+
+            // Verificar tipo de dato (debe contener solo letras y espacios)
+            for (char c : nombre) {
+                if (!isalpha(c) && !isspace(c)) {
+                    throw std::invalid_argument("El nombre debe ser un dato tipo texto.");
+                }
+            }
+
+            // Verificar tamaño de dato
+            if (nombre.length() > 50) {
+                throw std::out_of_range("El nombre excede la longitud maxima permitida.");
+            }
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    informacion["idCliente"] = idCliente;
-}
+    // Obtener apellido
+    while (true) {
+        try {
+            std::cout << "Ingrese el apellido del cliente (maximo 50 caracteres): ";
+            std::getline(std::cin, apellido);
 
-// Métodos para obtener y establecer el nombre del cliente
-template<typename T>
-const std::string& Cliente<T>::getNombreCliente() const {
-    return informacion.at("nombreCliente");
-}
+            // Verificar tipo de dato (debe contener solo letras y espacios)
+            for (char c : apellido) {
+                if (!isalpha(c) && !isspace(c)) {
+                    throw std::invalid_argument("El apellido debe ser un dato tipo texto.");
+                }
+            }
 
-template<typename T>
-void Cliente<T>::setNombreCliente(const std::string& nombre) {
-    // Validar longitud (ejemplo de longitud)
-    if (nombre.length() > 50) {
-        throw std::length_error("El nombre digitado excede la longitud maxima permitida (50 carcateres)");
+            // Verificar tamaño de dato
+            if (apellido.length() > 50) {
+                throw std::out_of_range("El apellido excede la longitud maxima permitida.");
+            }
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    // Validar tipo de dato (asegurarse que T sea compatible con std::string)
-    if (typeid(T) != typeid(std::string)) {
-        throw std::invalid_argument("El nombre del cliente debe ser una cadena de texto)");
+    // Insertar los datos en la base de datos
+    std::string comandoSQL = "INSERT INTO Client (id_client, client_name, client_lastname) VALUES (" +
+                             std::to_string(idCliente) + ", '" +
+                             nombre + "', '" +
+                             apellido + "')";
+
+    dbManager.ejecutarSQL(comandoSQL);
+
+    std::cout << std::endl;
+    std::cout << "Datos del Cliente:" << std::endl;
+    std::cout << "ID cliente: " << idCliente << std::endl;
+    std::cout << "Nombre: " << nombre << std::endl;
+    std::cout << "Apellido: " << apellido << std::endl;
+    std::cout << std::endl;
+
+
+}
+
+
+
+
+// Funcion que imprime datos de un cliente
+void Cliente::imprimirDatos(DBManager dbManager){
+
+    // Limpiar el buffer de entrada antes de pedir datos
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // Obtener ID del cliente
+    while (true) {
+        try {
+            std::cout << "Ingrese el ID del cliente (maximo 9 digitos): ";
+            std::string input;
+            std::getline(std::cin, input);
+
+            // Verificar tipo de dato (debe ser un entero)
+            std::stringstream ss(input);
+            int temp;
+            if (!(ss >> temp) || !ss.eof()) {
+                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+            }
+
+            // Verificar tamaño de dato
+            if (idCliente < 0 || idCliente > 999999999) {
+                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
+            }
+
+            idCliente = temp; // Asignar el valor convertido a int a idCliente
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    informacion["nombreCliente"] = nombre;
-}
+    // Construir la consulta SQL para obtener cada dato del cliente
+    std::string idClientQuery = "SELECT id_client FROM Client WHERE id_client = " + std::to_string(idCliente);
+    std::string nameQuery = "SELECT client_name FROM Client WHERE id_client = " + std::to_string(idCliente);
+    std::string lastnameQuery = "SELECT client_lastname FROM Client WHERE id_client = " + std::to_string(idCliente);
+    std::string colonesQuery = "SELECT id_colones_account FROM Client WHERE id_client = " + std::to_string(idCliente);
+    std::string dolaresQuery = "SELECT id_dolares_account FROM Client WHERE id_client = " + std::to_string(idCliente);
+    
 
-// Métodos para obtener y establecer el apellido del cliente
-template<typename T>
-const std::string& Cliente<T>::getApellidoCliente() const {
-    return informacion.at("apellidoCliente");
-}
+    // Obtener cada dato del cliente usando el método ejecutarSQL del DBManager
 
-template<typename T>
-void Cliente<T>::setApellidoCliente(const std::string& apellido) {
-    // Validar tipo de dato (asegurarse que T sea compatible con std::string)
-    if (typeid(T) != typeid(std::string)) {
-        throw std::invalid_argument("El apellido del cliente debe ser una cadena de texto)");
+    try {
+
+        idCliente = std::stoi(dbManager.ejecutarConsulta(idClientQuery));
+        nombre = dbManager.ejecutarConsulta(nameQuery);
+        apellido = dbManager.ejecutarConsulta(lastnameQuery);
+
+        // Manejo de valores NULL para idCuentaColones y idCuentaDolares
+        std::string colonesStr = dbManager.ejecutarConsulta(colonesQuery);
+        if (!colonesStr.empty()) {
+            idCuentaColones = std::stoi(colonesStr);
+        } else {
+            idCuentaColones = 0;  // Asignar valor por defecto o manejar de otra manera según tu lógica de negocio
+        }
+
+        std::string dolaresStr = dbManager.ejecutarConsulta(dolaresQuery);
+        if (!dolaresStr.empty()) {
+            idCuentaDolares = std::stoi(dolaresStr);
+        } else {
+            idCuentaDolares = 0;  // Asignar valor por defecto o manejar de otra manera según tu lógica de negocio
+        }
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error al obtener datos del cliente: " << e.what() << std::endl;
+        return;
     }
 
-    // Validar longitud (ejemplo de longitud)
-    if (apellido.length() > 50) {
-        throw std::length_error("El apellido digitado excede la longitud maxima permitida (50 caracteres)");
+    std::cout << "Datos del Cliente:" << std::endl;
+    std::cout << "ID cliente: " << idCliente << std::endl;
+    std::cout << "Nombre: " << nombre << std::endl;
+    std::cout << "Apellido: " << apellido << std::endl;
+    std::cout << "ID cuenta en colones: " << idCuentaColones << std::endl;
+    std::cout << "ID cuenta en dólares: " << idCuentaDolares << std::endl;
+    std::cout << std::endl;  // Línea en blanco al final
+
+
+}
+
+
+
+// Función que actualiza datos del cliente
+void Cliente::actualizarDatos(DBManager& dbManager) {
+
+    // Limpiar el buffer de entrada antes de pedir datos
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    int nuevoIdCliente = 0;  
+    std::string nuevoNombre;     
+    std::string nuevoApellido;
+
+    
+
+    // Obtener ID del cliente
+    while (true) {
+        try {
+            std::cout << "Ingrese el ID del cliente del que desea actualizar (maximo 9 digitos): ";
+            std::string input;
+            std::getline(std::cin, input);
+
+            // Verificar tipo de dato (debe ser un entero)
+            std::stringstream ss(input);
+            int temp;
+            if (!(ss >> temp) || !ss.eof()) {
+                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+            }
+
+            // Verificar tamaño de dato
+            if (idCliente < 0 || idCliente > 999999999) {
+                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
+            }
+
+            idCliente = temp; // Asignar el valor convertido a int a idCliente
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    informacion["apellidoCliente"] = apellido;
-}
+    // Verificar si el cliente existe en la base de datos antes de actualizar
+    std::string consulta = "SELECT id_client FROM Client WHERE id_client = " + std::to_string(idCliente);
+    std::string resultado = dbManager.ejecutarConsulta(consulta);
 
-// Métodos para obtener y establecer el ID de la cuenta bancaria en colones
-template<typename T>
-T Cliente<T>::getIdCuentaColones() const {
-    return informacion.at("idCuentaColonesCliente");
-}
 
-template<typename T>
-void Cliente<T>::setIdCuentaColones(T idCuentaColones) {
-    // Validar tipo de dato
-    if (typeid(idCuentaColones) != typeid(T)) {
-        throw std::invalid_argument("El ID de la cuenta en colones debe ser un dato tipo entero");
+    if (resultado.empty()) {
+        std::cerr << "El cliente con ID " << idCliente << " no esta registrado en la base de datos. No se puede actualizar." << std::endl;
+        return; // Salir del método si el cliente no está registrado
+    } else {
+
+        // Si está registrado
+        std::cerr << std::endl << "Cliente registrado." << std::endl;
+        while (true) {
+        try {
+            std::cout << "Ingrese el nuevo ID del cliente (máximo 9 dígitos): ";
+            std::string input;
+            std::getline(std::cin, input);
+
+            // Verificar si es un número entero
+            std::stringstream ss(input);
+            int temp;
+            if (!(ss >> temp) || !ss.eof()) {
+                throw std::invalid_argument("El ID del cliente debe ser un número entero.");
+            }
+
+            // Verificar la longitud del número
+            if (nuevoIdCliente < 0 || nuevoIdCliente > 999999999) {
+                throw std::out_of_range("El ID del cliente excede la longitud máxima permitida.");
+            }
+
+            nuevoIdCliente = temp; // Asignar el valor convertido a int a idCliente
+
+            // Verificar si el clientenuevo ID cliente existe en la base de datos antes de actualizar
+            std::string consultaCl = "SELECT id_client FROM Client WHERE id_client = " + std::to_string(nuevoIdCliente);
+            std::string resultado = dbManager.ejecutarConsulta(consultaCl);
+
+            if (!resultado.empty()) {
+                // Convertir std::string a int y luego comparar
+                int id = std::stoi(resultado);
+
+                if (nuevoIdCliente == id) {
+                    std::cerr << "El ID del cliente ya está registrado. Por favor, ingrese otro." << std::endl;
+                    continue; // Volver a pedir el ID del cliente
+                }
+            }
+
+            break; // Si todo está bien y el idCliente no está en uso, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    // Validar rango (ejemplo de rango)
-    if (idCuentaColones < 0 || idCuentaColones > 9999999999) {
-        throw std::out_of_range("ID de cuenta de colones fuera del rango permitido (0, 9999999999)");
+        // Solicitud del nuevo nombre
+        while (true) {
+        try {
+            std::cout << "Ingrese el nuevo nombre del cliente (maximo 50 caracteres): ";
+            std::getline(std::cin, nuevoNombre);
+
+            // Verificar tipo de dato (debe contener solo letras y espacios)
+            for (char c : nuevoNombre) {
+                if (!isalpha(c) && !isspace(c)) {
+                    throw std::invalid_argument("El nuevo nombre debe ser un dato tipo texto.");
+                }
+            }
+
+            // Verificar tamaño de dato
+            if (nuevoNombre.length() > 50) {
+                throw std::out_of_range("El nuevo nombre excede la longitud maxima permitida.");
+            }
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    informacion["idCuentaColonesCliente"] = idCuentaColones;
-}
+    // Solicitud del nuevo apellido
+    while (true) {
+        try {
+            std::cout << "Ingrese el nuevo apellido del cliente (maximo 50 caracteres): ";
+            std::getline(std::cin, nuevoApellido);
 
-// Método para obtener y establecer el ID de la cuenta bancaria en dólares
-template<typename T>
-T Cliente<T>::getIdCuentaDolares() const {
-    return informacion.at("idCuentaDolaresCliente");
-}
+            // Verificar tipo de dato (debe contener solo letras y espacios)
+            for (char c : nuevoApellido) {
+                if (!isalpha(c) && !isspace(c)) {
+                    throw std::invalid_argument("El nuevo apellido debe ser un dato tipo texto.");
+                }
+            }
 
-template<typename T>
-void Cliente<T>::setIdCuentaDolares(T idCuentaDolares) {
-    // Validar tipo de dato
-    if (typeid(idCuentaDolares) != typeid(T)) {
-        throw std::invalid_argument("El ID de cuenta de dolares debe ser un dato tipo entero");
+            // Verificar tamaño de dato
+            if (nuevoApellido.length() > 50) {
+                throw std::out_of_range("El nuevo apellido excede la longitud maxima permitida.");
+            }
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
+    }
+        // Actualizar los datos en la base de datos
+        std::string comandoSQL = "UPDATE Client SET id_client = '" + std::to_string(nuevoIdCliente) + "', client_name = '" + nuevoNombre + "', client_lastname = '" + nuevoApellido + "' WHERE id_client = " + std::to_string(idCliente);
+        dbManager.ejecutarSQL(comandoSQL);
+        // Actualizar en cascada en otras tablas relacionadas
+        std::string actualizarCascadaSQL = "UPDATE BankAccount SET id_client = '" + std::to_string(nuevoIdCliente) + "' WHERE id_client = " + std::to_string(idCliente);
+        dbManager.ejecutarSQL(actualizarCascadaSQL);
+
+        std::cout << "Datos del cliente actualizados correctamente en la base de datos." << std::endl;
+
+        std::cout << std::endl;
+        std::cout << "Datos actualizados del Cliente:" << std::endl;
+        std::cout << "ID cliente: " << nuevoIdCliente << std::endl;
+        std::cout << "Nombre: " << nuevoNombre << std::endl;
+        std::cout << "Apellido: " << nuevoApellido << std::endl;
+        std::cout << std::endl;
     }
 
-    // Validar rango (ejemplo de rango)
-    if (idCuentaDolares < 0 || idCuentaDolares > 9999999999) {
-        throw std::out_of_range("ID de cuenta de dólares fuera del rango permitido");
-    }
 
-    informacion["idCuentaDolaresCliente"] = idCuentaDolares;
 }
 
-template<typename T>
-std::map<std::string, T> Cliente<T>::getInformacion() const {
-  return informacion;
-}
 
-template<typename T>
-void Cliente<T>::obtenerInformacion() {
-    T idCliente;
-    std::string nombre, apellido;
-    bool success = false;
+// Método para eliminar un cliente por completo en la base de datos
+void Cliente::eliminarCliente(DBManager& dbManager) {
+
+    // Limpiar el buffer de entrada antes de pedir datos
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     // Bucle para obtener ID del cliente
-    while (!success) {
+    while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente: ";
-            std::cin >> idCliente;
-            if (std::cin.fail()) {
-                throw std::invalid_argument("El ID del cliente debe ser un número.");
+            std::cout << "Ingrese el ID del cliente que desea eliminar (máximo 9 digitos): ";
+            std::string input;
+            std::getline(std::cin, input);
+
+            // Verificar tipo de dato (debe ser un entero)
+            std::stringstream ss(input);
+            int temp;
+            if (!(ss >> temp) || !ss.eof()) {
+                throw std::invalid_argument("El ID del cliente debe ser un numero entero.");
             }
-            setIdCliente(idCliente); // Usar el método set para establecer el valor
-            success = true;
-        } catch (const std::exception& e) {
+
+            // Verificar tamaño de dato
+            if (idCliente < 0 || idCliente > 999999999) {
+                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida (9 digitos).");
+            }
+
+            idCliente = temp; // Asignar el valor convertido a int a idCliente
+
+            break; // Si todo está bien, salir del bucle
+
+        } catch (const std::invalid_argument& e) {
             std::cerr << "Error: " << e.what() << std::endl;
-            std::cin.clear(); // Limpiar el estado de error del cin
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignorar el resto de la entrada
-        }
-    }
-
-    success = false;
-
-    // Bucle para obtener el nombre del cliente
-    while (!success) {
-        try {
-            std::cout << "Ingrese el nombre del cliente: ";
-            std::cin >> nombre;
-            setNombreCliente(nombre); // Usar el método set para establecer el valor
-            success = true;
-        } catch (const std::exception& e) {
+        } catch (const std::out_of_range& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }
     }
 
-    success = false;
+    // Consultar si el cliente existe en la base de datos
+    std::string consulta = "SELECT id_client FROM Client WHERE id_client = " + std::to_string(idCliente);
+    std::string resultado = dbManager.ejecutarConsulta(consulta);
 
-    // Bucle para obtener el apellido del cliente
-    while (!success) {
-        try {
-            std::cout << "Ingrese el apellido del cliente: ";
-            std::cin >> apellido;
-            setApellidoCliente(apellido); // Usar el método set para establecer el valor
-            success = true;
-        } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
-        }
-    }
-}
-
-template<typename T>
-bool Cliente<T>::insertarInformacionBaseDeDatos(DBManager& dbManager) {
-    // Asumiendo que los datos ya están en el formato correcto y no necesitan ser escapados ni convertidos
-    int idCliente = informacion["idCliente"];
-    std::string nombreCliente = informacion["nombreCliente"];
-    std::string apellidoCliente = informacion["apellidoCliente"];
-    int idCuentaColonesCliente = informacion["idCuentaColonesCliente"];
-    int idCuentaDolaresCliente = informacion["idCuentaDolaresCliente"];
-
-    // Construimos la consulta SQL con los nuevos nombres de las columnas
-    std::string query = "INSERT INTO Clientes (id_client, client_name, client_lastname, id_colones_account, id_dolares_account) VALUES (";
-    query += std::to_string(idCliente) + ", ";
-    query += "'" + nombreCliente + "', ";
-    query += "'" + apellidoCliente + "', ";
-    query += std::to_string(idCuentaColonesCliente) + ", ";
-    query += std::to_string(idCuentaDolaresCliente) + ");";
-
-    // Ejecutamos la consulta SQL
-    dbManager.ejecutarSQL(query);
-
-    return true;
-
-}
-
-
-template<typename T>
-void Cliente<T>::actualizarDatos(DBManager& dbManager) {
-    int idCliente;
-    std::string nuevoNombre, nuevoApellido;
-
-    // Solicitar al usuario que ingrese el ID del cliente a actualizar en un bucle para manejar excepciones
-    while (true) {
-        try {
-            std::cout << "Ingrese el ID del cliente a actualizar: ";
-            std::cin >> idCliente;
-            setIdCliente(idCliente);  // Validar y establecer el ID del cliente
-
-            // Si no se lanzó ninguna excepción, salir del bucle
-            break;
-        } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << "\nPor favor, intente de nuevo." << std::endl;
-        }
+    // Verificar si el resultado está vacío (no existe el cliente)
+    if (resultado.empty()) {
+        std::cerr << std::endl << "El cliente con ID " << idCliente << " no esta registrado en la base de datos. No se puede eliminar." << std::endl;
+        return; // Salir del método si el cliente no está registrado
     }
 
-    // Consultar y mostrar los datos actuales del cliente asociado al ID antes de la actualización
-    std::cout << "Datos actuales del cliente con ID " << idCliente << " antes de la actualización:" << std::endl;
-    std::string consultaAntes = "SELECT id_client, client_name, client_lastname, id_colones_account, id_dolares_account FROM Client WHERE id_client = " + std::to_string(idCliente);
-    std::string resultadoConsultaAntes = dbManager.ejecutarConsulta(consultaAntes);
-    std::cout << resultadoConsultaAntes << std::endl;  // Imprimir el resultado de la consulta antes de la actualización
-
-    // Solicitar al usuario que ingrese el nuevo nombre y apellido en un bucle para manejar excepciones
-    while (true) {
-        try {
-            std::cout << "Ingrese el nuevo nombre del cliente: ";
-            std::cin.ignore();  // Ignorar el salto de línea anterior
-            std::getline(std::cin, nuevoNombre);
-            setNombreCliente(nuevoNombre);  // Validar y establecer el nuevo nombre
-
-            std::cout << "Ingrese el nuevo apellido del cliente: ";
-            std::getline(std::cin, nuevoApellido);
-            setApellidoCliente(nuevoApellido);  // Validar y establecer el nuevo apellido
-
-            // Si no se lanzó ninguna excepción, salir del bucle
-            break;
-        } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << "\nPor favor, intente de nuevo." << std::endl;
-        }
+    // Eliminar al cliente de la base de datos
+    std::string comandoSQL = "DELETE FROM Client WHERE id_client = " + std::to_string(idCliente);
+    // Eliminación en cascada en otras tablas relacionadas
+    std::string eliminarCascadaSQL = "DELETE FROM BankAccount WHERE id_client = " + std::to_string(idCliente);
+            
+    try {
+        dbManager.ejecutarSQL(comandoSQL);
+        dbManager.ejecutarSQL(eliminarCascadaSQL);
+        std::cout << "Cliente con ID " << idCliente << " eliminado correctamente." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error al intentar eliminar el cliente: " << e.what() << std::endl;
     }
 
+    
 
-    // Construir la consulta SQL para actualizar nombre y apellido
-    std::string actualizarQuery = "UPDATE Clientes SET client_name = '" + nuevoNombre + "', client_lastname = '" + nuevoApellido + "' WHERE id_client = " + std::to_string(idCliente);
-
-    // Ejecutar la consulta para actualizar en la base de datos
-    dbManager.ejecutarSQL(actualizarQuery);
-
-    // Mostrar mensaje de éxito
-    std::cout << "Nombre y apellido del cliente actualizados correctamente." << std::endl;
-
-    // Consultar y mostrar los datos actualizados del cliente asociado al ID después de la actualización
-    std::cout << "Datos actualizados del cliente con ID " << idCliente << ":" << std::endl;
-    std::string consultaDespues = "SELECT id_client, client_name, client_lastname, id_colones_account, id_dolares_account FROM Client WHERE id_client = " + std::to_string(idCliente);
-    std::string resultadoConsultaDespues = dbManager.ejecutarConsulta(consultaDespues);
-    std::cout << resultadoConsultaDespues << std::endl;  // Imprimir el resultado de la consulta después de la actualización
 }

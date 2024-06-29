@@ -1,7 +1,7 @@
 #include "Funciones.hpp"
 #include "Transaccion.hpp"
 #include "AbonoPrestamo.hpp"
-
+#include "CDP.hpp"
 
 #include "Menus.hpp"
 #include "Prestamo.hpp"
@@ -9,6 +9,7 @@
 #include "Retiro.hpp"
 #include "Transferencia.hpp"
 
+#include "Cliente.hpp"
 
 /*
 ----------------------------------------
@@ -23,9 +24,9 @@ void menuCS(DBManager& db) {
     bool detener = false;
     int operacion, cliente;
 
-    cout << "-----------------------------------------------------" << endl;
-    cout << "|          INTERFAZ DE ATENCION AL CLIENTE          |" << endl;
-    cout << "-----------------------------------------------------" << endl;
+    cout << "---------------------------------------------------------------------" << endl;
+    cout << "|                  INTERFAZ DE ATENCION AL CLIENTE                  |" << endl;
+    cout << "---------------------------------------------------------------------" << endl;
 
     // Inicializacion del id_cliente
     cout << "Ingrese el ID del cliente: ";
@@ -81,8 +82,9 @@ void menuPlatform(int id_client, DBManager& db) {
     int modo;
 
     // Instancias predefinidas
-    //Cliente* cliente = Cliente();
+    Cliente* cliente = new Cliente();
     Prestamo* prestamo = new Prestamo(id_client, db);
+    CDP* certificado = new CDP(id_client, db);
 
     // Inicio del menu principal
     while (detener == false) {
@@ -104,22 +106,93 @@ void menuPlatform(int id_client, DBManager& db) {
         // Determinacion de funcion a ejecutar
         switch (modo) {
             case CLIENTE: {
-                cout << "cliente" << endl;
+                bool detenerCliente = false;
+                while (!detenerCliente) {
+                    cout << "Cliente - Opciones:\n1. Crear Cliente\n2. Ver Clientes\n3. Actualizar Cliente\n4. Eliminar Cliente\n5. Retornar" << endl;
+                    cout << "Indique el modo de operacion: ";
+                    cin >> input;
+                    int subModo = verifyMenuOption(input, 5); // Maneja errores
+                    cin.ignore();
+
+                    switch (subModo) {
+                        case 1:
+                            cliente->obtenerInformacion(db);
+                            break;
+                        case 2:
+                            cliente->imprimirDatos(db);
+                            break;
+                        case 3:
+                            cliente->actualizarDatos(db);
+                            break;
+                        case 4:
+                            cliente->eliminarCliente(db);
+                            break;
+                        case 5:
+                            detenerCliente = true;
+                            break;
+                        default:
+                            cout << "La operacion ingresada no es valida." << endl;
+                            break;
+                    }
+                }
                 break;
             }
             case LOAN: {
-                // Crear un prestamo
-                prestamo->createLoan();
+                bool detenerPrestamo = false;
+                while (!detenerPrestamo) {
+                    cout << "Prestamos - Opciones:\n1. Crear Prestamo\n2. Ver Prestamos\n3. Buscar Prestamo\n4. Retornar" << endl;
+                    cout << "Indique el modo de operacion: ";
+                    cin >> input;
+                    int subModo = verifyMenuOption(input, 4); // Maneja errores
+                    cin.ignore();
 
-                // Ver todos los prestamos
-                prestamo->viewAll();
-
-                // Buscar un prestamo
-                prestamo->searchLoans();
+                    switch (subModo) {
+                        case 1:
+                            prestamo->createLoan();
+                            break;
+                        case 2:
+                            prestamo->viewAll();
+                            break;
+                        case 3:
+                            prestamo->searchLoans();
+                            break;
+                        case 4:
+                            detenerPrestamo = true;
+                            break;
+                        default:
+                            cout << "La operacion ingresada no es valida." << endl;
+                            break;
+                    }
+                }
                 break;
             }    
-            case CDP: {
-                cout << "cdp" << endl;
+            case CerDP: {
+                bool detenerCDP = false;
+                while (!detenerCDP) {
+                    cout << "Certificados de Deposito - Opciones:\n1. Crear CDP\n2. Ver CDP\n3. Buscar CDP\n4. Retornar" << endl;
+                    cout << "Indique el modo de operacion: ";
+                    cin >> input;
+                    int subModo = verifyMenuOption(input, 4); // Maneja errores
+                    cin.ignore();
+
+                    switch (subModo) {
+                        case 1:
+                            certificado->createCDP();
+                            break;
+                        case 2:
+                            certificado->viewAll();
+                            break;
+                        case 3:
+                            certificado->searchCDP();
+                            break;
+                        case 4:
+                            detenerCDP = true;
+                            break;
+                        default:
+                            cout << "La operacion ingresada no es valida." << endl;
+                            break;
+                    }
+                }
                 break;
             }
             case RETURN_CS: {
@@ -132,11 +205,12 @@ void menuPlatform(int id_client, DBManager& db) {
                 break;
             }
         }
-
     }
 
     // Liberamos memoria
     delete prestamo;
+    delete certificado;
+    delete cliente;
 }
 
 
@@ -146,12 +220,11 @@ void menuDocuments(int id_client, DBManager& db) {
     Transaccion* transaccion = nullptr;
 
     cout << "-------------------------------------" << endl;
-    cout << "|            TRANSACCION            |" << endl;
+    cout << "|      SOLICITUD DE DOCUMENTOS      |" << endl;
     cout << "-------------------------------------" << endl;
-    cout << "|  1. Deposito                      |" << endl;
-    cout << "|  2. Retiro                        |" << endl;
-    cout << "|  3. Transferencia                 |" << endl;
-    cout << "|  3. Abono a prestamos             |" << endl;
+    cout << "|  1. Reporte de Prestamos          |" << endl;
+    cout << "|  2. Registro de Transacciones     |" << endl;
+    cout << "|  3. Retornar a CS                 |" << endl;
     cout << "-------------------------------------" << endl;
     cout << "Ingrese la transaccion: " << endl;
 

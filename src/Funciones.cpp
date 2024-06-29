@@ -86,11 +86,11 @@ map<string, string> calculateLoan(){
     bool isValid = false;
 
     // Determinar el tipo de prestamo
-    cout << "\n-----------------------------------------------------" << endl;
-    cout << "|                  TIPO DE PRESTAMO                 |" << endl;
-    cout << "-----------------------------------------------------" << endl;
-    cout << "|  1. Personal  |  2. Prendario  |  3. Hipotecario  |" << endl;
-    cout << "-----------------------------------------------------" << endl;
+    cout << "\n---------------------------------------------------------------------" << endl;
+    cout << "|                         TIPO DE PRESTAMO                          |" << endl;
+    cout << "---------------------------------------------------------------------" << endl;
+    cout << "|     1. Personal    |     2. Prendario     |    3. Hipotecario     |" << endl;
+    cout << "---------------------------------------------------------------------" << endl;
     cout << "Indique el tipo de prestamo: ";
     cin >> input;
     option = verifyMenuOption(input, LOAN_TYPE_MAX);
@@ -164,9 +164,9 @@ map<string, string> calculateCDP() {
     map<string, string> data;                                  // return data
 
     // Solicitud de datos del CDP
-    cout << "\n-----------------------------------------------------" << endl;
-    cout << "|           DATOS DEL CERTIFICADO DE DEPÓSITO       |" << endl;
-    cout << "-----------------------------------------------------" << endl;
+    cout << "\n---------------------------------------------------------------------" << endl;
+    cout << "|                  DATOS DEL CERTIFICADO DE DEPÓSITO               |" << endl;
+    cout << "---------------------------------------------------------------------" << endl;
     cout << "Tipo de cambio (USD/CRC): ";
     cin >> currency;
     cin.ignore();

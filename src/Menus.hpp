@@ -30,8 +30,8 @@
  */
 enum opcionesCS {
     PLATAFORMA = 1,
-    DOC_REQUEST,
     TRANSACCION,
+    DOC_REQUEST,
     FINALIZAR_CS,
     CS_MAX // para saber cuantas opciones tenemos
 };
@@ -61,7 +61,7 @@ enum transacciones {
 enum opt_platform {
     CLIENTE = 1,
     LOAN,
-    CDP,
+    CerDP,
     RETURN_CS,
     OPT_PLAT_MAX // para saber cuantas opciones tenemos
 };

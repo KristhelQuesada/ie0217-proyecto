@@ -10,6 +10,9 @@ void Deposito::ejecutar() {
     double monto;
     std::string moneda;
     int cuentaDestino;
+    std::string beginTransactionSQL = "START TRANSACTION; ";
+    std::string endTransactionSQL   = "COMMIT; ";
+
 
     // Solicitar y validar el monto
     while (true) {
@@ -80,6 +83,9 @@ void Deposito::ejecutar() {
               << " en la cuenta " << cuentaDestino << ". Balance anterior: " << balanceAnterior
               << ", Balance posterior: " << balancePosterior << std::endl;
 
+    db.ejecutarSQL(beginTransactionSQL);
+    //db.ejecutarSQL(endTransactionSQL);
+ 
     // Actualizar el balance en la base de datos
     std::string comandoSQL = "UPDATE Cuentas SET balance = " + std::to_string(balancePosterior) +
                              " WHERE target_account = " + std::to_string(cuentaDestino);
@@ -89,6 +95,8 @@ void Deposito::ejecutar() {
     std::string registrarTransaccion = "INSERT INTO Transacciones (tipo, cuenta, monto, fecha) VALUES ('deposito', '" +
                                        std::to_string(cuentaDestino) + "', " + std::to_string(monto) + ", NOW())";
     db.ejecutarSQL(registrarTransaccion);
+
+    db.ejecutarSQL(endTransactionSQL);
 
     std::cout << "Depósito realizado y base de datos actualizada correctamente." << std::endl;
 }

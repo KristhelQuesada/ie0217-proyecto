@@ -817,3 +817,17 @@ ALTER TABLE `project-ie0217-db`.Transaction DROP FOREIGN KEY origin_account_t;
 ALTER TABLE `project-ie0217-db`.Transaction DROP FOREIGN KEY fk_currency_tran;
 
 
+
+-- ------------------------------------------------------------------------
+--               Para los TRANSACTION  (query no la Tabla)               --
+-- ------------------------------------------------------------------------
+/*Disabling the auto-commit  */
+SET autocommit = 0;
+
+
+-- ------------------------------------------------------------------------
+--               Eliminaremos columnas  para AbonoPrestamo               --
+-- ------------------------------------------------------------------------
+ALTER TABLE Payment
+DROP COLUMN total_capital_amount,
+DROP COLUMN total_interest_amount;

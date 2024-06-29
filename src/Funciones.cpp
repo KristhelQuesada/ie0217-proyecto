@@ -1,7 +1,7 @@
 #include "Funciones.hpp"
 #include "Transaccion.hpp"
 #include "AbonoPrestamo.hpp"
-#include "Prestamo.hpp"
+//#include "Prestamo.hpp"
 #include <cmath> // Para usar la función pow(base, exponential)
 #include <iomanip> // precision de los datos
 using namespace std;

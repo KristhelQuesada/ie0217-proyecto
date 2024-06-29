@@ -16,7 +16,6 @@ private:
 public:
     Sistema(const std::string& dbPath);
 
-    int inicializarSistema();
 /*
 
     // Métodos centrados en las operaciones principales del sistema

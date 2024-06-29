@@ -1,12 +1,14 @@
 #include "Funciones.hpp"
 #include "Transaccion.hpp"
 #include "AbonoPrestamo.hpp"
-#include "Prestamo.hpp"
-#include "Menus.hpp"
 
+
+#include "Menus.hpp"
+#include "Prestamo.hpp"
 #include "Deposito.hpp"
 #include "Retiro.hpp"
 #include "Transferencia.hpp"
+
 
 /*
 ----------------------------------------

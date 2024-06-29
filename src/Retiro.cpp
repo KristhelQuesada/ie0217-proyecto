@@ -10,6 +10,8 @@ void Retiro::ejecutar() {
     double monto;
     std::string moneda;
     std::string cuentaOrigen;
+    std::string beginTransactionSQL = "START TRANSACTION; ";
+    std::string endTransactionSQL   = "COMMIT; ";
 
     // Solicitar y validar el monto
     while (true) {
@@ -81,6 +83,9 @@ void Retiro::ejecutar() {
     double balancePosterior = balanceAnterior - monto;
     std::cout << "Balance posterior al retiro: " << balancePosterior << std::endl;
 
+    db.ejecutarSQL(beginTransactionSQL);
+    //db.ejecutarSQL(endTransactionSQL);
+
     // Actualizar el balance en la base de datos
     std::string comandoSQL = "UPDATE Cuentas SET balance = " + std::to_string(balancePosterior) +
                              " WHERE target_account = '" + cuentaOrigen + "'";
@@ -90,6 +95,8 @@ void Retiro::ejecutar() {
     std::string registrarTransaccion = "INSERT INTO Transacciones (tipo, cuenta, monto, fecha) VALUES ('retiro', '" +
                                        cuentaOrigen + "', " + std::to_string(monto) + ", NOW())";
     db.ejecutarSQL(registrarTransaccion);
+
+    db.ejecutarSQL(endTransactionSQL);
 
     std::cout << "Retiro realizado y base de datos actualizada correctamente." << std::endl;
 }

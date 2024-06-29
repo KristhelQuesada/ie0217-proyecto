@@ -27,7 +27,7 @@ enum initialMenu {
 // ----------------------------------------------------------
 //                          MAIN CODE
 // ----------------------------------------------------------
-int inicializarSistema() {
+int main() {
     // Variables
     string input;
     bool detener = false;
@@ -46,7 +46,7 @@ int inicializarSistema() {
         cout << "\n---------------------------------\n";
         cout << "1. Atencion al cliente\n";
         cout << "2. Informacion de Prestamos\n";
-        cout << "5. Salir del programa";
+        cout << "3. Salir del programa";
         cout << "\n---------------------------------";
         cout << "\nIndique el modo de operacion: ";
         cin >> input;

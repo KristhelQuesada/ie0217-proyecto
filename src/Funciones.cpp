@@ -133,7 +133,7 @@ map<string, string> calculateLoan(){
 
     // Calculo de cuota mensual y el monto final a pagar (repayment)
     monthly_payment = (p*r)/(1-pow(1+r, -n));
-    repayment = monthly_payment*n;
+    repayment = p + monthly_payment*n;
 
     // Impresion de resultados
     cout << "\n>> LOS RESULTADOS DEL PRESTAMO SOLICITADO SON:" <<  endl;

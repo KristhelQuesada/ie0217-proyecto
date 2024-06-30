@@ -116,14 +116,14 @@ void menuPlatform(int id_client, DBManager& db) {
     // Inicio del menu principal
     while (detener == false) {
         // Menu para el ususario
-        cout << "------------------------------------" << endl;
-        cout << "|            PLATAFORMA            |" << endl;
-        cout << "------------------------------------" << endl;
-        cout << "|  1. Cliente                      |" << endl;
-        cout << "|  2. Prestamos                    |" << endl;
-        cout << "|  3. Certificados de Deposito     |" << endl;
-        cout << "|  4. Retornar a CS                |" << endl;
-        cout << "------------------------------------" << endl;
+        cout << "-------------------------------------" << endl;
+        cout << "|            PLATAFORMA             |" << endl;
+        cout << "-------------------------------------" << endl;
+        cout << "| 1. Cliente                        |" << endl;
+        cout << "| 2. Prestamos                      |" << endl;
+        cout << "| 3. Certificados de Deposito       |" << endl;
+        cout << "| 4. Retornar a atencion al cliente |" << endl;
+        cout << "-------------------------------------" << endl;
         cout << "\n Indique el modo de operacion: ";
         cin >> input;
         modo = verifyMenuOption(input, OPT_PLAT_MAX); // Maneja errores
@@ -243,80 +243,121 @@ void menuPlatform(int id_client, DBManager& db) {
 
 void menuDocuments(int id_client, DBManager& db) {
     int option;
-    string input;
-    Transaccion* transaccion = nullptr;
+    std::string input;
+    bool detener = false;
 
-    cout << "-------------------------------------" << endl;
-    cout << "|      SOLICITUD DE DOCUMENTOS      |" << endl;
-    cout << "-------------------------------------" << endl;
-    cout << "|  1. Reporte de Prestamos          |" << endl;
-    cout << "|  2. Registro de Transacciones     |" << endl;
-    cout << "|  3. Retornar a CS                 |" << endl;
-    cout << "-------------------------------------" << endl;
-    cout << "Ingrese la transaccion: " << endl;
+    while (!detener) {
+        std::cout << "-------------------------------------" << std::endl;
+        std::cout << "|      SOLICITUD DE DOCUMENTOS      |" << std::endl;
+        std::cout << "-------------------------------------" << std::endl;
+        std::cout << "| 1. Reporte de Prestamos           |" << std::endl;
+        std::cout << "| 2. Registro de Transacciones      |" << std::endl;
+             cout << "| 3. Retornar a atencion al cliente |" << endl;
+        std::cout << "-------------------------------------" << std::endl;
+        std::cout << "Ingrese la operacion a realizar: ";
 
+        std::cin >> input;
+        option = verifyMenuOption(input, DOCS_MAX); // Maneja errores
+        std::cin.ignore();
 
-    cin >> input;
-    option = verifyMenuOption(input, DOCS_MAX); // Maneja errores
-    cin.ignore();
+        switch (option) {
+            case RDP: {
+                std::cout << "Reporte de prestamos" << std::endl;
 
-    switch (option) {
-        case RDP:
-            cout << "Reporte de prestamos" << endl;
-            break;
-        case RDT:
-            cout << "Registro de transacciones" << endl;
-            break;
-        default:
-            cout << "La transaccion seleccionada fue invalida." << endl;
-            break;
+                if (id_client == 0) {
+                    std::cout << "No se puede hacer reporte de prestamos porque el cliente no está registrado en el sistema." << std::endl;
+                } else {
+                    try {
+                        std::string client_id_str = std::to_string(id_client);
+                        db.desplegarRegistroTransacciones(client_id_str);
+                    } catch (const std::invalid_argument& e) {
+                        std::cout << "Número de cuenta inválido. Inténtelo de nuevo." << std::endl;
+                    } catch (const std::out_of_range& e) {
+                        std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo." << std::endl;
+                    }
+                }
+                break;
+            }
+            case RDT: {
+                std::cout << "Reporte de transacciones" << std::endl;
+                std::string accountID;
+                std::cout << "Ingrese el número de cuenta: ";
+                std::cin >> accountID;
+
+                try {
+                    db.desplegarRegistroTransacciones(accountID);
+                } catch (const std::invalid_argument& e) {
+                    std::cout << "Número de cuenta inválido. Inténtelo de nuevo." << std::endl;
+                } catch (const std::out_of_range& e) {
+                    std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo." << std::endl;
+                }
+                break;
+            }
+            case RETURN_CS3: {
+                std::cout << "Retornando a atencion al cliente..." << std::endl;
+                detener = true;
+                break;
+            }
+            default:
+                std::cout << "La transaccion seleccionada fue invalida." << std::endl;
+                break;
+        }
     }
 }
 
 
 void menuTransactions(int id_client, DBManager& db) {
     int option;
-    string input;
+    std::string input;
     Transaccion* transaccion = nullptr;
+    bool detener = false;
 
-    cout << "-------------------------------------" << endl;
-    cout << "|            TRANSACCION            |" << endl;
-    cout << "-------------------------------------" << endl;
-    cout << "|  1. Deposito                      |" << endl;
-    cout << "|  2. Retiro                        |" << endl;
-    cout << "|  3. Transferencia                 |" << endl;
-    cout << "|  3. Abono a prestamos             |" << endl;
-    cout << "-------------------------------------" << endl;
-    cout << "Ingrese la transaccion: " << endl;
+    while (!detener) {
+        std::cout << "-------------------------------------" << std::endl;
+        std::cout << "|            TRANSACCION            |" << std::endl;
+        std::cout << "-------------------------------------" << std::endl;
+        std::cout << "| 1. Deposito                       |" << std::endl;
+        std::cout << "| 2. Retiro                         |" << std::endl;
+        std::cout << "| 3. Transferencia                  |" << std::endl;
+        std::cout << "| 4. Abono a prestamos              |" << std::endl;
+             cout << "| 5. Retornar a atencion al cliente |" << endl;
+        std::cout << "-------------------------------------" << std::endl;
+        std::cout << "Ingrese la transaccion: ";
+        
+        std::cin >> input;
+        option = verifyMenuOption(input, TRAN_MAX); // Maneja errores
+        std::cin.ignore();
 
+        switch (option) {
+            case DEPOSIT:
+                std::cout << "Opcion Deposito" << std::endl;
+                transaccion = new Deposito(id_client, db);
+                break;
+            case WITHDRAWAL:
+                std::cout << "Opcion Retiro" << std::endl;
+                transaccion = new Retiro(id_client, db);
+                break;
+            case TRANSFER:
+                std::cout << "Opcion Transferencia" << std::endl;
+                transaccion = new Transferencia(id_client, db);
+                break;
+            case LOAN_PAYMENT:
+                std::cout << "Opcion Abono a prestamos" << std::endl;
+                transaccion = new AbonoPrestamo(id_client, db);
+                break;
+            case RETURN_CS2: // Opción para retornar al menú principal
+                std::cout << "Retornando a atencion al cliente..." << std::endl;
+                detener = true;
+                break;
+            default:
+                std::cout << "La transaccion seleccionada fue invalida." << std::endl;
+                break;
+        }
 
-    cin >> input;
-    option = verifyMenuOption(input, TRAN_MAX); // Maneja errores
-    cin.ignore();
-
-    switch (option) {
-        case DEPOSIT:
-            cout << "Opcion 1" << endl;
-            transaccion = new Deposito(id_client, db);
-            break;
-        case WITHDRAWAL:
-            cout << "Opcion 2" << endl;
-            transaccion = new Retiro(id_client, db);
-            break;
-        case TRANSFER:
-            cout << "Opcion 3" << endl;
-            // transaccion = new Transferencia(id_client, db);
-            break;
-        case LOAN_PAYMENT:
-            transaccion = new AbonoPrestamo(id_client, db);
-            break;
-        default:
-            cout << "La transaccion seleccionada fue invalida." << endl;
-            break;
-    }
-
-    if (transaccion) {
-        transaccion->ejecutar();
-        delete transaccion;
+        if (transaccion) {
+            transaccion->ejecutar();
+            delete transaccion;
+            transaccion = nullptr;
+        }
     }
 }

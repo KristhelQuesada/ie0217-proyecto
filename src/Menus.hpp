@@ -48,6 +48,7 @@ enum transacciones {
     WITHDRAWAL,
     TRANSFER,
     LOAN_PAYMENT,
+    RETURN_CS2,
     TRAN_MAX // para saber cuantas opciones tenemos
 };
 
@@ -76,6 +77,7 @@ enum opt_platform {
 enum docs_requested {
     RDP = 1,
     RDT,
+    RETURN_CS3,
     DOCS_MAX // para saber cuantas opciones tenemos
 };
 

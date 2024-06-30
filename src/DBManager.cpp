@@ -280,8 +280,19 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaTransferencia(cons
 ------------------------------------------------------------------------------------
 */
 double DBManager::obtenerTipoDeCambio(const std::string& monedaOrigen, const std::string& monedaDestino) {
-    // Caso ideal para pruebas: siempre devolver un tipo de cambio de 1.1
-    return 1.1;
+    // Definir tipos de cambio
+    const double USD_TO_CRC = 523.50;
+    const double CRC_TO_USD = 0.0019;
+
+    if (monedaOrigen == "USD" && monedaDestino == "CRC") {
+        return USD_TO_CRC;
+    } else if (monedaOrigen == "CRC" && monedaDestino == "USD") {
+        return CRC_TO_USD;
+    } else if (monedaOrigen == monedaDestino) {
+        return 1.0; // Misma moneda, tipo de cambio 1 a 1
+    } else {
+        throw std::invalid_argument("Tipo de cambio no soportado para las monedas especificadas.");
+    }
 }
 
 

@@ -98,7 +98,7 @@ void Deposito::ejecutar() {
     // Registrar la transacción
     std::string registrarTransaccion = "INSERT INTO Transaction (transaction_type, currency, "
                                        "transaction_amount, origin_account, target_account, detail, "
-                                       "previous_qty, present_qty) VALUES ('DP', '" + moneda + "', "
+                                       "previous_qty, present_qty) VALUES ('DP', '" + tipoCuenta + "', "
                                        + std::to_string(monto) + ", 0, " + std::to_string(cuentaDestino) + ", "
                                        + "'" + detalles + "', " + std::to_string(balanceAnterior) + ", "
                                        + std::to_string(balancePosterior) + ")"+ ";";

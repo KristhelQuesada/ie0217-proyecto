@@ -109,7 +109,6 @@ void Deposito::ejecutar() {
                              " WHERE id_account = " + std::to_string(cuentaDestino) + ";";
     db.ejecutarSQL(comandoSQL);
 
-
     db.ejecutarSQL(endTransactionSQL);
 
     std::cout << "Depósito realizado y base de datos actualizada correctamente." << std::endl;

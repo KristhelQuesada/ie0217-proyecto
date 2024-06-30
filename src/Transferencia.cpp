@@ -24,7 +24,7 @@ void Transferencia::ejecutar() {
 
             // Verificar longitud de la entrada
             if (cuentaOrigen.empty() || cuentaOrigen.size() > 10) {
-                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 caracteres).");
+                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 carácteres).");
             }
 
             // Verificar si es un número entero
@@ -51,7 +51,7 @@ void Transferencia::ejecutar() {
 
             // Verificar longitud de la entrada
             if (cuentaOrigen.empty() || cuentaOrigen.size() > 10) {
-                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 caracteres).");
+                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 carácteres).");
             }
 
             // Verificar si es un número entero
@@ -81,7 +81,7 @@ void Transferencia::ejecutar() {
             std::getline(std::cin, input);
 
             // Intentar convertir la entrada a double
-            std::size_t pos; // Variable para detectar caracteres no convertidos
+            std::size_t pos; // Variable para detectar carácteres no convertidos
             monto = std::stod(input, &pos);
 
             // Verificar si el monto es mayor que cero
@@ -94,7 +94,7 @@ void Transferencia::ejecutar() {
         } catch (const std::invalid_argument& e) {
             std::cout << "Error: " << e.what() << "\n";
         } catch (...) {
-            std::cout << "Error inesperado. Intentelo de nuevo.\n";
+            std::cout << "Error inesperado. Inténtelo de nuevo.\n";
         }
 
         return;
@@ -105,12 +105,12 @@ void Transferencia::ejecutar() {
     bool detalleValido = false;
 
     while (!detalleValido) {
-        std::cout << "Ingrese el detalle de la transacción (maximo 255 caracteres): ";
+        std::cout << "Ingrese el detalle de la transacción (máximo 255 carácteres): ";
         std::getline(std::cin, detalle);
 
         try {
             if (detalle.length() > 255) {
-                throw std::length_error("El detalle de la transacción no puede exceder los 255 caracteres.");
+                throw std::length_error("El detalle de la transacción no puede exceder los 255 carácteres.");
             }
             detalleValido = true; // Si no hay excepción, el detalle es válido y se sale del ciclo
         } catch (const std::length_error& e) {

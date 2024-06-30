@@ -20,7 +20,7 @@ void Retiro::ejecutar() {
         std::cin >> cuentaOrigen;
         if (std::cin.fail() || cuentaOrigen <= 0) {
             std::cin.clear(); // Limpiar el estado de error
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max()); // Limpiar el buffer
+            std::cin.ignore(); // Limpiar el buffer
             std::cout << "Número de cuenta inválido. Inténtelo de nuevo.\n";
         } else {
             std::cin.ignore(); // Limpiar el buffer
@@ -29,11 +29,14 @@ void Retiro::ejecutar() {
     }
 
     // Solicitar y validar la moneda
-    std::cout << "Ingrese la moneda: ";
-    std::cin >> moneda;
-    if (moneda.empty()) {
-        std::cout << "Moneda inválida. Inténtelo de nuevo.\n";
-        return;
+    while (true) {
+        std::cout << "Ingrese la moneda (CRC o USD): ";
+        std::getline(std::cin, moneda);
+        if (moneda != "CRC" && moneda != "USD") {
+            std::cout << "Moneda inválida. Inténtelo de nuevo.\n";
+        } else {
+            break;
+        }
     }
 
     // Solicitar y validar el monto

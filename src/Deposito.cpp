@@ -29,13 +29,15 @@ void Deposito::ejecutar() {
     }
 
     // Solicitar y validar la moneda
-    std::cout << "Ingrese la moneda: ";
-    std::getline(std::cin, moneda);
-    if (moneda.empty()) {
-        std::cout << "Moneda inválida. Inténtelo de nuevo.\n";
-        return;
+    while (true) {
+        std::cout << "Ingrese la moneda (CRC o USD): ";
+        std::getline(std::cin, moneda);
+        if (moneda != "CRC" && moneda != "USD") {
+            std::cout << "Moneda inválida. Inténtelo de nuevo.\n";
+        } else {
+            break;
+        }
     }
-    std::cout << "Moneda: '" << moneda << "'" << std::endl;
 
     // Solicitar y validar el monto
     while (true) {

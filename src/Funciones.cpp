@@ -23,6 +23,7 @@ enum loanTypes {
     PERSONAL = 1,
     PRENDARIO,
     HIPOTECARIO,
+    RETURN_LOAN,
     LOAN_TYPE_MAX // para saber cuantas opciones tenemos
 };
 
@@ -94,29 +95,29 @@ string to_string_with_precision(double value, int precision) {
 }
 
 
-// Funcion que calcula el monto por cuota y saldo total a pagar de
-// un credito a tasa fija.
-map<string, string> calculateLoan(){
+// Función que calcula el monto por cuota y saldo total a pagar de
+// un crédito a tasa fija.
+map<string, string> calculateLoan() {
     // Variables
     double p, i, n, r;                  // inputs
     double monthly_payment, repayment;  // outputs
-    string loan_type, currency;  // str inputs
+    string loan_type, currency;         // str inputs
     map<string, string> data;           // return data
 
-    // Determinar el tipo de prestamo
+    // Determinar el tipo de préstamo
     // Declarar e inicializar variables
     string input;
     bool isValid = false;
     int option;
 
-    // Impresion del menu
+    // Impresión del menú
     cout << "\n---------------------------------------------------------------------" << endl;
-    cout << "|                         TIPO DE PRESTAMO                          |" << endl;
+    cout << "|                         TIPO DE PRÉSTAMO                          |" << endl;
     cout << "---------------------------------------------------------------------" << endl;
     cout << "|  1. Personal  |  2. Prendario   |  3. Hipotecario   |  4. Salir   |" << endl;
     cout << "---------------------------------------------------------------------" << endl;
 
-    while (isValid == false) {
+    while (!isValid) {
         cout << "Indique el tipo de préstamo: ";
         cin >> input;
         option = verifyMenuOption(input, LOAN_TYPE_MAX);
@@ -135,6 +136,9 @@ map<string, string> calculateLoan(){
                 loan_type = "HP";
                 isValid = true;
                 break;
+            case RETURN_LOAN:
+                cout << "Saliendo del cálculo de préstamo..." << endl;
+                return data; // Retorno temprano si se selecciona salir
             default:
                 cout << "La opción para el tipo de préstamo ingresado no es válida." << endl;
                 break;
@@ -143,7 +147,7 @@ map<string, string> calculateLoan(){
 
     cout << loan_type << endl;
 
-    // Determinar el tipo de cambio, monto, plazo e interes
+    // Determinar el tipo de cambio, monto, plazo e interés
     cout << "\n\n > Ingrese:" << endl;
     currency = verifyCurrency();
     cout << currency << endl;
@@ -152,14 +156,14 @@ map<string, string> calculateLoan(){
     i = verifyInterest(loan_type);
     n = verifyTerm();
 
-    // Calculo de tasa de interes periodica
-    r = i/(100*12);
+    // Cálculo de tasa de interés periódica
+    r = i / (100 * 12);
 
-    // Calculo de cuota mensual y el monto final a pagar (repayment)
-    monthly_payment = (p*r)/(1-pow(1+r, -n));
-    repayment = p + monthly_payment*n;
+    // Cálculo de cuota mensual y el monto final a pagar (repayment)
+    monthly_payment = (p * r) / (1 - pow(1 + r, -n));
+    repayment = p + monthly_payment * n;
 
-    // Impresion de resultados
+    // Impresión de resultados
     cout << "\n > Los resultados del préstamo solicitado son" << endl;
     cout << "- Cuota mensual: "
          << to_string_with_precision(monthly_payment, 2)
@@ -167,7 +171,7 @@ map<string, string> calculateLoan(){
          << "\n- Monto final a pagar: "
          << to_string_with_precision(repayment, 2) << " (" << currency << ")." << endl;
 
-    // Creacion del mapa
+    // Creación del mapa
     data["id_loan_type"] = loan_type;
     data["currency"] = currency;
     data["principal"] = to_string_with_precision(p, 2);
@@ -175,7 +179,6 @@ map<string, string> calculateLoan(){
     data["interest_rate"] = to_string_with_precision(i, 0);
     data["monthly_payment"] = to_string_with_precision(monthly_payment, 2);
     data["total_repayment"] = to_string_with_precision(repayment, 2);
-
 
     // Retornar la cuota
     return data;

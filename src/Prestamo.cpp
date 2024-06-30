@@ -34,7 +34,13 @@ void Prestamo::createLoan() {
     string final_query;
     stringstream query;
     map<string, string> data = calculateLoan();
-    
+
+    // Verificar si el mapa data está vacío, lo cual indica que el usuario seleccionó salir
+    if (data.empty()) {
+        cout << "Operación cancelada. No se creó ningún préstamo." << endl;
+        return;
+    }
+
     // Crear el query
     query << "INSERT INTO Loan(id_client, loan_term, id_loan_type, currency, principal, "
           << "interest_rate, monthly_payment, total_repayment, actual_debt) VALUES ("
@@ -49,9 +55,13 @@ void Prestamo::createLoan() {
           << data["total_repayment"] << ");"; // al inicio actual_debt = total_repayment
     final_query = query.str();                // pasa el objeto stringstream -> string
 
-    // Ejecución del query
-    db.ejecutarSQL(final_query);
-    cout << "\nEl préstamo ha sido creado con éxito!" <<  endl;
+    // Ejecución del query con manejo de excepciones
+    try {
+        db.ejecutarSQL(final_query);
+        cout << "\nEl préstamo ha sido creado con éxito!" << endl;
+    } catch (const std::exception& e) {
+        cerr << "Error al crear el préstamo: " << e.what() << endl;
+    }
 }
 
 

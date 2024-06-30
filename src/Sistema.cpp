@@ -63,12 +63,15 @@ int main() {
             case INFO_PRESTAMOS: {
                 map<string, string> loan_data = calculateLoan();
 
-                // Esto se borra =======================================
-                cout << "\nLos datos son los siguientes: " << endl;
-                for (const auto& pair : loan_data) {
-                    cout << pair.first << ": " << pair.second << endl;
+                // Verificar si el mapa loan_data está vacío
+                if (loan_data.empty()) {
+                    cout << "Operación cancelada. No se generaron datos de préstamo." << endl;
+                } else {
+                    cout << "\nLos datos son los siguientes: " << endl;
+                    for (const auto& pair : loan_data) {
+                        cout << pair.first << ": " << pair.second << endl;
+                    }
                 }
-                // =====================================================
                 break;
             }
             case SALIR: {

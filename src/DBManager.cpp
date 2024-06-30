@@ -64,7 +64,7 @@ void DBManager::conectar() {
 // Analizar si es util o no
 void DBManager::desplegarConsulta(const std::string& consulta, std::map<std::string, std::string> tableInfo) {
     // Esto debe comentarse tras la verificacion
-    std::cout << "Ejecutando consulta: " << consulta << "\n" << std::endl;
+    //std::cout << "Ejecutando consulta: " << consulta << "\n" << std::endl;
 
     try {
         sql::Statement *stmt = con->createStatement();
@@ -94,7 +94,7 @@ void DBManager::desplegarConsulta(const std::string& consulta, std::map<std::str
 
 // Este método ejecuta una consulta SQL y devuelve el resultado
 void DBManager::desplegarPrestamos(const std::string& consulta) {
-    std::cout << "Ejecutando consulta: " << consulta << std::endl; // pending to delete/comment
+    //std::cout << "Ejecutando consulta: " << consulta << std::endl; // pending to delete/comment
 
     try {
         sql::Statement *stmt = con->createStatement();
@@ -128,7 +128,7 @@ void DBManager::desplegarPrestamos(const std::string& consulta) {
 
 // Este método ejecuta una consulta SQL y devuelve el resultado
 void DBManager::desplegarCDP(const std::string& consulta) {
-    std::cout << "Ejecutando consulta: " << consulta << std::endl; // Considerar eliminar/comentar
+    //std::cout << "Ejecutando consulta: " << consulta << std::endl; // Considerar eliminar/comentar
 
     try {
         sql::Statement *stmt = con->createStatement();
@@ -169,7 +169,7 @@ void DBManager::desplegarCDP(const std::string& consulta) {
 */
 // Funcion que retorna un unico dato consultado
 std::string DBManager::ejecutarConsulta(const std::string& consulta) {
-    std::cout << "Ejecutando consulta: " << consulta << "\n" << std::endl;
+    //std::cout << "Ejecutando consulta: " << consulta << "\n" << std::endl;
     std::string data;
 
     // Se prueba con el ejemplo inicial de la tabla Client
@@ -198,7 +198,7 @@ std::string DBManager::ejecutarConsulta(const std::string& consulta) {
 // Funcion que permite cargar datos asociados a un record de tabla por completo
 std::map<std::string, std::string> DBManager::cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo) {
     // Eliminar/Comentar esto cuando se hayan realizado todas las pruebas
-    std::cout << "Ejecutando consulta: " << consulta << endl;
+    //std::cout << "Ejecutando consulta: " << consulta << endl;
 
     std::map<std::string, std::string> datosConsulta; // Mapa de retorno
     map<string, string>::iterator it_map = tableInfo.begin();// Iterador del mapa argumento
@@ -228,7 +228,7 @@ std::map<std::string, std::string> DBManager::cargarDatos(const std::string& con
 // Funcion util para las clases Retiro y Deposito
 std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta) {
     std::map<std::string, std::string> datosConsulta;
-    std::cout << "Ejecutando consulta: " << consulta << endl;
+    //std::cout << "Ejecutando consulta: " << consulta << endl;
 
     try {
         Statement *stmt = con->createStatement();
@@ -361,7 +361,7 @@ bool DBManager::verificarPertenencia(const string& tabla, const string& idColumn
 // Realiza el query mas no mediante transaccion
 void DBManager::ejecutarSQL(const std::string& consulta) {
     // Funciona, al correr todas las pruebas se debe eliminar/comentar esta linea
-    std::cout << "Ejecutando SQL: " << consulta << std::endl;
+    //std::cout << "Ejecutando SQL: " << consulta << std::endl;
     
     
     try {
@@ -426,8 +426,8 @@ void DBManager::manejarErrores(const sql::SQLException &e) {
 ------------------------------------------------------------------------------------
 */
 void DBManager::desplegarRegistroTransacciones(string& accountID) {
-    string consulta = "SELECT * FROM Transaction WHERE origin_account=" + accountID +
-                      " OR target_account=" + accountID + ";";
+    //string consulta = "SELECT * FROM Transaction WHERE origin_account=" + accountID +
+    //                  " OR target_account=" + accountID + ";";
 
     cout << "Ejecutando consulta: " << consulta << endl; // pending to delete/comment
 
@@ -474,7 +474,7 @@ void DBManager::desplegarRegistroTransacciones(string& accountID) {
 */
 void DBManager::exportLoanReport(std::string& idLoan) {
     // Impresion inicial
-    cout << "Ejecutando exportación del Reporte de Préstamos: " << endl;
+    //cout << "Ejecutando exportación del Reporte de Préstamos: " << endl;
 
     // Query que genera la tabla temporal (aun tengo que agregarle un where para que se genere para un unico cliente)
     string tempTableQuery = "CREATE TEMPORARY TABLE `loanreport` "

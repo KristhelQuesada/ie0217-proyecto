@@ -38,10 +38,10 @@ void Transferencia::ejecutar() {
         std::cin >> monto;
         if (std::cin.fail() || monto <= 0) {
             std::cin.clear(); // Limpiar el estado de error
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer
+            std::cin.ignore(); // Limpiar el buffer
             std::cout << "Monto invalido. Intentelo de nuevo.\n";
         } else {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer
+            std::cin.ignore(); // Limpiar el buffer
             break;
         }
     }

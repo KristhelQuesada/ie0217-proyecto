@@ -86,7 +86,7 @@ void menuCS(DBManager& db) {
             }
             case DOC_REQUEST: {
                 if (cliente == 0) {
-                    cout << "Un cliente no registrado, acceso denegado."
+                    cout << "El cliente no esta registrado, acceso denegado.\n";
                 } else {
                     menuDocuments(cliente, db);
                 }
@@ -170,7 +170,12 @@ void menuPlatform(int id_client, DBManager& db) {
             }
             case LOAN: {
                 bool detenerPrestamo = false;
-                while (!detenerPrestamo) {
+
+                if (id_client == 0) {
+                    cout << "No se puede acceder a los prestamos porque el cliente no está registrado en el sistema.\n" << endl;
+                    break;
+                } else {
+                    while (!detenerPrestamo) {
                     cout << "Prestamos - Opciones:\n1. Crear Prestamo\n2. Ver Prestamos\n3. Buscar Prestamo\n4. Retornar" << endl;
                     cout << "Indique el modo de operacion: ";
                     cin >> input;
@@ -195,10 +200,15 @@ void menuPlatform(int id_client, DBManager& db) {
                             break;
                     }
                 }
+                }
                 break;
             }    
             case CerDP: {
                 bool detenerCDP = false;
+                if (id_client == 0) {
+                    cout << "No se puede acceder a los certificados de plazo porque el cliente no está registrado en el sistema.\n" << endl;
+                    break;
+                } else {
                 while (!detenerCDP) {
                     cout << "Certificados de Deposito - Opciones:\n1. Crear CDP\n2. Ver CDP\n3. Buscar CDP\n4. Retornar" << endl;
                     cout << "Indique el modo de operacion: ";
@@ -223,6 +233,7 @@ void menuPlatform(int id_client, DBManager& db) {
                             cout << "La operacion ingresada no es valida." << endl;
                             break;
                     }
+                }
                 }
                 break;
             }
@@ -269,15 +280,15 @@ void menuDocuments(int id_client, DBManager& db) {
                 std::cout << "Reporte de prestamos" << std::endl;
 
                 if (id_client == 0) {
-                    std::cout << "No se puede hacer reporte de prestamos porque el cliente no está registrado en el sistema." << std::endl;
+                    std::cout << "No se puede hacer reporte de prestamos porque el cliente no está registrado en el sistema.\n" << std::endl;
                 } else {
                     try {
                         std::string client_id_str = std::to_string(id_client);
                         db.exportLoanReport(client_id_str);
                     } catch (const std::invalid_argument& e) {
-                        std::cout << "Número de cuenta inválido. Inténtelo de nuevo." << std::endl;
+                        std::cout << "Número de cuenta inválido. Inténtelo de nuevo.\n" << std::endl;
                     } catch (const std::out_of_range& e) {
-                        std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo." << std::endl;
+                        std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo.\n" << std::endl;
                     }
                 }
                 break;
@@ -294,12 +305,12 @@ void menuDocuments(int id_client, DBManager& db) {
                     try {
                         db.desplegarRegistroTransacciones(accountID);
                     } catch (const std::invalid_argument& e) {
-                        std::cout << "Número de cuenta inválido. Inténtelo de nuevo." << std::endl;
+                        std::cout << "Número de cuenta inválido. Inténtelo de nuevo.\n" << std::endl;
                     } catch (const std::out_of_range& e) {
-                        std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo." << std::endl;
+                        std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo.\n" << std::endl;
                     }                    
                 } else {
-                    cout << "La cuenta  bancaria ingresada no es de su pertenencia" << endl;
+                    cout << "La cuenta  bancaria ingresada no es de su pertenencia.\n" << endl;
                 }
                     
 
@@ -346,12 +357,24 @@ void menuTransactions(int id_client, DBManager& db) {
                 transaccion = new Deposito(id_client, db);
                 break;
             case WITHDRAWAL:
-                std::cout << "Opcion Retiro" << std::endl;
-                transaccion = new Retiro(id_client, db);
+
+                if (id_client == 0) {
+                    std::cout << "No se puede hacer retiro porque el cliente no está registrado en el sistema.\n\n" << std::endl;
+                    break;
+                } else {
+                    std::cout << "Opcion Retiro" << std::endl;
+                    transaccion = new Retiro(id_client, db);
+                }
                 break;
             case TRANSFER:
-                std::cout << "Opcion Transferencia" << std::endl;
-                transaccion = new Transferencia(id_client, db);
+
+                if (id_client == 0) {
+                    std::cout << "No se puede hacer transferencia porque el cliente no está registrado en el sistema.\n\n" << std::endl;
+                    break;
+                } else {
+                    std::cout << "Opcion Transferencia" << std::endl;
+                    transaccion = new Transferencia(id_client, db);
+                }
                 break;
             case LOAN_PAYMENT:
                 std::cout << "Opcion Abono a prestamos" << std::endl;

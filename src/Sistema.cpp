@@ -35,7 +35,7 @@ int main() {
     cout << "INICIO DEL PROGRAMA" << endl;
 
     // Inicializacion de la base de datos
-    DBManager db("Hola");
+    DBManager db("BankDatabase");
     
 
     // Inicio del menu principal

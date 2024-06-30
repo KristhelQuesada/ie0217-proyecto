@@ -245,6 +245,30 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(con
     return datosConsulta;
 }
 
+// Método para ejecutar una consulta de balance y moneda de una cuenta específica
+std::map<std::string, std::string> DBManager::ejecutarConsultaTransferencia(const std::string& consulta) {
+    std::map<std::string, std::string> datosConsulta;
+
+    try {
+        Statement *stmt = con->createStatement();
+        ResultSet *res = stmt->executeQuery(consulta);
+
+        if (res->next()) {
+            datosConsulta["balance"] = std::to_string(res->getDouble("balance"));
+            datosConsulta["currency"] = res->getString("currency");
+        }
+
+        delete res;
+        delete stmt;
+    } catch (SQLException &e) {
+        std::cerr << "Error de SQL: " << e.what() << std::endl;
+        std::cerr << "Código de error SQL: " << e.getErrorCode() << std::endl;
+        }
+
+        return datosConsulta;
+    }
+
+
 
 /*
 ------------------------------------------------------------------------------------

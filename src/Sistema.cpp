@@ -57,7 +57,6 @@ int main() {
         // Determinacion de funcion a ejecutar
         switch (operacion) {
             case ATENCION_CLIENTE: {
-                cout << "hola" << endl;
                 menuCS(db);
                 break;
             }

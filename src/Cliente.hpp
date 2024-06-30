@@ -24,10 +24,10 @@ public:
   Cliente(int idCliente, const std::string& nombre, const std::string& apellido, int idCuentaColones, int idCuentaDolares);
 
   // Método para solicitar datos al usuario e inicializar el objeto
-  void obtenerInformacion(DBManager dbManager);
+  void obtenerInformacion(DBManager& dbManager);
 
   // Método que imprime datos d eun cliente
-  void imprimirDatos(DBManager dbManager);
+  void imprimirDatos(DBManager& dbManager);
 
   // Método para actualizar nombre y apellido del cliente
   void actualizarDatos(DBManager& dbManager);

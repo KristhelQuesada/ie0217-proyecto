@@ -29,10 +29,9 @@ Cliente::Cliente(int idCliente, const std::string& nombre, const std::string& ap
 
 
 // Método que solicita los datos del cliente y los almacena en la base de datos
-void Cliente::obtenerInformacion(DBManager dbManager) {
+void Cliente::obtenerInformacion(DBManager& dbManager) {
 
     // Limpiar el buffer de entrada antes de pedir datos
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     // Obtener ID del cliente
     while (true) {
@@ -140,10 +139,8 @@ void Cliente::obtenerInformacion(DBManager dbManager) {
 
 
 // Funcion que imprime datos de un cliente
-void Cliente::imprimirDatos(DBManager dbManager){
+void Cliente::imprimirDatos(DBManager& dbManager){
 
-    // Limpiar el buffer de entrada antes de pedir datos
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     // Obtener ID del cliente
     while (true) {
@@ -227,8 +224,6 @@ void Cliente::imprimirDatos(DBManager dbManager){
 // Función que actualiza datos del cliente
 void Cliente::actualizarDatos(DBManager& dbManager) {
 
-    // Limpiar el buffer de entrada antes de pedir datos
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     int nuevoIdCliente = 0;  
     std::string nuevoNombre;     
@@ -398,8 +393,6 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
 // Método para eliminar un cliente por completo en la base de datos
 void Cliente::eliminarCliente(DBManager& dbManager) {
 
-    // Limpiar el buffer de entrada antes de pedir datos
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     // Bucle para obtener ID del cliente
     while (true) {

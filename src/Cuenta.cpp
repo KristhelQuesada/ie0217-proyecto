@@ -28,8 +28,6 @@ Cuenta::Cuenta(int idCliente, int idCuenta, const std::string& moneda, double sa
 // Método para obtener la información de la cuenta bancaria
 void Cuenta::obtenerInformacion(DBManager& dbManager) {
 
-    // Limpiar el buffer de entrada antes de pedir datos
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     // Bucle para obtener ID del cliente
     while (true) {
@@ -184,9 +182,6 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
 
 // Metodo para eliminar cuenta
 void Cuenta::eliminarCuenta(DBManager& dbManager) {
-
-    // Limpiar el buffer de entrada antes de pedir datos
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     // Pedir y validar el ID del cliente a eliminar
     while (true) {

@@ -10,7 +10,7 @@
 #include "Transferencia.hpp"
 
 #include "Cliente.hpp"
-
+#include <cctype> // Para toupper
 /*
 ----------------------------------------
            IMPLEMENTACION
@@ -20,18 +20,44 @@
 // Funcion de atencion al cliente
 void menuCS(DBManager& db) {
     // Variables
-    string input;
+    std::string input;
     bool detener = false;
-    int operacion, cliente;
+    int operacion, cliente = 0; // Inicializamos cliente a 0
+    char registrado;
 
-    cout << "---------------------------------------------------------------------" << endl;
-    cout << "|                  INTERFAZ DE ATENCION AL CLIENTE                  |" << endl;
-    cout << "---------------------------------------------------------------------" << endl;
+    // Encabezado bonito
+    std::cout << "=====================================================" << std::endl;
+    std::cout << "||          INTERFAZ DE ATENCION AL CLIENTE        ||" << std::endl;
+    std::cout << "=====================================================" << std::endl;
+    std::cout << "    Bienvenido al sistema de atencion al cliente.    " << std::endl;
+    std::cout << "=====================================================" << std::endl;
+    std::cout << "                                                     " << std::endl;
+
+
+    // Preguntar si el cliente está registrado en el banco
+    while (true) {
+        std::cout << "¿El cliente está registrado en el banco? (S/N): ";
+        std::cin >> registrado;
+        registrado = toupper(registrado); // Convertir a mayúsculas para evitar problemas de comparación
+
+        if (registrado == 'S' || registrado == 'N') {
+            break;
+        } else {
+            std::cout << "Opción inválida. Inténtelo de nuevo.\n";
+        }
+    }
 
     // Inicializacion del id_cliente
-    cout << "Ingrese el ID del cliente: ";
-    cin >> cliente;
+    if (registrado == 'S') {
+        std::cout << "Ingrese el ID del cliente: ";
+        std::cin >> cliente;
+    } else {
+        std::cout << "El cliente no está registrado en el banco. ID de cliente asignado: 0\n";
+    }
     
+    std::cout << "                                                     " << std::endl;
+    std::cout << "                                                     " << std::endl;
+    std::cout << "                                                     " << std::endl;
 
     // Inicio del menu principal
     while (detener == false) {
@@ -40,6 +66,7 @@ void menuCS(DBManager& db) {
         cout << "|                      OPERACIONES DISPONIBLES                      |" << endl;
         cout << "---------------------------------------------------------------------" << endl;
         cout << "|  1. Plataforma  |  2. Transaccion  |  3. Solicitud de Documentos  |" << endl;
+        cout << "|  4. Finalizar   |                  |                              |" << endl;
         cout << "---------------------------------------------------------------------" << endl;
         cout << "\n Indique el modo de operacion: ";
         cin >> input;

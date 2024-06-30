@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream> // Libreria para que permite el uso de outfile para generar una exportacion de datos
 #include <iomanip> // Libreria que permite que sean mas legibles los datos que se exportan al archivo .txt
+#include <string>
+#include <vector>
 using namespace std;
 using namespace sql;
 
@@ -13,7 +15,7 @@ using namespace sql;
 */
 // CONSTRUCTOR QUE CONECTA CON LA DB AL INICIAR UNA INSTANCIA
 DBManager::DBManager(const std::string& connStr) : connectionString(connStr) {
-    cout << connStr << endl;
+    std::cout << connStr << endl;
     this->conectar();
 }
 
@@ -22,7 +24,7 @@ DBManager::DBManager(const std::string& connStr) : connectionString(connStr) {
 // DESTRUCTOR QUE FINALIZA LA CONEXION CON LA DB AL FINALIZAR EL PROGRAMA
 DBManager::~DBManager() {
     // Elimina la conexion
-    cout << "Base de datos desconectada." << endl;
+    std::cout << "Base de datos desconectada." << endl;
     delete con;
 }
 
@@ -42,7 +44,7 @@ void DBManager::conectar() {
         con->setSchema("project-ie0217-db");
 
         // Mensaje de Exito
-        cout << "Conexión establecida exitosamente." << endl;
+        std::cout << "Conexión establecida exitosamente." << endl;
 
     } catch (sql::SQLException &e) {
         this->manejarErrores(e);
@@ -73,12 +75,12 @@ void DBManager::desplegarConsulta(const std::string& consulta, std::map<std::str
 
         // Siempre que haya records asociados a la consulta
         while (res->next()) {
-            cout << "---------------------------------------------" << endl;
+            std::cout << "---------------------------------------------" << endl;
             while (it_map != tableInfo.end()) {
-                cout << "> " << it_map->second << ": " << res->getString(it_map->first) << endl;
+                std::cout << "> " << it_map->second << ": " << res->getString(it_map->first) << endl;
                 ++it_map;
             }
-            cout << "---------------------------------------------" << endl;
+            std::cout << "---------------------------------------------" << endl;
         }   
 
         delete res;
@@ -101,18 +103,18 @@ void DBManager::desplegarPrestamos(const std::string& consulta) {
         int contador = 1; // Lleva la cuenta de la cantidad de Prestamos del Cliente
 
         while (res->next()) {
-            cout << "-------------- Prestamo " << contador << " --------------" << endl;
-            cout << "  - ID del Préstamo       : " << res->getString("id_loan") << endl;
-            cout << "  - ID del Cliente        : " << res->getString("id_client") << endl;
-            cout << "  - Fecha de Creación     : " << res->getString("creation_date") << endl;
-            cout << "  - Tipo de Préstamo      : " << res->getString("id_loan_type") << endl;
-            cout << "  - Divisa                : " << res->getString("currency") << endl;
-            cout << "  - Monto Solicitado      : " << res->getString("principal") << endl;
-            cout << "  - Tasa de Interés       : " << res->getString("interest_rate") << endl;
-            cout << "  - Plazo                 : " << res->getString("loan_term") << endl;
-            cout << "  - Cuota Mensual         : " << res->getString("monthly_payment") << endl;
-            cout << "  - Monto Total a Pagar   : " << res->getString("total_repayment") << endl;
-            cout << "  - Monto Actual Pagado   : " << res->getString("actual_debt") << "\n" << endl;
+            std::cout << "  - ID del Préstamo       : " << res->getString("id_loan") << endl;
+            std::cout << "-------------- Prestamo " << contador << " --------------" << endl;
+            std::cout << "  - ID del Cliente        : " << res->getString("id_client") << endl;
+            std::cout << "  - Fecha de Creación     : " << res->getString("creation_date") << endl;
+            std::cout << "  - Tipo de Préstamo      : " << res->getString("id_loan_type") << endl;
+            std::cout << "  - Divisa                : " << res->getString("currency") << endl;
+            std::cout << "  - Monto Solicitado      : " << res->getString("principal") << endl;
+            std::cout << "  - Tasa de Interés       : " << res->getString("interest_rate") << endl;
+            std::cout << "  - Plazo                 : " << res->getString("loan_term") << endl;
+            std::cout << "  - Cuota Mensual         : " << res->getString("monthly_payment") << endl;
+            std::cout << "  - Monto Total a Pagar   : " << res->getString("total_repayment") << endl;
+            std::cout << "  - Monto Actual Pagado   : " << res->getString("actual_debt") << "\n" << endl;
             contador++;
         }   
 
@@ -196,7 +198,7 @@ std::string DBManager::ejecutarConsulta(const std::string& consulta) {
 // Funcion que permite cargar datos asociados a un record de tabla por completo
 std::map<std::string, std::string> DBManager::cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo) {
     // Eliminar/Comentar esto cuando se hayan realizado todas las pruebas
-    cout << "Ejecutando consulta: " << consulta << endl;
+    std::cout << "Ejecutando consulta: " << consulta << endl;
 
     std::map<std::string, std::string> datosConsulta; // Mapa de retorno
     map<string, string>::iterator it_map = tableInfo.begin();// Iterador del mapa argumento
@@ -226,7 +228,7 @@ std::map<std::string, std::string> DBManager::cargarDatos(const std::string& con
 // Funcion util para las clases Retiro y Deposito
 std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(const std::string& consulta) {
     std::map<std::string, std::string> datosConsulta;
-    cout << "Ejecutando consulta: " << consulta << endl;
+    std::cout << "Ejecutando consulta: " << consulta << endl;
 
     try {
         Statement *stmt = con->createStatement();
@@ -301,8 +303,8 @@ string DBManager::determinarCuentaID(string& idCliente) {
 
     // Obtener la cantidad de cuentas asociadas al DB
     string queryContadorCuentas = "SELECT COUNT(*) FROM BankAccount WHERE id_client=;" + idCliente;
-    string contadorCuentas = stoi(this->ejecutarConsulta(queryContadorCuentas));
-    boool isValid;
+    int contadorCuentas = stoi(this->ejecutarConsulta(queryContadorCuentas));
+    bool isValid;
 
     // Retornar el idAccount
     if (contadorCuentas == 0) {
@@ -313,7 +315,7 @@ string DBManager::determinarCuentaID(string& idCliente) {
     } else {
 
         while(!isValid) {}
-            cout << "Con cual cuenta se procede (USD/CRC): ";
+            std::cout << "Con cual cuenta se procede (USD/CRC): ";
             cin >> currency;
 
             if (currency == "USD" || currency == "CRC") {
@@ -322,7 +324,7 @@ string DBManager::determinarCuentaID(string& idCliente) {
                 isValid = true;
 
             } else {
-                cout << "Ingrese una divisa correcta.\n";
+                std::cout << "Ingrese una divisa correcta.\n";
             }
     }
 
@@ -337,9 +339,9 @@ string DBManager::determinarCuentaID(string& idCliente) {
                     Es util en la impresion de documentos
 ------------------------------------------------------------------------------------
 */
-bool AbonoPrestamo::verificarPertenencia(const string& tabla, const string& idColumna, const& string idAccount){
-    string queryAccount = "SELECT id_client FROM " + columna + "WHERE " + idColumna + "=" + idAccount;
-    string toCheckOwner = db.ejecutarConsulta(queryAccount);
+bool DBManager::verificarPertenencia(const string& tabla, const string& idColumna, const string& idAccount, const string& idClient){
+    string queryAccount = "SELECT id_client FROM " + tabla + "WHERE " + idColumna + "=" + idAccount;
+    string toCheckOwner = this->ejecutarConsulta(queryAccount);
 
     if (idClient == toCheckOwner) {
         return true;
@@ -375,7 +377,7 @@ void DBManager::ejecutarSQL(const std::string& consulta) {
 // Funcion que permite iniciar una transaccion de SQL;
 void DBManager::ejecutarTransactionSQL(const std::vector<string>& querySet) {
     // Funciona, al correr todas las pruebas se debe eliminar/comentar esta linea
-    std::cout << "Ejecutando SQL: " << consulta << std::endl;
+    //std::cout << "Ejecutando consulta SQL: " << consulta << std::endl;
     
     
     try {
@@ -384,7 +386,8 @@ void DBManager::ejecutarTransactionSQL(const std::vector<string>& querySet) {
 
         // Ejecutar cada query que contenga el vector
         for (const auto& query : querySet) {
-            cout << query << endl;
+            cout << "Ejecutando consulta SQL: " << query << endl;
+            stmt->executeUpdate(query);
         }
 
         stmt->executeUpdate("COMMIT;");

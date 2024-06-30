@@ -26,8 +26,8 @@ void AbonoPrestamo::ejecutar() {
     // Declaracion de variables
     bool existe, isOnTime, enoughBalance;
     string input, final_query, divisaPago;
-    stringstream queryInsert, queryUpdate;
-    double pago, cuotasPagar, tipoDeCambio;
+    stringstream queryInsert, queryUpdate, queryAccount;
+    double pago, cuotasPagar, tipoDeCambio, newBalance;
 
 
     // 1. Solicitud del ID del prestamo, verificacion de
@@ -74,22 +74,22 @@ void AbonoPrestamo::ejecutar() {
         bool confirmed = this->confirmarMetodoDePago();
 
 
-        if (id_account != "") {
+        if (this->accountID != "") {
             tipoDeCambio = this->getCurrencyChange(divisa);
             pago = pago * tipoDeCambio;
-            enoughBalance = this->confirmarFondos(divisa, pago);
+            enoughBalance = this->confirmarFondos(pago);
 
             if (enoughBalance) {
                 newBalance = getNewBalanceAccount(pago);
                 queryAccount << "UPDATE BankAccount SET balance=" << to_string_with_precision(newBalance, 2)
-                             << " WHERE id_account" << this->account;
+                             << " WHERE id_account" << this->accountID;
             }
 
         } else {
             cout << "Indique la divisa de pago (USD/CRC): " << endl;
             cin >> divisaPago;
 
-            tipoDeCambio = this->obtenerTipoDeCambio(divisa, divisaPago);
+            tipoDeCambio = db.obtenerTipoDeCambio(divisa, divisaPago);
             pago = pago * tipoDeCambio;
             cout << "El monto total a pagar es de " << pago << " " << divisaPago;
             enoughBalance = true; // se asume que se acepta el pago;
@@ -252,7 +252,7 @@ void AbonoPrestamo::setColumnas() {
     this->lastPayment["interest_paid"]       = "";
 
     // Inicializar cuenta bancaria del que se extrae el abono
-    this->idAccount = "";
+    this->accountID = "";
 }
 
 
@@ -344,6 +344,9 @@ double AbonoPrestamo::interesAmortizacion(double capitalPagado,
 bool AbonoPrestamo::confirmarMetodoDePago(){
     string metodo, continuar, idAccount;
     bool metodoValido, confirmado;
+    int option;
+    string cliente;
+    cliente = to_string(this->id_client);
 
     if (this->id_client = 0) {
         cout << "El cliente solo puede pagar en efectivo.\n";
@@ -368,7 +371,7 @@ bool AbonoPrestamo::confirmarMetodoDePago(){
                     break;
                 case 2:
                     cout << "El pago se realiza por cuenta interna." << endl;
-                    this->idAccount = db.determinarCuentaID(this->id_client);
+                    this->accountID = db.determinarCuentaID(cliente);
                     metodoValido = true;
                     return true;
                     break;
@@ -387,25 +390,28 @@ bool AbonoPrestamo::confirmarMetodoDePago(){
 }
 
 
-double getNewBalanceAccount(const double& pago) {
-    string query;
+double AbonoPrestamo::getNewBalanceAccount(const double& pago) {
+    string query, queryfinal;
     double balance, newBalance;
 
-    query = "SELECT balance FROM BankAccount WHERE id_account=" + this->idAccount;
-    balance = stod(db.ejecutarConsulta{query});
+
+    query = "SELECT balance FROM BankAccount WHERE id_account=" + this->accountID;
+    queryfinal = db.ejecutarConsulta(query);
+
+    balance = stod(db.ejecutarConsulta(query));
     newBalance = balance - pago;
 
     return newBalance;
 }
 
-double getCurrencyChange(const string& divisaPrestamo) {
+double AbonoPrestamo::getCurrencyChange(const string& divisaPrestamo) {
     string query, divisaCuenta;
     double tipoDeCambio;
 
-    query = "SELECT currency FROM BankAccount WHERE id_account=" + this->idAccount;
-    divisaCuenta = db.ejecutarConsulta{query};
+    query = "SELECT currency FROM BankAccount WHERE id_account=" + this->accountID;
+    divisaCuenta = db.ejecutarConsulta(query);
 
-    tipoDeCambio = obtenerTipoDeCambio(divisaPrestamo, divisaCuenta);
+    tipoDeCambio = db.obtenerTipoDeCambio(divisaPrestamo, divisaCuenta);
 
     return tipoDeCambio;
 }
@@ -416,12 +422,12 @@ bool AbonoPrestamo::confirmarFondos(const double& pagoConv) {
     string query;
     double balance;
 
-    query = "SELECT balance FROM BankAccount WHERE id_account=" + this->idAccount;
-    balance = stod(db.ejecutarConsulta{query});
+    query = "SELECT balance FROM BankAccount WHERE id_account=" + this->accountID;
+    balance = stod(db.ejecutarConsulta(query));
     
-    if (balance < pago) {
+    if (balance < pagoConv) {
         return false;
-    } esle {
+    } else {
         return true;
     }
 

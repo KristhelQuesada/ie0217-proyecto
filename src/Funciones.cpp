@@ -333,7 +333,7 @@ double getAmountLimit(const string& loanType, const string& currency) {
             throw std::invalid_argument("Tipo de préstamo no válido");
         }
 
-    } else if {"USD"} {
+    } else if (currency == "USD") {
         if (loanType == "HP") { // Préstamos Hipotecarios
             return MAX_HIPOTECARIO_LOAN_USD;
         } else if (loanType == "PR") { // Préstamos Prendarios

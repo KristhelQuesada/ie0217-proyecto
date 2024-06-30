@@ -50,7 +50,7 @@ class AbonoPrestamo : public Transaccion {
 private:
     std::map<std::string, std::string> loanData;
     std::map<std::string, std::string> lastPayment;
-    std::map<std::string, std::string> accountData;
+    std::string accountID;
 
 public:
 
@@ -128,7 +128,7 @@ public:
 
     double getNewBalanceAccount(const double& pago);
     double getCurrencyChange(const string& divisaPrestamo);
-    bool AbonoPrestamo::confirmarFondos(const double& pagoConv);
+    bool confirmarFondos(const double& pagoConv);
 
 };
 

@@ -284,7 +284,7 @@ void menuDocuments(int id_client, DBManager& db) {
                 std::cout << "Ingrese el número de cuenta: ";
                 std::cin >> accountID;
 
-                bool ownsAccount = db.verificarPertenencia("BankAccount", "id_account", accountID);
+                bool ownsAccount = db.verificarPertenencia("BankAccount", "id_account", accountID, std::to_string(id_client));
 
                 if (ownsAccount) {
                     try {

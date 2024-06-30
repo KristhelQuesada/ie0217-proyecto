@@ -35,6 +35,7 @@
 // Librerias convecinales de C++
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 // Librerías necesarias para la conexión con la base de datos como <mysql/mysql.h> para MySQL
 #include <mysql_driver.h>
@@ -140,8 +141,8 @@ public:
     std::map<std::string, std::string> ejecutarConsultaTransferencia(const std::string& consulta);
     double obtenerTipoDeCambio(const std::string& monedaOrigen, const std::string& monedaDestino);
     std::map<std::string, std::string> cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo);
-    std::string determinarCuentaID(string& idCliente);
-    bool verificarPertenencia(const string& tabla, const string& idColumna, const& string idAccount){
+    std::string determinarCuentaID(std::string& idCliente);
+    bool verificarPertenencia(const std::string& tabla, const std::string& idColumna, const std::string& idAccount, const std::string& idCliente);
 
     
 
@@ -164,7 +165,7 @@ public:
     ------------------------------------------------------------------------------------
     */
     string determinarCuentaID(string& idCliente);
-    bool verificarPertenencia(const string& tabla, const string& idColumna, const& string idAccount);
+    bool verificarPertenencia(const string& tabla, const string& idColumna, const std::string& idAccount);
 
 
 
@@ -200,5 +201,6 @@ public:
     */
     void testingVinculo();
 };
+
 
 #endif // DBMANAGER_HPP

@@ -117,7 +117,7 @@ map<string, string> calculateLoan(){
     cout << "---------------------------------------------------------------------" << endl;
 
     while (isValid == false) {
-        cout << "Indique el tipo de prestamo: ";
+        cout << "Indique el tipo de préstamo: ";
         cin >> input;
         option = verifyMenuOption(input, LOAN_TYPE_MAX);
         cin.ignore();
@@ -136,7 +136,7 @@ map<string, string> calculateLoan(){
                 isValid = true;
                 break;
             default:
-                cout << "La opcion para el tipo de prestamo ingresado no es valida." << endl;
+                cout << "La opción para el tipo de préstamo ingresado no es válida." << endl;
                 break;
         }
     }
@@ -160,7 +160,7 @@ map<string, string> calculateLoan(){
     repayment = p + monthly_payment*n;
 
     // Impresion de resultados
-    cout << "\n > Los resultados del prestamo solicitado son" <<  endl;
+    cout << "\n > Los resultados del préstamo solicitado son" << endl;
     cout << "- Cuota mensual: "
          << to_string_with_precision(monthly_payment, 2)
          << " (" << currency << ")."
@@ -378,7 +378,7 @@ double verifyTerm() {
     bool valid_term = false;
 
     while (!valid_term) {
-        cout << "Ingrese el plazo: ";
+        cout << "Ingrese el plazo en meses: ";
         cin >> valorEntero;
 
         if (cin.fail()) {

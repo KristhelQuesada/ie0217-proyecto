@@ -442,14 +442,14 @@ void DBManager::desplegarRegistroTransacciones(string& accountID) {
 
 
         while (res->next()) {
-            cout << "-------------- Transaccion " << contador << " --------------" << endl;
-            cout << "  - ID Transaccion      : " << res->getString("id_transaction") << endl;
-            cout << "  - Fecha de Ejecucion  : " << res->getString("date_and_time") << endl;
-            cout << "  - Tipo de Transaccion : " << res->getString("transaction_type") << endl;
+            cout << "-------------- Transacción " << contador << " --------------" << endl;
+            cout << "  - ID Transacción      : " << res->getString("id_transaction") << endl;
+            cout << "  - Fecha de Ejecución  : " << res->getString("date_and_time") << endl;
+            cout << "  - Tipo de Transacción : " << res->getString("transaction_type") << endl;
             cout << "  - Divisa              : " << res->getString("currency") << endl;
             cout << "  - Monto               : " << res->getString("transaction_amount") << endl;
             cout << "  - Cuenta de Origen    : " << res->getString("origin_account") << endl;
-            cout << "  - Centa Destino       : " << res->getString("target_account") << endl;
+            cout << "  - Cuenta Destino      : " << res->getString("target_account") << endl;
             cout << "  - Detalle             : " << res->getString("detail") << endl;
             cout << "  - Saldo Anterior      : " << res->getString("previous_qty") << endl;
             cout << "  - Saldo Posterior     : " << res->getString("present_qty") << "\n" << endl;
@@ -474,7 +474,7 @@ void DBManager::desplegarRegistroTransacciones(string& accountID) {
 */
 void DBManager::exportLoanReport(std::string& idLoan) {
     // Impresion inicial
-    cout << "Ejecutando exportacion del Reporte de Prestamos: " << endl;
+    cout << "Ejecutando exportación del Reporte de Préstamos: " << endl;
 
     // Query que genera la tabla temporal (aun tengo que agregarle un where para que se genere para un unico cliente)
     string tempTableQuery = "CREATE TEMPORARY TABLE `loanreport` "
@@ -517,12 +517,12 @@ void DBManager::exportLoanReport(std::string& idLoan) {
         // queda pendiente y para comentar
         outfile << left << setw(shortwidth) << "ID"
                 << left << setw(width) << "Cliente"
-                << left << setw(shortwidth) << "ID Prestamo"
+                << left << setw(shortwidth) << "ID Préstamo"
                 << left << setw(shortwidth) << "Cuotas"
-                << left << setw(width) << "Creacion"
-                << left << setw(width) << "Tipo de Prestamo"
+                << left << setw(width) << "Creación"
+                << left << setw(width) << "Tipo de Préstamo"
                 << left << setw(width) << "Monto Solicitado"
-                << left << setw(shortwidth) << "Interes"
+                << left << setw(shortwidth) << "Interés"
                 << left << setw(width) << "Cuota Mensual"
                 << left << setw(width) << "Deuda Total"
                 << left << setw(width) << "Deuda Actual"
@@ -531,7 +531,7 @@ void DBManager::exportLoanReport(std::string& idLoan) {
                 << left << setw(width) << "Capital Actual"
                 << left << setw(width) << "Intereses Actual"
                 << left << setw(width) << "Capital abonado"
-                << left << setw(width) << "Interes abonado"
+                << left << setw(width) << "Interés abonado"
                 << left << setw(width) << "Fecha del Abono"
                 << endl;
 
@@ -565,7 +565,7 @@ void DBManager::exportLoanReport(std::string& idLoan) {
         stmt->execute("DROP TEMPORARY TABLE IF EXISTS `loanreport`;");
 
         // Mensaje de exito
-        cout << "El Reporte de Prestamos ha sido creado con exito." << endl;
+        cout << "El Reporte de Préstamos ha sido creado con éxito." << endl;
 
         // Liberacion de recursos
         delete res;
@@ -585,5 +585,5 @@ void DBManager::exportLoanReport(std::string& idLoan) {
 ------------------------------------------------------------------------------------
 */
 void DBManager::testingVinculo() {
-    cout << "Has establecido conexion con la DB." << endl;
+    cout << "Has establecido conexión con la DB." << endl;
 }

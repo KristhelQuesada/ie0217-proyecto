@@ -42,13 +42,13 @@ int main() {
     while (detener == false) {
         // Menu para el ususario
         cout << "\n---------------------------------\n";
-        cout << "         MODO DE OPERACION";
+        cout << "         MODO DE OPERACIÓN";
         cout << "\n---------------------------------\n";
-        cout << "1. Atencion al cliente\n";
-        cout << "2. Informacion de Prestamos\n";
+        cout << "1. Atención al cliente\n";
+        cout << "2. Información de Préstamos\n";
         cout << "3. Salir del programa";
         cout << "\n---------------------------------";
-        cout << "\nIndique el modo de operacion: ";
+        cout << "\nIndique el modo de operación: ";
         cin >> input;
         operacion = verifyMenuOption(input, OPCIONES_MAX); // Maneja errores
         cin.ignore();
@@ -77,7 +77,7 @@ int main() {
                 break;
             }
             default: {
-                cout << "Opcion ingresada no valida." << endl;
+                cout << "Opción ingresada no válida." << endl;
                 break;
             }
 

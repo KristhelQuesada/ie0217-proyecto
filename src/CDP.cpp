@@ -75,10 +75,10 @@ void CDP::searchCDP() {
 
     // Metodo de busqueda
     cout << "------------------------------------------" << endl;
-    cout << "            Filtro de Busqueda            " << endl;
+    cout << "            Filtro de Búsqueda            " << endl;
     cout << "------------------------------------------" << endl;
     cout << "1. ID del CDP" << endl;
-    cout << "2. Anio de creacion" << endl;
+    cout << "2. Año de creación" << endl;
     cout << "Desea buscar sus CDP por: ";
     cin >> input;
     cout << "------------------------------------------" << endl;
@@ -95,14 +95,14 @@ void CDP::searchCDP() {
                   << " AND id_deposit_certificate=" << filter << ";";
             break;
         case YEAR_FILTER:
-            cout << "Indique el anio de creacion del CDP: ";
+            cout << "Indique el año de creacion del CDP: ";
             cin >> filter;
             cin.ignore();
             query << "SELECT * FROM DepositCertificate WHERE id_account=" << this->id_account
                   << " AND YEAR(deadline)=" << filter << ";";
             break;
         default:
-            cout << "La opcion para el filtro de busqueda ingresado no es valida." << endl;
+            cout << "La opción para el filtro de búsqueda ingresado no es válida." << endl;
             break;
     }
 

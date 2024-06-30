@@ -63,7 +63,7 @@ void Cliente::obtenerInformacion(DBManager& dbManager) {
     // Obtener nombre
     while (true) {
         try {
-            std::cout << "Ingrese el nombre del cliente (maximo 50 caracteres): ";
+            std::cout << "Ingrese el nombre del cliente (máximo 50 carácteres): ";
             std::getline(std::cin, nombre);
 
             // Verificar tipo de dato (debe contener solo letras y espacios)
@@ -75,7 +75,7 @@ void Cliente::obtenerInformacion(DBManager& dbManager) {
 
             // Verificar tamaño de dato
             if (nombre.length() > 50) {
-                throw std::out_of_range("El nombre excede la longitud maxima permitida.");
+                throw std::out_of_range("El nombre excede la longitud máxima permitida.");
             }
 
             break; // Si todo está bien, salir del bucle
@@ -90,7 +90,7 @@ void Cliente::obtenerInformacion(DBManager& dbManager) {
     // Obtener apellido
     while (true) {
         try {
-            std::cout << "Ingrese el apellido del cliente (maximo 50 caracteres): ";
+            std::cout << "Ingrese el apellido del cliente (máximo 50 carácteres): ";
             std::getline(std::cin, apellido);
 
             // Verificar tipo de dato (debe contener solo letras y espacios)
@@ -102,7 +102,7 @@ void Cliente::obtenerInformacion(DBManager& dbManager) {
 
             // Verificar tamaño de dato
             if (apellido.length() > 50) {
-                throw std::out_of_range("El apellido excede la longitud maxima permitida.");
+                throw std::out_of_range("El apellido excede la longitud máxima permitida.");
             }
 
             break; // Si todo está bien, salir del bucle
@@ -142,19 +142,19 @@ void Cliente::imprimirDatos(DBManager& dbManager){
     // Obtener ID del cliente
     while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID del cliente (máximo 9 dígitos): ";
             std::string input;
             std::getline(std::cin, input);
 
             // Verificar longitud de la entrada
             if (input.empty() || input.size() > 9) {
-                throw std::out_of_range("La longitud del ID del cliente excede el maximo permitido (9 digitos).");
+                throw std::out_of_range("La longitud del ID del cliente excede el máximo permitido (9 dígitos).");
             }
 
             // Convertir la entrada a int
             std::stringstream ss(input);
             if (!(ss >> idCliente) || !ss.eof()) {
-                throw std::invalid_argument("Debe ingresar un numero entero valido.");
+                throw std::invalid_argument("Debe ingresar un número entero válido.");
             }
 
             // Si todo está bien, salir del bucle
@@ -188,14 +188,14 @@ void Cliente::imprimirDatos(DBManager& dbManager){
         if (!colonesStr.empty()) {
             idCuentaColones = std::stoi(colonesStr);
         } else {
-            idCuentaColones = 0;  // Asignar valor por defecto o manejar de otra manera según tu lógica de negocio
+            idCuentaColones = 0;  // Asignar valor por defecto o manejar de otra manera
         }
 
         std::string dolaresStr = dbManager.ejecutarConsulta(dolaresQuery);
         if (!dolaresStr.empty()) {
             idCuentaDolares = std::stoi(dolaresStr);
         } else {
-            idCuentaDolares = 0;  // Asignar valor por defecto o manejar de otra manera según tu lógica de negocio
+            idCuentaDolares = 0;  // Asignar valor por defecto
         }
 
     } catch (const std::exception& e) {
@@ -219,29 +219,26 @@ void Cliente::imprimirDatos(DBManager& dbManager){
 // Función que actualiza datos del cliente
 void Cliente::actualizarDatos(DBManager& dbManager) {
 
-
     int nuevoIdCliente = 0;  
     std::string nuevoNombre;     
     std::string nuevoApellido;
 
-    
-
     // Obtener ID del cliente
     while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID del cliente (máximo 9 dígitos): ";
             std::string input;
             std::getline(std::cin, input);
 
             // Verificar longitud de la entrada
             if (input.empty() || input.size() > 9) {
-                throw std::out_of_range("La longitud del ID del cliente excede el maximo permitido (9 digitos).");
+                throw std::out_of_range("La longitud del ID del cliente excede el máximo permitido (9 dígitos).");
             }
 
             // Convertir la entrada a int
             std::stringstream ss(input);
             if (!(ss >> idCliente) || !ss.eof()) {
-                throw std::invalid_argument("Debe ingresar un numero entero valido.");
+                throw std::invalid_argument("Debe ingresar un número entero válido.");
             }
 
             // Si todo está bien, salir del bucle
@@ -260,7 +257,7 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
 
 
     if (resultado.empty()) {
-        std::cerr << "El cliente con ID " << idCliente << " no esta registrado en la base de datos. No se puede actualizar." << std::endl;
+        std::cerr << "El cliente con ID " << idCliente << " no está registrado en la base de datos. No se puede actualizar." << std::endl;
         return; // Salir del método si el cliente no está registrado
     } else {
 
@@ -274,13 +271,13 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
 
             // Verificar longitud de la entrada
             if (input.empty() || input.size() > 9) {
-                throw std::out_of_range("La longitud del ID del cliente excede el maximo permitido (9 digitos).");
+                throw std::out_of_range("La longitud del ID del cliente excede el máximo permitido (9 dígitos).");
             }
 
             // Convertir la entrada a int
             std::stringstream ss(input);
             if (!(ss >> idCliente) || !ss.eof()) {
-                throw std::invalid_argument("Debe ingresar un numero entero valido.");
+                throw std::invalid_argument("Debe ingresar un número entero válido.");
             }
 
             // Verificar si el clientenuevo ID cliente existe en la base de datos antes de actualizar
@@ -309,7 +306,7 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
         // Solicitud del nuevo nombre
         while (true) {
         try {
-            std::cout << "Ingrese el nuevo nombre del cliente (maximo 50 caracteres): ";
+            std::cout << "Ingrese el nuevo nombre del cliente (máximo 50 carácteres): ";
             std::getline(std::cin, nuevoNombre);
 
             // Verificar tipo de dato (debe contener solo letras y espacios)
@@ -321,7 +318,7 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
 
             // Verificar tamaño de dato
             if (nuevoNombre.length() > 50) {
-                throw std::out_of_range("El nuevo nombre excede la longitud maxima permitida.");
+                throw std::out_of_range("El nuevo nombre excede la longitud máxima permitida.");
             }
 
             break; // Si todo está bien, salir del bucle
@@ -336,7 +333,7 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
     // Solicitud del nuevo apellido
     while (true) {
         try {
-            std::cout << "Ingrese el nuevo apellido del cliente (maximo 50 caracteres): ";
+            std::cout << "Ingrese el nuevo apellido del cliente (máximo 50 carácteres): ";
             std::getline(std::cin, nuevoApellido);
 
             // Verificar tipo de dato (debe contener solo letras y espacios)
@@ -348,7 +345,7 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
 
             // Verificar tamaño de dato
             if (nuevoApellido.length() > 50) {
-                throw std::out_of_range("El nuevo apellido excede la longitud maxima permitida.");
+                throw std::out_of_range("El nuevo apellido excede la longitud máxima permitida.");
             }
 
             break; // Si todo está bien, salir del bucle
@@ -387,7 +384,7 @@ void Cliente::eliminarCliente(DBManager& dbManager) {
     // Bucle para obtener ID del cliente
     while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente que desea eliminar (máximo 9 digitos): ";
+            std::cout << "Ingrese el ID del cliente que desea eliminar (máximo 9 dígitos): ";
             std::string input;
             std::getline(std::cin, input);
 
@@ -395,12 +392,12 @@ void Cliente::eliminarCliente(DBManager& dbManager) {
             std::stringstream ss(input);
             int temp;
             if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un numero entero.");
+                throw std::invalid_argument("El ID del cliente debe ser un número entero.");
             }
 
             // Verificar tamaño de dato
             if (idCliente < 0 || idCliente > 999999999) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida (9 digitos).");
+                throw std::out_of_range("El ID del cliente excede la longitud máxima permitida (9 dígitos).");
             }
 
             idCliente = temp; // Asignar el valor convertido a int a idCliente
@@ -420,7 +417,7 @@ void Cliente::eliminarCliente(DBManager& dbManager) {
 
     // Verificar si el resultado está vacío (no existe el cliente)
     if (resultado.empty()) {
-        std::cerr << std::endl << "El cliente con ID " << idCliente << " no esta registrado en la base de datos. No se puede eliminar." << std::endl;
+        std::cerr << std::endl << "El cliente con ID " << idCliente << " no está registrado en la base de datos. No se puede eliminar." << std::endl;
         return; // Salir del método si el cliente no está registrado
     }
 

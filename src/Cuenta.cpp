@@ -71,7 +71,7 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
 
             // Verificar tamaño de dato
             if (moneda.length() > 3) {
-                throw std::out_of_range("No se especifica la moneda correctamente o se excede la longitud maxima permitida.");
+                throw std::out_of_range("No se especifica la moneda correctamente o se excede de la longitud máxima permitida.");
             }
 
             break; // Si todo está bien, salir del bucle
@@ -89,7 +89,7 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
 
     if (resultadoCliente.empty()) {
         
-        std::cerr << "El cliente con ID " << idCliente << " no esta registrado en la base de datos. No se puede actualizar." << std::endl;
+        std::cerr << "El cliente con ID " << idCliente << " no está registrado en la base de datos. No se puede actualizar." << std::endl;
         return; // Salir del método si el cliente no está registrado
     }
 
@@ -104,16 +104,16 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
 
     // Lógica para determinar si se puede crear la cuenta
     if (cantidadCuentas >= 2) {
-        std::cout << "El cliente ya tiene dos cuentas asociadas. No se puede crear mas cuentas." << std::endl;
+        std::cout << "El cliente ya tiene dos cuentas asociadas. No se puede crear más cuentas." << std::endl;
     } else if (resultadoTipo.find("CRC") != std::string::npos && moneda == "CRC") {
         std::cout << "El cliente ya tiene una cuenta en colones. No se puede crear otra cuenta en colones." << std::endl;
     } else if (resultadoTipo.find("USD") != std::string::npos && moneda == "USD") {
-        std::cout << "El cliente ya tiene una cuenta en dolares. No se puede crear otra cuenta en dolares." << std::endl;
+        std::cout << "El cliente ya tiene una cuenta en dólares. No se puede crear otra cuenta en dólares." << std::endl;
     } else {
 
         while (true) {
             try {
-            std::cout << "Ingrese el ID de la cuenta a crear (maximo 10 digitos): ";
+            std::cout << "Ingrese el ID de la cuenta a crear (máximo 10 dígitos): ";
             std::string input;
             std::getline(std::cin, input);
 
@@ -121,12 +121,12 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
             std::stringstream ss(input);
             int temp;
             if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID de la cuenta debe ser un dato tipo numero entero.");
+                throw std::invalid_argument("El ID de la cuenta debe ser un dato número entero.");
             }
 
             // Verificar tamaño de dato
             if (input.length() > 10) {
-                throw std::out_of_range("El ID de la cuenta excede la longitud maxima permitida.");
+                throw std::out_of_range("El ID de la cuenta excede la longitud máxima permitida.");
             }
 
             idCuenta = temp; // Asignar el valor convertido a int a idCliente
@@ -158,13 +158,13 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
     // Ejecutar la consulta SQL
     dbManager.ejecutarSQL(query);
 
-    // Actualizar id_colones_account o id_dolares_account en la tabla Client en función de la moneda ingresada 
+    // Actualizar id_colones_account o id_dólares_account en la tabla Client en función de la moneda ingresada 
     std::string consultaActualizar = "UPDATE Client SET ";
 
     if (moneda == "CRC") {
         consultaActualizar += "id_colones_account = (SELECT id_account FROM BankAccount WHERE id_client = '" + std::to_string(idCliente) + "' AND currency = 'CRC')";
     } else if (moneda == "USD") {
-        consultaActualizar += "id_dolares_account = (SELECT id_account FROM BankAccount WHERE id_client = '" + std::to_string(idCliente) + "' AND currency = 'USD')";
+        consultaActualizar += "id_dólares_account = (SELECT id_account FROM BankAccount WHERE id_client = '" + std::to_string(idCliente) + "' AND currency = 'USD')";
     }
 
     consultaActualizar += " WHERE id_client = '" + std::to_string(idCliente) + "'";
@@ -235,7 +235,7 @@ void Cuenta::eliminarCuenta(DBManager& dbManager) {
     while (true) {
 
         try {
-            std::cout << "Ingrese el ID de la cuenta a eliminar (maximo 10 digitos): ";
+            std::cout << "Ingrese el ID de la cuenta a eliminar (máximo 10 digitos): ";
             std::string input;
             std::getline(std::cin, input);
 
@@ -243,12 +243,12 @@ void Cuenta::eliminarCuenta(DBManager& dbManager) {
             std::stringstream ss(input);
             int temp;
             if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID de la cuenta debe ser un dato tipo numero entero.");
+                throw std::invalid_argument("El ID de la cuenta debe ser número entero.");
             }
 
             // Verificar tamaño de dato
             if (input.length() > 10) {
-                throw std::out_of_range("El ID de la cuenta excede la longitud maxima permitida.");
+                throw std::out_of_range("El ID de la cuenta excede la longitud máxima permitida.");
             }
 
             idCuenta = temp; // Asignar el valor convertido a int a idCliente
@@ -286,7 +286,7 @@ void Cuenta::eliminarCuenta(DBManager& dbManager) {
     if (resultadoCurrency == "CRC") {
         campoActualizar = "id_colones_account = NULL";
     } else if (resultadoCurrency == "USD") {
-        campoActualizar = "id_dolares_account = NULL";
+        campoActualizar = "id_dólares_account = NULL";
     }
 
     std::string actualizarCliente = "UPDATE Client SET " + campoActualizar + " WHERE id_client = " + std::to_string(idCliente);

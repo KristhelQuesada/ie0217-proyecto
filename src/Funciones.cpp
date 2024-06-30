@@ -304,7 +304,7 @@ double verifyDesiredAmount(const string& loanType, const string& currency) {
             cout << maxLimit << endl;
             cout << desiredAmount << endl;
 
-            if (desiredAmount =< maxLimit) {
+            if (desiredAmount <= maxLimit) {
                 validAmount = true;
             } else {
                 cout << "El monto solicitado está fuera del rango "

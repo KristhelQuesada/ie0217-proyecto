@@ -296,6 +296,58 @@ double DBManager::obtenerTipoDeCambio(const std::string& monedaOrigen, const std
 }
 
 
+string DBManager::determinarCuentaID(string& idCliente) {
+    string queryAccount, currency, account;
+
+    // Obtener la cantidad de cuentas asociadas al DB
+    string queryContadorCuentas = "SELECT COUNT(*) FROM BankAccount WHERE id_client=;" + idCliente;
+    string contadorCuentas = stoi(this->ejecutarConsulta(queryContadorCuentas));
+    boool isValid;
+
+    // Retornar el idAccount
+    if (contadorCuentas == 0) {
+        return queryAccount = "0";
+    } else if (contadorCuentas == 1) {
+        queryAccount = "SELECT id_account FROM BankAccount WHERE id_client=" + idCliente;
+        
+    } else {
+
+        while(!isValid) {}
+            cout << "Con cual cuenta se procede (USD/CRC): ";
+            cin >> currency;
+
+            if (currency == "USD" || currency == "CRC") {
+                queryAccount = "SELECT id_account FROM BankAccount WHERE id_client=" + idCliente +
+                               " AND currency=" + currency + ";";
+                isValid = true;
+
+            } else {
+                cout << "Ingrese una divisa correcta.\n";
+            }
+    }
+
+    return this->ejecutarConsulta(queryAccount);
+}
+
+
+/*
+------------------------------------------------------------------------------------
+     Funcion que permite verificar si lo que el usuario ingreso se asocia a
+     su informacion o esta intentando acceder a informacion de otra persona
+                    Es util en la impresion de documentos
+------------------------------------------------------------------------------------
+*/
+bool AbonoPrestamo::verificarPertenencia(const string& tabla, const string& idColumna, const& string idAccount){
+    string queryAccount = "SELECT id_client FROM " + columna + "WHERE " + idColumna + "=" + idAccount;
+    string toCheckOwner = db.ejecutarConsulta(queryAccount);
+
+    if (idClient == toCheckOwner) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 
 /*
@@ -304,6 +356,7 @@ double DBManager::obtenerTipoDeCambio(const std::string& monedaOrigen, const std
                   es decir, que no requieren retorno de datos
 ------------------------------------------------------------------------------------
 */
+// Realiza el query mas no mediante transaccion
 void DBManager::ejecutarSQL(const std::string& consulta) {
     // Funciona, al correr todas las pruebas se debe eliminar/comentar esta linea
     std::cout << "Ejecutando SQL: " << consulta << std::endl;
@@ -312,6 +365,29 @@ void DBManager::ejecutarSQL(const std::string& consulta) {
     try {
         sql::Statement *stmt = con->createStatement();
         stmt->executeUpdate(consulta);  // para sentencias INSERT, UPDATE, DELETE
+        delete stmt;
+        
+    } catch (sql::SQLException &e) {
+        this->manejarErrores(e);
+    } 
+}
+
+// Funcion que permite iniciar una transaccion de SQL;
+void DBManager::ejecutarTransactionSQL(const std::vector<string>& querySet) {
+    // Funciona, al correr todas las pruebas se debe eliminar/comentar esta linea
+    std::cout << "Ejecutando SQL: " << consulta << std::endl;
+    
+    
+    try {
+        sql::Statement *stmt = con->createStatement();
+        stmt->executeUpdate("START TRANSACTION; ");
+
+        // Ejecutar cada query que contenga el vector
+        for (const auto& query : querySet) {
+            cout << query << endl;
+        }
+
+        stmt->executeUpdate("COMMIT;");
         delete stmt;
         
     } catch (sql::SQLException &e) {

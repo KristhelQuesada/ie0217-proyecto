@@ -140,6 +140,8 @@ public:
     std::map<std::string, std::string> ejecutarConsultaTransferencia(const std::string& consulta);
     double obtenerTipoDeCambio(const std::string& monedaOrigen, const std::string& monedaDestino);
     std::map<std::string, std::string> cargarDatos(const std::string& consulta, std::map<std::string, std::string> tableInfo);
+    std::string determinarCuentaID(string& idCliente);
+    bool verificarPertenencia(const string& tabla, const string& idColumna, const& string idAccount){
 
     
 
@@ -151,6 +153,18 @@ public:
     ------------------------------------------------------------------------------------
     */
     void ejecutarSQL(const std::string& comandoSQL);
+    void ejecutarTransactionSQL(const std::vector<string>& querySet);
+
+
+
+
+    /*
+    ------------------------------------------------------------------------------------
+                       Funcion que permiten verificar pertenencias
+    ------------------------------------------------------------------------------------
+    */
+    string determinarCuentaID(string& idCliente);
+    bool verificarPertenencia(const string& tabla, const string& idColumna, const& string idAccount);
 
 
 

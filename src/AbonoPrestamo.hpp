@@ -50,6 +50,7 @@ class AbonoPrestamo : public Transaccion {
 private:
     std::map<std::string, std::string> loanData;
     std::map<std::string, std::string> lastPayment;
+    std::map<std::string, std::string> accountData;
 
 public:
 
@@ -122,6 +123,12 @@ public:
      * Este método verifica la puntualidad de un préstamo.
     */
     bool verificarPuntualidad();
+
+    bool confirmarMetodoDePago();
+
+    double getNewBalanceAccount(const double& pago);
+    double getCurrencyChange(const string& divisaPrestamo);
+    bool AbonoPrestamo::confirmarFondos(const double& pagoConv);
 
 };
 

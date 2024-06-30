@@ -5,8 +5,12 @@ using namespace std;
 
 // DEFINES DE PRESTAMO
 #define MAX_PERSONAL_LOAN 8000000.0;
-#define MAX_PRENDARIO_LOAN 15000000.0;
+#define MAX_PRENDARIO_LOAN 20000000.0;
 #define MAX_HIPOTECARIO_LOAN 50000000.0;
+
+#define MAX_PERSONAL_LOAN_USD 15000.0;
+#define MAX_PRENDARIO_LOAN_USD 40000.0;
+#define MAX_HIPOTECARIO_LOAN_USD 100000.0;
 
 // ENUMS
 /**
@@ -277,14 +281,14 @@ pair<double, double> getInterestRateRange(const string& loanType) {
 
 
 
-double verifyDesiredAmount(const string& loanType) {
+double verifyDesiredAmount(const string& loanType, const string& currency) {
     // Declaracion e inicializacion de variables
     string input;
     double desiredAmount;
     bool validAmount = false;
 
     // Obtener el rango de tasas de interés basado en el tipo de préstamo
-    auto maxLimit = getAmountLimit(loanType);
+    auto maxLimit = getAmountLimit(loanType, currency);
     cout << maxLimit << endl;
 
     // Asegurarse que se solicita un prestamo menor al maximo permitido
@@ -317,15 +321,28 @@ double verifyDesiredAmount(const string& loanType) {
 
 
 
-double getAmountLimit(const string& loanType) {
-    if (loanType == "HP") { // Préstamos Hipotecarios
-        return MAX_HIPOTECARIO_LOAN;
-    } else if (loanType == "PR") { // Préstamos Prendarios
-        return MAX_PRENDARIO_LOAN;
-    } else if (loanType == "PE") { // Préstamos Personales
-        return MAX_PERSONAL_LOAN;
-    } else {
-        throw std::invalid_argument("Tipo de préstamo no válido");
+double getAmountLimit(const string& loanType, const string& currency) {
+    if (currency == "CRC") {
+        if (loanType == "HP") { // Préstamos Hipotecarios
+            return MAX_HIPOTECARIO_LOAN;
+        } else if (loanType == "PR") { // Préstamos Prendarios
+            return MAX_PRENDARIO_LOAN;
+        } else if (loanType == "PE") { // Préstamos Personales
+            return MAX_PERSONAL_LOAN;
+        } else {
+            throw std::invalid_argument("Tipo de préstamo no válido");
+        }
+
+    } else if {"USD"} {
+        if (loanType == "HP") { // Préstamos Hipotecarios
+            return MAX_HIPOTECARIO_LOAN_USD;
+        } else if (loanType == "PR") { // Préstamos Prendarios
+            return MAX_PRENDARIO_LOAN_USD;
+        } else if (loanType == "PE") { // Préstamos Personales
+            return MAX_PERSONAL_LOAN_USD;
+        } else {
+            throw std::invalid_argument("Tipo de préstamo no válido");
+        }
     }
 }
 

@@ -2,6 +2,7 @@
 #include "Funciones.hpp"
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 // Define que contiene la multa que se aplica por atraso
@@ -23,10 +24,10 @@ AbonoPrestamo::AbonoPrestamo(int id_cliente, DBManager& db)
 */
 void AbonoPrestamo::ejecutar() {
     // Declaracion de variables
-    bool existe, isOnTime;
-    string input, final_query;
+    bool existe, isOnTime, enoughBalance;
+    string input, final_query, divisaPago;
     stringstream queryInsert, queryUpdate;
-    double pago;
+    double pago, cuotasPagar, tipoDeCambio;
 
 
     // 1. Solicitud del ID del prestamo, verificacion de
@@ -51,8 +52,7 @@ void AbonoPrestamo::ejecutar() {
         double capitalPaid       = stod(this->lastPayment["capital_paid"]);
         double interestPaid      = stod(this->lastPayment["interest_paid"]);
 
-        string beginTransactionSQL = "START TRANSACTION; ";
-        string endTransactionSQL   = "COMMIT; ";
+        vector<string> queries;
 
         // 2. Verificar el cobro por multa
         isOnTime = verificarPuntualidad();
@@ -65,23 +65,52 @@ void AbonoPrestamo::ejecutar() {
 
 
         // 3. Confirmar transaccion
-        cout << "El monto total a pagar es de " << pagoMensual << " "
-             << divisa << ".\n" << "Desea continuar con el pago? [Y/N]: ";
-        cin >> input;
+        cout << "Cuantas cuotas desea abonar: ";
+        cin >> cuotasPagar;
+        pago = pagoMensual * (cuotasPagar-1); // multa solo a una cuota
+
+
+        cout << "El monto total a pagar es de " << pago << " " << divisa;
+        bool confirmed = this->confirmarMetodoDePago();
+
+
+        if (id_account != "") {
+            tipoDeCambio = this->getCurrencyChange(divisa);
+            pago = pago * tipoDeCambio;
+            enoughBalance = this->confirmarFondos(divisa, pago);
+
+            if (enoughBalance) {
+                newBalance = getNewBalanceAccount(pago);
+                queryAccount << "UPDATE BankAccount SET balance=" << to_string_with_precision(newBalance, 2)
+                             << " WHERE id_account" << this->account;
+            }
+
+        } else {
+            cout << "Indique la divisa de pago (USD/CRC): " << endl;
+            cin >> divisaPago;
+
+            tipoDeCambio = this->obtenerTipoDeCambio(divisa, divisaPago);
+            pago = pago * tipoDeCambio;
+            cout << "El monto total a pagar es de " << pago << " " << divisaPago;
+            enoughBalance = true; // se asume que se acepta el pago;
+        }
 
         // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-        if (input == "Y" || input == "y") {
-            // 4. Actualizar datos del presente abono
-            cuotasPagadas += 1; 
-            interestPaid = interesAmortizacion(totalCapitalPaid, principal, interes);
-            capitalPaid = pagoMensual - interestPaid;
+        if (confirmed && enoughBalance) {
 
-            totalInterestPaid += interestPaid;
-            totalCapitalPaid += capitalPaid;
+            for (double i=0; i < cuotasPagar; cuotasPagar--) {
+                // 4. Actualizar datos del presente abono
+                cuotasPagadas += 1; 
+                interestPaid = interesAmortizacion(totalCapitalPaid, principal, interes);
+                capitalPaid = pagoMensual - interestPaid;
+
+                totalInterestPaid += interestPaid;
+                totalCapitalPaid += capitalPaid;
 
 
-            // 5. Actualizar datos del prestamo
-            deudaActual -= pagoMensual;
+                // 5. Actualizar datos del prestamo
+                deudaActual -= pagoMensual;
+            }
 
 
             // 6. Crear el queries
@@ -101,28 +130,27 @@ void AbonoPrestamo::ejecutar() {
 
 
             // 7. Ejecutar el cambio
-            db.ejecutarSQL(beginTransactionSQL);
 
             final_query = queryInsert.str();
-            db.ejecutarSQL(final_query);
+            queries.push_back(final_query);
 
             final_query = queryUpdate.str();
-            db.ejecutarSQL(final_query);
+            queries.push_back(final_query);
 
-            db.ejecutarSQL(endTransactionSQL);
+            final_query = queryAccount.str();
+            queries.push_back(final_query);
+
+            db.ejecutarTransactionSQL(queries);
 
 
         // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
         } else {
             // Afinar respuesta
-            cout << "No se decidio continuar con el pago" << endl;
+            cout << "Cliente suspende el pago." << endl;
         }
 
 
     // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-    } else {
-        // Aca sepuede preguntar si se quiere consultar de nuevo
-        cout << "if existe de ejecutar" << endl;
     }
 }
 
@@ -222,6 +250,9 @@ void AbonoPrestamo::setColumnas() {
     this->lastPayment["total_interest_paid"] = "";
     this->lastPayment["capital_paid"]        = "";
     this->lastPayment["interest_paid"]       = "";
+
+    // Inicializar cuenta bancaria del que se extrae el abono
+    this->idAccount = "";
 }
 
 
@@ -300,4 +331,98 @@ double AbonoPrestamo::interesAmortizacion(double capitalPagado,
     // Formula para calcular cuanto se abona de interes de la cuota mensual
     double saldo = principal - capitalPagado;
     return (saldo*((interes*0.01)/12.0));
+}
+
+
+
+/*
+----------------------------------------------------------
+      Funcion que permite determinar el metodo de
+             pago: efectivo o por cuenta.
+----------------------------------------------------------
+*/
+bool AbonoPrestamo::confirmarMetodoDePago(){
+    string metodo, continuar, idAccount;
+    bool metodoValido, confirmado;
+
+    if (this->id_client = 0) {
+        cout << "El cliente solo puede pagar en efectivo.\n";
+
+    } else {
+
+        while (!metodoValido) {
+            cout << "Desea pagar:\n"
+             << "  1. En efectivo\n"
+             << "  2. Cuenta interna \n"
+             << "  3, Suspender pago"  ;
+            cout << "Seleccione: ";
+            cin >> metodo;
+            option = verifyMenuOption(metodo, 4);
+            cin.ignore();
+
+            switch (option) {
+                case 1:
+                    cout << "El pago se realiza en efectivo." << endl;
+                    metodoValido = true;
+                    return true;
+                    break;
+                case 2:
+                    cout << "El pago se realiza por cuenta interna." << endl;
+                    this->idAccount = db.determinarCuentaID(this->id_client);
+                    metodoValido = true;
+                    return true;
+                    break;
+                case 3:
+                    metodoValido = true;
+                    return false;
+                    break;
+                default:
+                    cout << "La entrada no es valida" 
+                         << ", seleccione un numero del menu."
+                         << endl;
+                    break;
+            }
+        }
+    }
+}
+
+
+double getNewBalanceAccount(const double& pago) {
+    string query;
+    double balance, newBalance;
+
+    query = "SELECT balance FROM BankAccount WHERE id_account=" + this->idAccount;
+    balance = stod(db.ejecutarConsulta{query});
+    newBalance = balance - pago;
+
+    return newBalance;
+}
+
+double getCurrencyChange(const string& divisaPrestamo) {
+    string query, divisaCuenta;
+    double tipoDeCambio;
+
+    query = "SELECT currency FROM BankAccount WHERE id_account=" + this->idAccount;
+    divisaCuenta = db.ejecutarConsulta{query};
+
+    tipoDeCambio = obtenerTipoDeCambio(divisaPrestamo, divisaCuenta);
+
+    return tipoDeCambio;
+}
+
+
+
+bool AbonoPrestamo::confirmarFondos(const double& pagoConv) {
+    string query;
+    double balance;
+
+    query = "SELECT balance FROM BankAccount WHERE id_account=" + this->idAccount;
+    balance = stod(db.ejecutarConsulta{query});
+    
+    if (balance < pago) {
+        return false;
+    } esle {
+        return true;
+    }
+
 }

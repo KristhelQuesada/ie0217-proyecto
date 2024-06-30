@@ -284,13 +284,21 @@ void menuDocuments(int id_client, DBManager& db) {
                 std::cout << "Ingrese el número de cuenta: ";
                 std::cin >> accountID;
 
-                try {
-                    db.desplegarRegistroTransacciones(accountID);
-                } catch (const std::invalid_argument& e) {
-                    std::cout << "Número de cuenta inválido. Inténtelo de nuevo." << std::endl;
-                } catch (const std::out_of_range& e) {
-                    std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo." << std::endl;
+                bool ownsAccount = db.verificarPertenencia("BankAccount", "id_account", accountID);
+
+                if (ownsAccount) {
+                    try {
+                        db.desplegarRegistroTransacciones(accountID);
+                    } catch (const std::invalid_argument& e) {
+                        std::cout << "Número de cuenta inválido. Inténtelo de nuevo." << std::endl;
+                    } catch (const std::out_of_range& e) {
+                        std::cout << "Número de cuenta fuera de rango. Inténtelo de nuevo." << std::endl;
+                    }                    
+                } else {
+                    cout << "La cuenta  bancaria ingresada no es de su pertenencia" << endl;
                 }
+                    
+
                 break;
             }
             case RETURN_CS3: {

@@ -1,8 +1,6 @@
 #include "Transferencia.hpp"
-
 #include <iostream>
 #include <sstream>      // Directiva que facilita trabajar con cadenas de flujo
-
 
 Transferencia::Transferencia(int id_client, DBManager& db) : Transaccion(id_client, db) {}
 
@@ -15,7 +13,6 @@ void Transferencia::ejecutar() {
     std::string beginTransactionSQL = "START TRANSACTION; ";
     std::string endTransactionSQL   = "COMMIT; ";
 
-
     // Solicitar y validar el número de cuenta de origen
     while (true) {
         try {
@@ -24,7 +21,7 @@ void Transferencia::ejecutar() {
 
             // Verificar longitud de la entrada
             if (cuentaOrigen.empty() || cuentaOrigen.size() > 10) {
-                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 carácteres).");
+                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 caracteres).");
             }
 
             // Verificar si es un número entero
@@ -44,14 +41,15 @@ void Transferencia::ejecutar() {
         }
     }
 
+    // Solicitar y validar el número de cuenta de destino
     while (true) {
         try {
             std::cout << "Ingrese el número de cuenta de destino: ";
-            std::getline(std::cin, cuentaOrigen);
+            std::getline(std::cin, cuentaDestino);
 
             // Verificar longitud de la entrada
-            if (cuentaOrigen.empty() || cuentaOrigen.size() > 10) {
-                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 carácteres).");
+            if (cuentaDestino.empty() || cuentaDestino.size() > 10) {
+                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 caracteres).");
             }
 
             // Verificar si es un número entero
@@ -73,7 +71,6 @@ void Transferencia::ejecutar() {
 
     // Solicitar y validar el monto
     while (true) {
-
         std::string input;
 
         try {
@@ -81,7 +78,7 @@ void Transferencia::ejecutar() {
             std::getline(std::cin, input);
 
             // Intentar convertir la entrada a double
-            std::size_t pos; // Variable para detectar carácteres no convertidos
+            std::size_t pos; // Variable para detectar caracteres no convertidos
             monto = std::stod(input, &pos);
 
             // Verificar si el monto es mayor que cero
@@ -96,21 +93,18 @@ void Transferencia::ejecutar() {
         } catch (...) {
             std::cout << "Error inesperado. Inténtelo de nuevo.\n";
         }
-
-        return;
     }
-
 
     std::string detalle;
     bool detalleValido = false;
 
     while (!detalleValido) {
-        std::cout << "Ingrese el detalle de la transacción (máximo 255 carácteres): ";
+        std::cout << "Ingrese el detalle de la transacción (máximo 255 caracteres): ";
         std::getline(std::cin, detalle);
 
         try {
             if (detalle.length() > 255) {
-                throw std::length_error("El detalle de la transacción no puede exceder los 255 carácteres.");
+                throw std::length_error("El detalle de la transacción no puede exceder los 255 caracteres.");
             }
             detalleValido = true; // Si no hay excepción, el detalle es válido y se sale del ciclo
         } catch (const std::length_error& e) {
@@ -118,7 +112,6 @@ void Transferencia::ejecutar() {
             // detalleValido se mantiene como false para repetir el ciclo
         }
     }
-
 
     // Consultar el balance y la moneda de la cuenta de origen
     std::string consultaBalanceCO = "SELECT balance, currency FROM BankAccount WHERE id_account = '" + cuentaOrigen + "'";
@@ -142,7 +135,6 @@ void Transferencia::ejecutar() {
         return;
     }
 
-
     // Consultar el balance y la moneda de la cuenta de destino
     std::string consultaBalanceCD = "SELECT balance, currency FROM BankAccount WHERE id_account = '" + cuentaDestino + "'";
     auto datosCD = db.ejecutarConsultaTransferencia(consultaBalanceCD);
@@ -165,13 +157,10 @@ void Transferencia::ejecutar() {
         return;
     }
 
-    
     double tipoDeCambio = db.obtenerTipoDeCambio(monedaOrigen, monedaDestino);
     double montoCambio = monto * tipoDeCambio;
-    
-    
 
-        // Actualizar balances
+    // Actualizar balances
     double nuevoSaldoOrigen = balanceAnteriorCO - monto;
     double nuevoSaldoDestino = balanceAnteriorCD + montoCambio;
 
@@ -188,15 +177,14 @@ void Transferencia::ejecutar() {
     db.ejecutarSQL(actualizarBalanceDestino);
 
     // Registrar la transacción
-    std::string registrarTransaccionOrigen = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, origin_account, detail, previous_qty, present_qty) VALUES (NOW(), 'TS', '" +
-                                                monedaOrigen + "', " + std::to_string(monto) + ", '" + cuentaOrigen + "', '" + detalle + "', " +
-                                                std::to_string(balanceAnteriorCO) + ", " + std::to_string(nuevoSaldoOrigen) + ")";
+    std::string registrarTransaccionOrigen = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, origin_account, detail, previous_qty, present_qty) VALUES (NOW(), 'TR', '" +
+                                             monedaOrigen + "', " + std::to_string(monto) + ", '" + cuentaOrigen + "', '" + detalle + "', " +
+                                             std::to_string(balanceAnteriorCO) + ", " + std::to_string(nuevoSaldoOrigen) + ")";
 
     // Insertar transacción de entrada
-    std::string registrarTransaccionDestino = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, target_account, detail, previous_qty, present_qty) VALUES (NOW(), 'TE', '" +
-                                                monedaDestino + "', " + std::to_string(montoCambio) + ", '" + cuentaDestino + "', '" + detalle + "', " +
-                                                std::to_string(balanceAnteriorCO) + ", " + std::to_string(nuevoSaldoDestino) + ")";
-
+    std::string registrarTransaccionDestino = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, target_account, detail, previous_qty, present_qty) VALUES (NOW(), 'TR', '" +
+                                              monedaDestino + "', " + std::to_string(montoCambio) + ", '" + cuentaDestino + "', '" + detalle + "', " +
+                                              std::to_string(balanceAnteriorCD) + ", " + std::to_string(nuevoSaldoDestino) + ")";
 
     db.ejecutarSQL(registrarTransaccionOrigen);
     db.ejecutarSQL(registrarTransaccionDestino);
@@ -204,6 +192,5 @@ void Transferencia::ejecutar() {
     // Finalizar transacción
     db.ejecutarSQL(endTransactionSQL);
 
-
+    std::cout << "Transferencia realizada y base de datos actualizada correctamente." << std::endl;
 }
-

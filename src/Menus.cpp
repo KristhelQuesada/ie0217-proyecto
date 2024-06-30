@@ -246,7 +246,33 @@ void menuPlatform(int id_client, DBManager& db) {
                 break;
             }
             case ACC: {
-                cout << "Acceso denegado. El cliente no está registrado en el sistema.\n" << endl;
+                bool detenerCuenta = false;
+                while (!detenerCuenta) {
+                    cout << "Cuentas - Opciones:\n1. Obtener Información de Cuenta\n2. Eliminar Cuenta\n3. Retornar" << endl;
+                    cout << "Indique el modo de operación: ";
+                    cin >> input;
+                    int subModo = verifyMenuOption(input, 3); // Maneja errores
+                    cin.ignore();
+
+                    switch (subModo) {
+                        case 1: {
+                            Cuenta cuenta;
+                            cuenta.obtenerInformacion(db);
+                            break;
+                        }
+                        case 2: {
+                            Cuenta cuenta;
+                            cuenta.eliminarCuenta(db);
+                            break;
+                        }
+                        case 3:
+                            detenerCuenta = true;
+                            break;
+                        default:
+                            cout << "La operación ingresada no es válida." << endl;
+                            break;
+                    }
+                }
                 break;
             }
             default: {

@@ -28,12 +28,6 @@ void Retiro::ejecutar() {
         }
     }
 
-    // Verificar si la cuenta pertenece al cliente
-    if (!db.verificarPertenencia("BankAccount", "id_account", std::to_string(cuentaOrigen), std::to_string(this->id_client))) {
-        std::cout << "La cuenta no pertenece al cliente.\n";
-        return;
-    }
-
     // Solicitar y validar la moneda
     while (true) {
         std::cout << "Ingrese la moneda (CRC o USD): ";

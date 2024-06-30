@@ -89,8 +89,8 @@ enum docs_requested {
 --------------------------------
 */
 void menuCS(DBManager& db);
-void menuPlatform(int id_client, DBManager& db);
-void menuDocuments(int id_client, DBManager& db);
-void menuTransactions(int id_client, DBManager& db);
+void menuPlatform(int& id_client, DBManager& db);
+void menuDocuments(int& id_client, DBManager& db);
+void menuTransactions(int& id_client, DBManager& db);
 
 #endif // MENUS_HPP

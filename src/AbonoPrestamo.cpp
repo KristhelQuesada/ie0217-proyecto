@@ -74,73 +74,75 @@ void AbonoPrestamo::ejecutar() {
         bool confirmed = this->confirmarMetodoDePago();
 
 
-        if (this->accountID != "") {
-            tipoDeCambio = this->getCurrencyChange(divisa);
-            pago = pago * tipoDeCambio;
-            enoughBalance = this->confirmarFondos(pago);
-
-            if (enoughBalance) {
+        // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+        if (confirmed) {
+            // Agrega un query adicional al transaction cuando se busque hacer un prestamo desde la cuenta
+            if (this->accountID != "") {
+                tipoDeCambio = this->getCurrencyChange(divisa);
+                pago = pago * tipoDeCambio;
+                enoughBalance = this->confirmarFondos(pago);
                 newBalance = getNewBalanceAccount(pago);
                 queryAccount << "UPDATE BankAccount SET balance=" << to_string_with_precision(newBalance, 2)
                              << " WHERE id_account=" << this->accountID;
-            }
+                final_query = queryAccount.str();
+                queries.push_back(final_query);
 
-        } else {
-            cout << "Indique la divisa de pago (USD/CRC): ";
-            cin >> divisaPago;
+            } else { // No hay cuenta asociada
+                cout << "Indique la divisa de pago (USD/CRC): ";
+                cin >> divisaPago;
 
-            tipoDeCambio = db.obtenerTipoDeCambio(divisa, divisaPago);
-            pago = pago * tipoDeCambio;
-            cout << "El monto total a pagar es de " << pago << " " << divisaPago << ".\n";
-            enoughBalance = true; // se asume que se acepta el pago;
-        }
-
-        // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-        if (confirmed && enoughBalance) {
-
-            for (double i=0; i < cuotasPagar; cuotasPagar--) {
-                // 4. Actualizar datos del presente abono
-                cuotasPagadas += 1; 
-                interestPaid = interesAmortizacion(totalCapitalPaid, principal, interes);
-                capitalPaid = pagoMensual - interestPaid;
-
-                totalInterestPaid += interestPaid;
-                totalCapitalPaid += capitalPaid;
-
-
-                // 5. Actualizar datos del prestamo
-                deudaActual -= pagoMensual;
+                tipoDeCambio = db.obtenerTipoDeCambio(divisa, divisaPago);
+                pago = pago * tipoDeCambio;
+                cout << "El monto total a pagar es de " << pago << " " << divisaPago << ".\n";
+                enoughBalance = true;
             }
 
 
-            // 6. Crear el queries
-            queryInsert << "INSERT INTO Payment (id_loan, terms_completed, "
-                        << "total_capital_paid, total_interest_paid, capital_paid, interest_paid) "
-                        << "VALUES ("
-                        << this->lastPayment["id_loan"] << ", "
-                        << to_string_with_precision(cuotasPagadas, 0) << ", "
-                        << to_string_with_precision(totalCapitalPaid, 2) << ", "
-                        << to_string_with_precision(totalInterestPaid, 2) << ", "
-                        << to_string_with_precision(capitalPaid, 2) << ", "
-                        << to_string_with_precision(interestPaid, 2) << "); ";
+            if (enoughBalance) {
+                for (double i=0; i < cuotasPagar; cuotasPagar--) {
+                    // 4. Actualizar datos del presente abono
+                    cuotasPagadas += 1; 
+                    interestPaid = interesAmortizacion(totalCapitalPaid, principal, interes);
+                    capitalPaid = pagoMensual - interestPaid;
+                    
+                    totalInterestPaid += interestPaid;
+                    totalCapitalPaid += capitalPaid;
+                    
+                    
+                    // 5. Actualizar datos del prestamo
+                    deudaActual -= pagoMensual;
+                }
+    
+    
+                // 6. Crear el queries
+                queryInsert << "INSERT INTO Payment (id_loan, terms_completed, "
+                            << "total_capital_paid, total_interest_paid, capital_paid, interest_paid) "
+                            << "VALUES ("
+                            << this->lastPayment["id_loan"] << ", "
+                            << to_string_with_precision(cuotasPagadas, 0) << ", "
+                            << to_string_with_precision(totalCapitalPaid, 2) << ", "
+                            << to_string_with_precision(totalInterestPaid, 2) << ", "
+                            << to_string_with_precision(capitalPaid, 2) << ", "
+                            << to_string_with_precision(interestPaid, 2) << "); ";
 
-            queryUpdate << "UPDATE Loan SET actual_debt="
-                        << to_string_with_precision(deudaActual, 2) << " WHERE id_loan="
-                        << this->lastPayment["id_loan"] << ";";
+                queryUpdate << "UPDATE Loan SET actual_debt="
+                            << to_string_with_precision(deudaActual, 2) << " WHERE id_loan="
+                            << this->lastPayment["id_loan"] << ";";
 
 
-            // 7. Ejecutar el cambio
+                // 7. Ejecutar el cambio
 
-            final_query = queryInsert.str();
-            queries.push_back(final_query);
+                final_query = queryInsert.str();
+                queries.push_back(final_query);
 
-            final_query = queryUpdate.str();
-            queries.push_back(final_query);
+                final_query = queryUpdate.str();
+                queries.push_back(final_query);
 
-            final_query = queryAccount.str();
-            queries.push_back(final_query);
+                db.ejecutarTransactionSQL(queries);
 
-            db.ejecutarTransactionSQL(queries);
+            } else {
+                cout << "No puede realizarse el pago por fondos insuficientes.";
+            }
 
 
         // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _

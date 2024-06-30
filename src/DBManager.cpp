@@ -340,7 +340,7 @@ string DBManager::determinarCuentaID(string& idCliente) {
 ------------------------------------------------------------------------------------
 */
 bool DBManager::verificarPertenencia(const string& tabla, const string& idColumna, const string& idAccount, const string& idClient){
-    string queryAccount = "SELECT id_client FROM " + tabla + "WHERE " + idColumna + "=" + idAccount;
+    string queryAccount = "SELECT id_client FROM " + tabla + " WHERE " + idColumna + "=" + idAccount;
     string toCheckOwner = this->ejecutarConsulta(queryAccount);
 
     if (idClient == toCheckOwner) {

@@ -80,12 +80,16 @@ void menuCS(DBManager& db) {
                 menuPlatform(cliente, db);
                 break;
             }
-            case DOC_REQUEST: {
-                menuDocuments(cliente, db);
-                break;
-            }
             case TRANSACCION: {
                 menuTransactions(cliente, db);
+                break;
+            }
+            case DOC_REQUEST: {
+                if (cliente == 0) {
+                    cout << "Un cliente no registrado, acceso denegado."
+                } else {
+                    menuDocuments(cliente, db);
+                }
                 break;
             }
             case FINALIZAR_CS: {

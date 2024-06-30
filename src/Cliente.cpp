@@ -21,7 +21,6 @@ Cliente::Cliente() {
 }
 
 
-
 // Inicialización del constructor de la clase cliente
 Cliente::Cliente(int idCliente, const std::string& nombre, const std::string& apellido, int idCuentaColones, int idCuentaDolares)
     : idCliente(idCliente), nombre(nombre), apellido(apellido), idCuentaColones(idCuentaColones), idCuentaDolares(idCuentaDolares) {}
@@ -36,25 +35,23 @@ void Cliente::obtenerInformacion(DBManager& dbManager) {
     // Obtener ID del cliente
     while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID del cliente (máximo 9 dígitos): ";
             std::string input;
             std::getline(std::cin, input);
-        
-            // Verificar tipo de dato (debe ser un entero)
+
+            // Verificar longitud de la entrada
+            if (input.empty() || input.size() > 9) {
+                throw std::out_of_range("La longitud del ID del cliente excede el máximo permitido (9 dígitos).");
+            }
+
+            // Convertir la entrada a int
             std::stringstream ss(input);
-            int temp;
-            if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+            if (!(ss >> idCliente) || !ss.eof()) {
+                throw std::invalid_argument("Debe ingresar un número entero válido.");
             }
 
-            // Verificar tamaño de dato
-            if (idCliente < 0 || idCliente > 999999999) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
-            }
-
-            idCliente = temp; // Asignar el valor convertido a int a idCliente
-
-            break; // Si todo está bien, salir del bucle
+            // Si todo está bien, salir del bucle
+            break;
 
         } catch (const std::invalid_argument& e) {
             std::cerr << "Error: " << e.what() << std::endl;
@@ -149,21 +146,19 @@ void Cliente::imprimirDatos(DBManager& dbManager){
             std::string input;
             std::getline(std::cin, input);
 
-            // Verificar tipo de dato (debe ser un entero)
+            // Verificar longitud de la entrada
+            if (input.empty() || input.size() > 9) {
+                throw std::out_of_range("La longitud del ID del cliente excede el maximo permitido (9 digitos).");
+            }
+
+            // Convertir la entrada a int
             std::stringstream ss(input);
-            int temp;
-            if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+            if (!(ss >> idCliente) || !ss.eof()) {
+                throw std::invalid_argument("Debe ingresar un numero entero valido.");
             }
 
-            // Verificar tamaño de dato
-            if (idCliente < 0 || idCliente > 999999999) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
-            }
-
-            idCliente = temp; // Asignar el valor convertido a int a idCliente
-
-            break; // Si todo está bien, salir del bucle
+            // Si todo está bien, salir del bucle
+            break;
 
         } catch (const std::invalid_argument& e) {
             std::cerr << "Error: " << e.what() << std::endl;
@@ -234,25 +229,23 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
     // Obtener ID del cliente
     while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente del que desea actualizar (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID del cliente (maximo 9 digitos): ";
             std::string input;
             std::getline(std::cin, input);
 
-            // Verificar tipo de dato (debe ser un entero)
+            // Verificar longitud de la entrada
+            if (input.empty() || input.size() > 9) {
+                throw std::out_of_range("La longitud del ID del cliente excede el maximo permitido (9 digitos).");
+            }
+
+            // Convertir la entrada a int
             std::stringstream ss(input);
-            int temp;
-            if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+            if (!(ss >> idCliente) || !ss.eof()) {
+                throw std::invalid_argument("Debe ingresar un numero entero valido.");
             }
 
-            // Verificar tamaño de dato
-            if (idCliente < 0 || idCliente > 999999999) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
-            }
-
-            idCliente = temp; // Asignar el valor convertido a int a idCliente
-
-            break; // Si todo está bien, salir del bucle
+            // Si todo está bien, salir del bucle
+            break;
 
         } catch (const std::invalid_argument& e) {
             std::cerr << "Error: " << e.what() << std::endl;
@@ -279,19 +272,16 @@ void Cliente::actualizarDatos(DBManager& dbManager) {
             std::string input;
             std::getline(std::cin, input);
 
-            // Verificar si es un número entero
+            // Verificar longitud de la entrada
+            if (input.empty() || input.size() > 9) {
+                throw std::out_of_range("La longitud del ID del cliente excede el maximo permitido (9 digitos).");
+            }
+
+            // Convertir la entrada a int
             std::stringstream ss(input);
-            int temp;
-            if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un número entero.");
+            if (!(ss >> idCliente) || !ss.eof()) {
+                throw std::invalid_argument("Debe ingresar un numero entero valido.");
             }
-
-            // Verificar la longitud del número
-            if (nuevoIdCliente < 0 || nuevoIdCliente > 999999999) {
-                throw std::out_of_range("El ID del cliente excede la longitud máxima permitida.");
-            }
-
-            nuevoIdCliente = temp; // Asignar el valor convertido a int a idCliente
 
             // Verificar si el clientenuevo ID cliente existe en la base de datos antes de actualizar
             std::string consultaCl = "SELECT id_client FROM Client WHERE id_client = " + std::to_string(nuevoIdCliente);

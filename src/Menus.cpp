@@ -130,6 +130,7 @@ void menuPlatform(int id_client, DBManager& db) {
         cout << "| 2. Préstamos                      |" << endl;
         cout << "| 3. Certificados de Depósito       |" << endl;
         cout << "| 4. Retornar a atención al cliente |" << endl;
+        cout << "| 5. Cuenta                         |" << endl;
         cout << "-------------------------------------" << endl;
         cout << "\n Indique el modo de operación: ";
         cin >> input;

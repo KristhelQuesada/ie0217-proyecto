@@ -313,19 +313,19 @@ string DBManager::determinarCuentaID(string& idCliente) {
         queryAccount = "SELECT id_account FROM BankAccount WHERE id_client=" + idCliente;
         
     } else {
-
-        while(!isValid) {}
+        while(!isValid) {
             std::cout << "Con cual cuenta se procede (USD/CRC): ";
             cin >> currency;
 
             if (currency == "USD" || currency == "CRC") {
                 queryAccount = "SELECT id_account FROM BankAccount WHERE id_client=" + idCliente +
-                               " AND currency=" + currency + ";";
+                               " AND currency='" + currency + "';";
                 isValid = true;
 
             } else {
                 std::cout << "Ingrese una divisa correcta.\n";
             }
+        }
     }
 
     return this->ejecutarConsulta(queryAccount);

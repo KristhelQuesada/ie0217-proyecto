@@ -26,11 +26,12 @@ void menuCS(DBManager& db) {
     char registrado;
 
     // Encabezado bonito
-    std::cout << "=====================================================" << std::endl;
-    std::cout << "||          INTERFAZ DE ATENCIÓN AL CLIENTE        ||" << std::endl;
-    std::cout << "=====================================================" << std::endl;
-    std::cout << "    Bienvenido al sistema de atención al cliente.    " << std::endl;
-    std::cout << "=====================================================" << std::endl;
+    std::cout << "\n\n\n";
+    std::cout << "=====================================================================" << std::endl;
+    std::cout << "||                  INTERFAZ DE ATENCIÓN AL CLIENTE                ||" << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+    std::cout << "            Bienvenido al sistema de atención al cliente.            " << std::endl;
+    std::cout << "=====================================================================" << std::endl;
     std::cout << "                                                     " << std::endl;
 
 
@@ -55,9 +56,9 @@ void menuCS(DBManager& db) {
         std::cout << "El cliente no está registrado en el banco. ID de cliente asignado: 0\n";
     }
     
-    std::cout << "                                                     " << std::endl;
-    std::cout << "                                                     " << std::endl;
-    std::cout << "                                                     " << std::endl;
+    std::cout << " " << std::endl;
+    std::cout << " " << std::endl;
+    std::cout << " " << std::endl;
 
     // Inicio del menu principal
     while (detener == false) {
@@ -68,10 +69,11 @@ void menuCS(DBManager& db) {
         cout << "|  1. Plataforma  |  2. Transacción  |  3. Solicitud de Documentos  |" << endl;
         cout << "|  4. Finalizar   |                  |                              |" << endl;
         cout << "---------------------------------------------------------------------" << endl;
-        cout << "\n Indique el modo de operación: ";
+        cout << "Indique el modo de operación: ";
         cin >> input;
         operacion = verifyMenuOption(input, CS_MAX); // Maneja errores
         cin.ignore();
+        cout << endl;
 
 
         // Determinacion de funcion a ejecutar
@@ -318,7 +320,7 @@ void menuDocuments(int id_client, DBManager& db) {
                 break;
             }
             case RETURN_CS3: {
-                std::cout << "Retornando a atención al cliente..." << std::endl;
+                std::cout << "Retornando a atención al cliente...\n" << std::endl;
                 detener = true;
                 break;
             }
@@ -383,7 +385,7 @@ void menuTransactions(int id_client, DBManager& db) {
                 transaccion = new AbonoPrestamo(id_client, db);
                 break;
             case RETURN_CS2: // Opción para retornar al menú principal
-                std::cout << "Retornando a atención al cliente..." << std::endl;
+                std::cout << "Retornando a atención al cliente...\n" << std::endl;
                 detener = true;
                 break;
             default:

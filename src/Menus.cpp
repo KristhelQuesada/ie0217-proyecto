@@ -10,6 +10,7 @@
 #include "Transferencia.hpp"
 
 #include "Cliente.hpp"
+#include "Cuenta.hpp"
 #include <cctype> // Para toupper
 /*
 ----------------------------------------
@@ -242,6 +243,10 @@ void menuPlatform(int id_client, DBManager& db) {
             case RETURN_CS: {
                 cout << "Consulta en plataforma finalizada.\n" << endl;
                 detener = true;
+                break;
+            }
+            case ACC: {
+                cout << "Acceso denegado. El cliente no está registrado en el sistema.\n" << endl;
                 break;
             }
             default: {

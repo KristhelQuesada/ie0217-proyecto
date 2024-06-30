@@ -97,6 +97,7 @@ enum opt_platform {
     LOAN,
     CerDP,
     RETURN_CS,
+    ACC,
     OPT_PLAT_MAX // para saber cuantas opciones tenemos
 };
 

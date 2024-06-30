@@ -23,30 +23,28 @@ AbonoPrestamo::AbonoPrestamo(int id_cliente, DBManager& db)
 ----------------------------------------------------------
 */
 void AbonoPrestamo::ejecutar() {
-    // Declaracion de variables
+    // Declaración de variables
     bool existe, isOnTime, enoughBalance;
     string input, final_query, divisaPago;
     stringstream queryInsert, queryUpdate, queryAccount;
     double pago, cuotasPagar, tipoDeCambio, newBalance;
 
-
-    // 1. Solicitud del ID del prestamo, verificacion de
-    // existencia y extraccio de datos
+    // 1. Solicitud del ID del préstamo, verificación de
+    // existencia y extracción de datos
     existe = verificarExistencia();
 
-
-    // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+    // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     if (existe) {
         // Inicializar variables
         string divisa      = this->loanData["currency"];
-        double loanTerm    = stod(this->loanData["loan_term"]);       // is int
-        double interes     = stod(this->loanData["interest_rate"]);   // is int
+        double loanTerm    = stod(this->loanData["loan_term"]);       // es int
+        double interes     = stod(this->loanData["interest_rate"]);   // es int
         double pagoMensual = stod(this->loanData["monthly_payment"]);
         double deudaActual = stod(this->loanData["actual_debt"]);
         double principal   = stod(this->loanData["principal"]);
         double repayment   = stod(this->loanData["total_repayment"]);
 
-        double cuotasPagadas     = stod(this->lastPayment["terms_completed"]);    // is intdouble
+        double cuotasPagadas     = stod(this->lastPayment["terms_completed"]);    // es int
         double totalCapitalPaid  = stod(this->lastPayment["total_capital_paid"]);
         double totalInterestPaid = stod(this->lastPayment["total_interest_paid"]);
         double capitalPaid       = stod(this->lastPayment["capital_paid"]);
@@ -54,30 +52,40 @@ void AbonoPrestamo::ejecutar() {
 
         vector<string> queries;
 
+        double cuotasRestantes = loanTerm - cuotasPagadas;
+
+        // Verificar si todas las cuotas han sido pagadas
+        if (cuotasRestantes <= 0) {
+            cout << "El préstamo ya está pagado en su totalidad." << endl;
+            return;
+        }
+
         // 2. Verificar el cobro por multa
         isOnTime = verificarPuntualidad();
 
         if (!isOnTime) {
-            pago = pagoMensual + (pagoMensual*MULTA);
+            pago = pagoMensual + (pagoMensual * MULTA);
         } else {
             pago = pagoMensual;
         }
 
-        double cuotasRestantes = loanTerm - cuotasPagadas;
-
-        // 3. Confirmar transaccion
-        cout << "Cuantas cuotas desea abonar (" << cuotasRestantes << " restantes): ";
+        // 3. Confirmar transacción
+        cout << "Cuántas cuotas desea abonar (" << cuotasRestantes << " restantes): ";
         cin >> cuotasPagar;
-        pago = pagoMensual * (cuotasPagar); // multa solo a una cuota
 
+        if (cuotasPagar > cuotasRestantes) {
+            cout << "No puede abonar más cuotas de las que quedan pendientes." << endl;
+            return;
+        }
+
+        pago = pagoMensual * cuotasPagar; // multa solo a una cuota
 
         cout << "El monto total a pagar es de " << pago << " " << divisa << ".\n";
         bool confirmed = this->confirmarMetodoDePago();
 
-
-        // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+        // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
         if (confirmed) {
-            // Agrega un query adicional al transaction cuando se busque hacer un prestamo desde la cuenta
+            // Agrega un query adicional al transaction cuando se busca hacer un préstamo desde la cuenta
             if (this->accountID != "") {
                 tipoDeCambio = this->getCurrencyChange(divisa);
                 pago = pago * tipoDeCambio;
@@ -98,23 +106,25 @@ void AbonoPrestamo::ejecutar() {
                 enoughBalance = true;
             }
 
-
             if (enoughBalance) {
-                for (double i=0; i < cuotasPagar; cuotasPagar--) {
+                for (double i = 0; i < cuotasPagar; i++) {
                     // 4. Actualizar datos del presente abono
-                    cuotasPagadas += 1; 
+                    cuotasPagadas += 1;
                     interestPaid = interesAmortizacion(totalCapitalPaid, principal, interes);
                     capitalPaid = pagoMensual - interestPaid;
-                    
+
                     totalInterestPaid += interestPaid;
                     totalCapitalPaid += capitalPaid;
-                    
-                    
-                    // 5. Actualizar datos del prestamo
+
+                    // 5. Actualizar datos del préstamo
                     deudaActual -= pagoMensual;
                 }
-    
-    
+
+                // Verificar si todas las cuotas han sido pagadas
+                if (cuotasRestantes - cuotasPagar <= 0) {
+                    deudaActual = 0;
+                }
+
                 // 6. Crear el queries
                 queryInsert << "INSERT INTO Payment (id_loan, terms_completed, "
                             << "total_capital_paid, total_interest_paid, capital_paid, interest_paid) "
@@ -130,9 +140,7 @@ void AbonoPrestamo::ejecutar() {
                             << to_string_with_precision(deudaActual, 2) << " WHERE id_loan="
                             << this->lastPayment["id_loan"] << ";";
 
-
                 // 7. Ejecutar el cambio
-
                 final_query = queryInsert.str();
                 queries.push_back(final_query);
 
@@ -145,13 +153,11 @@ void AbonoPrestamo::ejecutar() {
                 cout << "No puede realizarse el pago por fondos insuficientes.";
             }
 
-
-        // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+        // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
         } else {
             // Afinar respuesta
             cout << "Cliente suspende el pago." << endl;
         }
-
 
     // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     }

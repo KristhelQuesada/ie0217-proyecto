@@ -831,3 +831,22 @@ SET autocommit = 0;
 ALTER TABLE Payment
 DROP COLUMN total_capital_amount,
 DROP COLUMN total_interest_amount;
+
+
+
+-- ------------------------------------------------------------------------
+--       Se agrega un cliente 0 para cuando se hagan depositos           --
+-- ------------------------------------------------------------------------
+INSERT INTO `project-ie0217-db`.Client(id_client, client_name, client_lastname)
+VALUES (0, 'NoClient', 'N/A');
+
+UPDATE `project-ie0217-db`.Client
+SET id_client = 0
+WHERE id_client = 100; -- 100 porque se habia asociado al cliente 100 no al cero por el automatico
+
+INSERT INTO `project-ie0217-db`.BankAccount(id_account, id_client, currency, balance)
+VALUES (0, 0, 'CRC', 0.00);
+
+UPDATE `project-ie0217-db`.BankAccount
+SET id_account = 0
+WHERE id_account = 21; -- 21 porque se habia asociado al cliente 100 no al cero por el automatico

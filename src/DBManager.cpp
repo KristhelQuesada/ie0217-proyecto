@@ -158,6 +158,8 @@ void DBManager::desplegarCDP(const std::string& consulta) {
 }
 
 
+
+
 /*
 ------------------------------------------------------------------------------------
         Funciones que permiten retornar informacion, de a dato o completo
@@ -233,7 +235,7 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(con
         // Asumimos que solo nos interesa la primera fila para el retiro
         if (res->next()) {
             datosConsulta["balance"] = to_string(res->getDouble("balance"));
-            datosConsulta["tipoCuenta"] = res->getString("tipoCuenta");
+            datosConsulta["currency"] = res->getString("currency");
         }
 
         delete res;
@@ -246,6 +248,8 @@ std::map<std::string, std::string> DBManager::ejecutarConsultaRetiroDeposito(con
 }
 
 
+
+
 /*
 ------------------------------------------------------------------------------------
               Implementación de obtenerTipoDeCambio
@@ -255,6 +259,8 @@ double DBManager::obtenerTipoDeCambio(const std::string& monedaOrigen, const std
     // Caso ideal para pruebas: siempre devolver un tipo de cambio de 1.1
     return 1.1;
 }
+
+
 
 
 /*
@@ -301,13 +307,58 @@ void DBManager::manejarErrores(const sql::SQLException &e) {
 
 /*
 ------------------------------------------------------------------------------------
+        Funcion que permite deplegar el registro de transacciones asociado
+         a una una cuenta especifica tanto por origin como target account
+------------------------------------------------------------------------------------
+*/
+void DBManager::desplegarRegistroTransacciones(string& accountID) {
+    string consulta = "SELECT * FROM Transaction WHERE origin_account=" + accountID +
+                      " OR target_account=" + accountID + ";";
+
+    cout << "Ejecutando consulta: " << consulta << endl; // pending to delete/comment
+
+    try {
+        sql::Statement *stmt = con->createStatement();
+        sql::ResultSet *res = stmt->executeQuery(consulta);
+
+        int contador = 1; // Lleva la cuenta de la cantidad de Prestamos del Cliente
+        
+        cout << "_________________________________________________________\n";
+        cout << "                REGISTRO DE TRANSACCIONES                \n" << endl;
+
+
+        while (res->next()) {
+            cout << "-------------- Transaccion " << contador << " --------------" << endl;
+            cout << "  - ID Transaccion      : " << res->getString("id_transaction") << endl;
+            cout << "  - Fecha de Ejecucion  : " << res->getString("date_and_time") << endl;
+            cout << "  - Tipo de Transaccion : " << res->getString("transaction_type") << endl;
+            cout << "  - Divisa              : " << res->getString("currency") << endl;
+            cout << "  - Monto               : " << res->getString("transaction_amount") << endl;
+            cout << "  - Cuenta de Origen    : " << res->getString("origin_account") << endl;
+            cout << "  - Centa Destino       : " << res->getString("target_account") << endl;
+            cout << "  - Detalle             : " << res->getString("detail") << endl;
+            cout << "  - Saldo Anterior      : " << res->getString("previous_qty") << endl;
+            cout << "  - Saldo Posterior     : " << res->getString("present_qty") << "\n" << endl;
+            contador++;
+        }   
+
+        delete res;
+        delete stmt;
+        
+    } catch (sql::SQLException &e) {
+        this->manejarErrores(e);
+    }
+}
+
+
+
+/*
+------------------------------------------------------------------------------------
       Funciones que permiten ejecutar el reporte de prestamos. Se implementa
          de manera individual porque se requiere de exportacion de datos
 ------------------------------------------------------------------------------------
 */
-// Solo falta agregarle un WHERE al query y parametrizar para que quede general y se
-//  consulte por persona.
-void DBManager::exportLoanReport() {
+void DBManager::exportLoanReport(std::string& idLoan) {
     // Impresion inicial
     cout << "Ejecutando exportacion del Reporte de Prestamos: " << endl;
 
@@ -315,14 +366,18 @@ void DBManager::exportLoanReport() {
     string tempTableQuery = "CREATE TEMPORARY TABLE `loanreport` "
                             "SELECT "
                             "Client.id_client, "
-                            "CONCAT(client_name, ' ', client_lastname) AS full_name, "
-                            "Loan.id_loan, loan_term, creation_date, id_loan_type, currency, principal, "
+                            "CONCAT(client_name, ' ', client_lastname) AS Cliente, "
+                            "Loan.id_loan, loan_term, creation_date, id_loan_type, "
+                            "CONCAT(principal, ' (', currency, ')') AS MontoSolicitado, "
                             "interest_rate, monthly_payment, total_repayment, actual_debt, "
-                            "id_payment, terms_completed, total_capital_amount, total_interest_amount, "
-                            "total_capital_paid, total_interest_paid, capital_paid, interest_paid, made_on "
+                            "id_payment, terms_completed, total_capital_paid, total_interest_paid, "
+                            "capital_paid, interest_paid, made_on "
                             "FROM Client "
                             "INNER JOIN Loan ON Client.id_client = Loan.id_client "
-                            "INNER JOIN Payment ON Loan.id_loan = Payment.id_loan;";
+                            "INNER JOIN Payment ON Loan.id_loan = Payment.id_loan "
+                            "WHERE Loan.id_loan=" + idLoan + ";";
+
+
 
     // Logica para la exportacion
     try {
@@ -338,6 +393,7 @@ void DBManager::exportLoanReport() {
         std::ofstream outfile("LoanReport.txt");
 
         // Se configura un ancho para las columnas
+        int shortwidth = 12;
         int width = 20;
 
         // Escribe los encabezados de las columnas
@@ -345,47 +401,41 @@ void DBManager::exportLoanReport() {
         // Podria modificarse para que los datos esten transpuestos
         // es decir, en la primera columna los header y luego los datos
         // queda pendiente y para comentar
-        outfile << left << setw(width) << "id_client"
-                << left << setw(width) << "full_name"
-                << left << setw(width) << "id_loan"
-                << left << setw(width) << "loan_term"
-                << left << setw(width) << "creation_date"
-                << left << setw(width) << "id_loan_type"
-                << left << setw(width) << "currency"
-                << left << setw(width) << "principal"
-                << left << setw(width) << "interest_rate"
-                << left << setw(width) << "monthly_payment"
-                << left << setw(width) << "total_repayment"
-                << left << setw(width) << "actual_debt"
-                << left << setw(width) << "id_payment"
-                << left << setw(width) << "terms_completed"
-                << left << setw(width) << "total_capital_amount"
-                << left << setw(width) << "total_interest_amount"
-                << left << setw(width) << "total_capital_paid"
-                << left << setw(width) << "total_interest_paid"
-                << left << setw(width) << "capital_paid"
-                << left << setw(width) << "interest_paid"
-                << left << setw(width) << "made_on"
+        outfile << left << setw(shortwidth) << "ID"
+                << left << setw(width) << "Cliente"
+                << left << setw(shortwidth) << "ID Prestamo"
+                << left << setw(shortwidth) << "Cuotas"
+                << left << setw(width) << "Creacion"
+                << left << setw(width) << "Tipo de Prestamo"
+                << left << setw(width) << "Monto Solicitado"
+                << left << setw(shortwidth) << "Interes"
+                << left << setw(width) << "Cuota Mensual"
+                << left << setw(width) << "Deuda Total"
+                << left << setw(width) << "Deuda Actual"
+                << left << setw(shortwidth) << "ID del Abono"
+                << left << setw(shortwidth) << "Cuotas pagas"
+                << left << setw(width) << "Capital Actual"
+                << left << setw(width) << "Intereses Actual"
+                << left << setw(width) << "Capital abonado"
+                << left << setw(width) << "Interes abonado"
+                << left << setw(width) << "Fecha del Abono"
                 << endl;
 
         // Escribe los datos de la consulta en el archivo
         while (res->next()) {
-            outfile << left << setw(width) << res->getInt("id_client")
-                    << left << setw(width) << res->getString("full_name")
-                    << left << setw(width) << res->getInt("id_loan")
-                    << left << setw(width) << res->getInt("loan_term")
+            outfile << left << setw(shortwidth) << res->getInt("id_client")
+                    << left << setw(width) << res->getString("Cliente")
+                    << left << setw(shortwidth) << res->getInt("id_loan")
+                    << left << setw(shortwidth) << res->getInt("loan_term")
                     << left << setw(width) << res->getString("creation_date")
                     << left << setw(width) << res->getString("id_loan_type")
-                    << left << setw(width) << res->getString("currency")
-                    << left << setw(width) << res->getString("principal")
-                    << left << setw(width) << res->getInt("interest_rate")
+                    << left << setw(width) << res->getString("MontoSolicitado")
+                    << left << setw(shortwidth) << res->getInt("interest_rate")
                     << left << setw(width) << res->getString("monthly_payment")
                     << left << setw(width) << res->getString("total_repayment")
                     << left << setw(width) << res->getString("actual_debt")
-                    << left << setw(width) << res->getInt("id_payment")
-                    << left << setw(width) << res->getInt("terms_completed")
-                    << left << setw(width) << res->getString("total_capital_amount")
-                    << left << setw(width) << res->getString("total_interest_amount")
+                    << left << setw(shortwidth) << res->getInt("id_payment")
+                    << left << setw(shortwidth) << res->getInt("terms_completed")
                     << left << setw(width) << res->getString("total_capital_paid")
                     << left << setw(width) << res->getString("total_interest_paid")
                     << left << setw(width) << res->getString("capital_paid")
@@ -403,7 +453,7 @@ void DBManager::exportLoanReport() {
         // Mensaje de exito
         cout << "El Reporte de Prestamos ha sido creado con exito." << endl;
 
-        // Liberacuib de recursos
+        // Liberacion de recursos
         delete res;
         delete stmt;
 

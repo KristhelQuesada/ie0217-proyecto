@@ -17,41 +17,106 @@ void Transferencia::ejecutar() {
 
 
     // Solicitar y validar el número de cuenta de origen
-    std::cout << "Ingrese el numero de cuenta de origen: ";
-    std::getline(std::cin, cuentaOrigen);
-    if (cuentaOrigen.empty()) {
-        std::cout << "Numero de cuenta invalido. Intentelo de nuevo.\n";
-        return;
+    while (true) {
+        try {
+            std::cout << "Ingrese el número de cuenta de origen: ";
+            std::getline(std::cin, cuentaOrigen);
+
+            // Verificar longitud de la entrada
+            if (cuentaOrigen.empty() || cuentaOrigen.size() > 10) {
+                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 caracteres).");
+            }
+
+            // Verificar si es un número entero
+            std::stringstream ss(cuentaOrigen);
+            int temp;
+            if (!(ss >> temp) || !ss.eof()) {
+                throw std::invalid_argument("El número de cuenta debe ser un número entero válido.");
+            }
+
+            // Si todo está bien, salir del bucle
+            break;
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
-    // Solicitar y validar el número de cuenta de destino
-    std::cout << "Ingrese el numero de cuenta de destino: ";
-    std::getline(std::cin, cuentaDestino);
-    if (cuentaDestino.empty()) {
-        std::cout << "Numero de cuenta destino invalido. Intentelo de nuevo.\n";
-        return;
+    while (true) {
+        try {
+            std::cout << "Ingrese el número de cuenta de destino: ";
+            std::getline(std::cin, cuentaOrigen);
+
+            // Verificar longitud de la entrada
+            if (cuentaOrigen.empty() || cuentaOrigen.size() > 10) {
+                throw std::out_of_range("La longitud del número de cuenta excede el máximo permitido (10 caracteres).");
+            }
+
+            // Verificar si es un número entero
+            std::stringstream ss(cuentaDestino);
+            int temp;
+            if (!(ss >> temp) || !ss.eof()) {
+                throw std::invalid_argument("El número de cuenta debe ser un número entero válido.");
+            }
+
+            // Si todo está bien, salir del bucle
+            break;
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
     }
 
     // Solicitar y validar el monto
     while (true) {
-        std::cout << "Ingrese el monto a transferir: ";
-        std::cin >> monto;
-        if (std::cin.fail() || monto <= 0) {
-            std::cin.clear(); // Limpiar el estado de error
-            std::cin.ignore(); // Limpiar el buffer
-            std::cout << "Monto invalido. Intentelo de nuevo.\n";
-        } else {
-            std::cin.ignore(); // Limpiar el buffer
+
+        std::string input;
+
+        try {
+            std::cout << "Ingrese el monto a transferir: ";
+            std::getline(std::cin, input);
+
+            // Intentar convertir la entrada a double
+            std::size_t pos; // Variable para detectar caracteres no convertidos
+            monto = std::stod(input, &pos);
+
+            // Verificar si el monto es mayor que cero
+            if (monto <= 0) {
+                throw std::invalid_argument("El monto debe ser mayor que cero.");
+            }
+
+            // Si se llega aquí, la conversión fue exitosa y el monto es válido
             break;
+        } catch (const std::invalid_argument& e) {
+            std::cout << "Error: " << e.what() << "\n";
+        } catch (...) {
+            std::cout << "Error inesperado. Intentelo de nuevo.\n";
         }
+
+        return;
     }
 
-    // Solicitar y validar la moneda
-    std::cout << "Ingrese la moneda: ";
-    std::getline(std::cin, moneda);
-    if (moneda.empty()) {
-        std::cout << "Moneda invalida. Intentelo de nuevo.\n";
-        return;
+
+    std::string detalle;
+    bool detalleValido = false;
+
+    while (!detalleValido) {
+        std::cout << "Ingrese el detalle de la transacción (maximo 255 caracteres): ";
+        std::getline(std::cin, detalle);
+
+        try {
+            if (detalle.length() > 255) {
+                throw std::length_error("El detalle de la transacción no puede exceder los 255 caracteres.");
+            }
+            detalleValido = true; // Si no hay excepción, el detalle es válido y se sale del ciclo
+        } catch (const std::length_error& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            // detalleValido se mantiene como false para repetir el ciclo
+        }
     }
 
 
@@ -100,16 +165,15 @@ void Transferencia::ejecutar() {
         return;
     }
 
-    // Conversión de moneda si es necesario
-    if (moneda != monedaOrigen) {
-        double tipoDeCambio = db.obtenerTipoDeCambio(moneda, monedaOrigen);
-        monto *= tipoDeCambio;
-        std::cout << "Monto convertido a " << monedaOrigen << ": " << monto << std::endl;
-    }
+    
+    double tipoDeCambio = db.obtenerTipoDeCambio(monedaOrigen, monedaDestino);
+    double montoCambio = monto * tipoDeCambio;
+    
+    
 
         // Actualizar balances
     double nuevoSaldoOrigen = balanceAnteriorCO - monto;
-    double nuevoSaldoDestino = balanceAnteriorCD + monto;
+    double nuevoSaldoDestino = balanceAnteriorCD + montoCambio;
 
     // Iniciar transacción
     db.ejecutarSQL(beginTransactionSQL);
@@ -124,11 +188,15 @@ void Transferencia::ejecutar() {
     db.ejecutarSQL(actualizarBalanceDestino);
 
     // Registrar la transacción
-    std::string registrarTransaccionOrigen = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, origin_account, detail, previous_qty, present_qty) VALUES (NOW(), 'transferencia_salida', '" +
-                                         monedaOrigen + "', " + std::to_string(monto) + ", '" + cuentaOrigen + "', 'Detalle de la transacción', " + std::to_string(balanceAnteriorCO) + ", " + std::to_string(nuevoSaldoOrigen) + ")";
+    std::string registrarTransaccionOrigen = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, origin_account, detail, previous_qty, present_qty) VALUES (NOW(), 'TS', '" +
+                                                monedaOrigen + "', " + std::to_string(monto) + ", '" + cuentaOrigen + "', '" + detalle + "', " +
+                                                std::to_string(balanceAnteriorCO) + ", " + std::to_string(nuevoSaldoOrigen) + ")";
 
-    std::string registrarTransaccionDestino = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, target_account, detail, previous_qty, present_qty) VALUES (NOW(), 'transferencia_entrada', '" +
-                                          monedaDestino + "', " + std::to_string(monto) + ", '" + cuentaDestino + "', 'Detalle de la transacción', " + std::to_string(balanceAnteriorCD) + ", " + std::to_string(nuevoSaldoDestino) + ")";
+    // Insertar transacción de entrada
+    std::string registrarTransaccionDestino = "INSERT INTO Transaction (date_and_time, transaction_type, currency, transaction_amount, target_account, detail, previous_qty, present_qty) VALUES (NOW(), 'TE', '" +
+                                                monedaDestino + "', " + std::to_string(montoCambio) + ", '" + cuentaDestino + "', '" + detalle + "', " +
+                                                std::to_string(balanceAnteriorCO) + ", " + std::to_string(nuevoSaldoDestino) + ")";
+
 
     db.ejecutarSQL(registrarTransaccionOrigen);
     db.ejecutarSQL(registrarTransaccionDestino);

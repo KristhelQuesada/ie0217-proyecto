@@ -29,28 +29,26 @@ Cuenta::Cuenta(int idCliente, int idCuenta, const std::string& moneda, double sa
 void Cuenta::obtenerInformacion(DBManager& dbManager) {
 
 
-    // Bucle para obtener ID del cliente
+    // Obtener ID del cliente
     while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID del cliente (máximo 9 dígitos): ";
             std::string input;
             std::getline(std::cin, input);
 
-            // Verificar tipo de dato (debe ser un entero)
+            // Verificar longitud de la entrada
+            if (input.empty() || input.size() > 9) {
+                throw std::out_of_range("La longitud del ID del cliente excede el máximo permitido (9 dígitos).");
+            }
+
+            // Convertir la entrada a int
             std::stringstream ss(input);
-            int temp;
-            if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un numero entero.");
+            if (!(ss >> idCliente) || !ss.eof()) {
+                throw std::invalid_argument("Debe ingresar un número entero válido.");
             }
 
-            // Verificar tamaño de dato
-            if (input.length() > 9) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
-            }
-
-            idCliente = temp; // Asignar el valor convertido a int a idCliente
-
-            break; // Si todo está bien, salir del bucle
+            // Si todo está bien, salir del bucle
+            break;
 
         } catch (const std::invalid_argument& e) {
             std::cerr << "Error: " << e.what() << std::endl;
@@ -115,7 +113,7 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
 
         while (true) {
             try {
-            std::cout << "Ingrese el ID de la cuenta a crear (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID de la cuenta a crear (maximo 10 digitos): ";
             std::string input;
             std::getline(std::cin, input);
 
@@ -123,12 +121,12 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
             std::stringstream ss(input);
             int temp;
             if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+                throw std::invalid_argument("El ID de la cuenta debe ser un dato tipo numero entero.");
             }
 
             // Verificar tamaño de dato
-            if (input.length() > 9) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
+            if (input.length() > 10) {
+                throw std::out_of_range("El ID de la cuenta excede la longitud maxima permitida.");
             }
 
             idCuenta = temp; // Asignar el valor convertido a int a idCliente
@@ -184,24 +182,25 @@ void Cuenta::obtenerInformacion(DBManager& dbManager) {
 void Cuenta::eliminarCuenta(DBManager& dbManager) {
 
     // Pedir y validar el ID del cliente a eliminar
+    // Obtener ID del cliente
     while (true) {
         try {
-            std::cout << "Ingrese el ID del cliente que desea eliminar una cuenta (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID del cliente que desea eliminar una cuenta (máximo 9 dígitos): ";
             std::string input;
             std::getline(std::cin, input);
 
+            // Verificar longitud de la entrada
+            if (input.empty() || input.size() > 9) {
+                throw std::out_of_range("La longitud del ID del cliente excede el máximo permitido (9 dígitos).");
+            }
+
+            // Convertir la entrada a int
             std::stringstream ss(input);
-            int temp;
-            if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un dato numero entero.");
+            if (!(ss >> idCliente) || !ss.eof()) {
+                throw std::invalid_argument("Debe ingresar un número entero válido.");
             }
 
-            if (input.length() > 9) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
-            }
-
-            idCliente = temp;
-
+            // Si todo está bien, salir del bucle
             break;
 
         } catch (const std::invalid_argument& e) {
@@ -233,11 +232,10 @@ void Cuenta::eliminarCuenta(DBManager& dbManager) {
         return;
     }
 
-    // Solicitud del id de la cuenta a eliminar
     while (true) {
 
         try {
-            std::cout << "Ingrese el ID de la cuenta a eliminar (maximo 9 digitos): ";
+            std::cout << "Ingrese el ID de la cuenta a eliminar (maximo 10 digitos): ";
             std::string input;
             std::getline(std::cin, input);
 
@@ -245,24 +243,24 @@ void Cuenta::eliminarCuenta(DBManager& dbManager) {
             std::stringstream ss(input);
             int temp;
             if (!(ss >> temp) || !ss.eof()) {
-                throw std::invalid_argument("El ID del cliente debe ser un dato tipo numero entero.");
+                throw std::invalid_argument("El ID de la cuenta debe ser un dato tipo numero entero.");
             }
 
             // Verificar tamaño de dato
-            if (input.length() > 9) {
-                throw std::out_of_range("El ID del cliente excede la longitud maxima permitida.");
+            if (input.length() > 10) {
+                throw std::out_of_range("El ID de la cuenta excede la longitud maxima permitida.");
             }
 
             idCuenta = temp; // Asignar el valor convertido a int a idCliente
 
             break; // Si todo está bien, salir del bucle
 
-            } catch (const std::invalid_argument& e) {
-                std::cerr << "Error: " << e.what() << std::endl;
-            } catch (const std::out_of_range& e) {
-                std::cerr << "Error: " << e.what() << std::endl;
-            }
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
         }
+    }
 
 
     // Verificar si la cuenta que se desea eliminar existe

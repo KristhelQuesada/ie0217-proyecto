@@ -302,7 +302,7 @@ string DBManager::determinarCuentaID(string& idCliente) {
     string queryAccount, currency, account;
 
     // Obtener la cantidad de cuentas asociadas al DB
-    string queryContadorCuentas = "SELECT COUNT(*) FROM BankAccount WHERE id_client=;" + idCliente;
+    string queryContadorCuentas = "SELECT COUNT(*) FROM BankAccount WHERE id_client=" + idCliente;
     int contadorCuentas = stoi(this->ejecutarConsulta(queryContadorCuentas));
     bool isValid;
 

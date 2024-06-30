@@ -67,10 +67,10 @@ void AbonoPrestamo::ejecutar() {
         // 3. Confirmar transaccion
         cout << "Cuantas cuotas desea abonar: ";
         cin >> cuotasPagar;
-        pago = pagoMensual * (cuotasPagar-1); // multa solo a una cuota
+        pago = pagoMensual * (cuotasPagar); // multa solo a una cuota
 
 
-        cout << "El monto total a pagar es de " << pago << " " << divisa;
+        cout << "El monto total a pagar es de " << pago << " " << divisa << ".\n";
         bool confirmed = this->confirmarMetodoDePago();
 
 
@@ -82,16 +82,16 @@ void AbonoPrestamo::ejecutar() {
             if (enoughBalance) {
                 newBalance = getNewBalanceAccount(pago);
                 queryAccount << "UPDATE BankAccount SET balance=" << to_string_with_precision(newBalance, 2)
-                             << " WHERE id_account" << this->accountID;
+                             << " WHERE id_account=" << this->accountID;
             }
 
         } else {
-            cout << "Indique la divisa de pago (USD/CRC): " << endl;
+            cout << "Indique la divisa de pago (USD/CRC): ";
             cin >> divisaPago;
 
             tipoDeCambio = db.obtenerTipoDeCambio(divisa, divisaPago);
             pago = pago * tipoDeCambio;
-            cout << "El monto total a pagar es de " << pago << " " << divisaPago;
+            cout << "El monto total a pagar es de " << pago << " " << divisaPago << ".\n";
             enoughBalance = true; // se asume que se acepta el pago;
         }
 
@@ -360,7 +360,7 @@ bool AbonoPrestamo::confirmarMetodoDePago() {
             cout << "Desea pagar:\n"
              << "  1. En efectivo\n"
              << "  2. Cuenta interna \n"
-             << "  3, Suspender pago"  ;
+             << "  3. Suspender pago\n"  ;
             cout << "Seleccione: ";
             cin >> metodo;
             option = verifyMenuOption(metodo, 4);

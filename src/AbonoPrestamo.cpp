@@ -341,19 +341,22 @@ double AbonoPrestamo::interesAmortizacion(double capitalPagado,
              pago: efectivo o por cuenta.
 ----------------------------------------------------------
 */
-bool AbonoPrestamo::confirmarMetodoDePago(){
-    string metodo, continuar, idAccount;
-    bool metodoValido, confirmado;
+bool AbonoPrestamo::confirmarMetodoDePago() {
+    // Declaracion de variables
+    string metodo, cliente;
+    bool inputValid, paymentDefined;
     int option;
-    string cliente;
+
+    //Inicializar variables;
     cliente = to_string(this->id_client);
 
-    if (this->id_client = 0) {
+    // Verificar si se trata de un cliente no afiliado al banco
+    if (this->id_client == 0) {
         cout << "El cliente solo puede pagar en efectivo.\n";
-
+        paymentDefined =  true;
     } else {
 
-        while (!metodoValido) {
+        while (!inputValid) {
             cout << "Desea pagar:\n"
              << "  1. En efectivo\n"
              << "  2. Cuenta interna \n"
@@ -366,19 +369,22 @@ bool AbonoPrestamo::confirmarMetodoDePago(){
             switch (option) {
                 case 1:
                     cout << "El pago se realiza en efectivo." << endl;
-                    metodoValido = true;
-                    return true;
+                    inputValid = true;
+                    paymentDefined = true;
                     break;
+
                 case 2:
                     cout << "El pago se realiza por cuenta interna." << endl;
                     this->accountID = db.determinarCuentaID(cliente);
-                    metodoValido = true;
-                    return true;
+                    inputValid = true;
+                    paymentDefined = true;
                     break;
+
                 case 3:
-                    metodoValido = true;
-                    return false;
+                    inputValid = true;
+                    paymentDefined = false;
                     break;
+
                 default:
                     cout << "La entrada no es valida" 
                          << ", seleccione un numero del menu."
@@ -387,10 +393,12 @@ bool AbonoPrestamo::confirmarMetodoDePago(){
             }
         }
     }
+
+    return paymentDefined;
 }
 
 
-double AbonoPrestamo::getNewBalanceAccount(const double& pago) {
+double AbonoPrestamo::getNewBalanceAccount(double& pago) {
     string query, queryfinal;
     double balance, newBalance;
 
@@ -404,7 +412,7 @@ double AbonoPrestamo::getNewBalanceAccount(const double& pago) {
     return newBalance;
 }
 
-double AbonoPrestamo::getCurrencyChange(const string& divisaPrestamo) {
+double AbonoPrestamo::getCurrencyChange(string& divisaPrestamo) {
     string query, divisaCuenta;
     double tipoDeCambio;
 
@@ -418,7 +426,7 @@ double AbonoPrestamo::getCurrencyChange(const string& divisaPrestamo) {
 
 
 
-bool AbonoPrestamo::confirmarFondos(const double& pagoConv) {
+bool AbonoPrestamo::confirmarFondos(double& pagoConv) {
     string query;
     double balance;
 

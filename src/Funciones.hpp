@@ -133,7 +133,7 @@ std::pair<double, double> getInterestRateRange(const string& loanType);
  * @return Un valor entero fuera del rango de las opciones permitidas
  * del menu
  */
-double verifyDesiredAmount(const string& loanType);
+double verifyDesiredAmount(const string& loanType, const string& currency);
 
 
 
@@ -144,7 +144,7 @@ double verifyDesiredAmount(const string& loanType);
  * @return Un valor entero fuera del rango de las opciones permitidas
  * del menu
  */
-double getAmountLimit(const string& loanType);
+double getAmountLimit(const string& loanType, const string& currency);
 
 
 

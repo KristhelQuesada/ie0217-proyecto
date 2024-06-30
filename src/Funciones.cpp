@@ -145,14 +145,14 @@ map<string, string> calculateLoan() {
         }
     }
 
-    cout << loan_type << endl;
+
 
     // Determinar el tipo de cambio, monto, plazo e interés
     cout << "\n\n > Ingrese:" << endl;
     currency = verifyCurrency();
-    cout << currency << endl;
+
     p = verifyDesiredAmount(loan_type, currency);
-    cout << p << endl;
+
     i = verifyInterest(loan_type);
     n = verifyTerm();
 
@@ -292,7 +292,6 @@ double verifyDesiredAmount(const string& loanType, const string& currency) {
 
     // Obtener el rango de tasas de interés basado en el tipo de préstamo
     auto maxLimit = getAmountLimit(loanType, currency);
-    cout << maxLimit << endl;
 
     // Asegurarse que se solicita un prestamo menor al maximo permitido
     while (validAmount == false) {
@@ -304,8 +303,6 @@ double verifyDesiredAmount(const string& loanType, const string& currency) {
 
             desiredAmount = stod(input);
 
-            cout << maxLimit << endl;
-            cout << desiredAmount << endl;
 
             if (desiredAmount <= maxLimit) {
                 validAmount = true;

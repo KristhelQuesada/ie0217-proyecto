@@ -269,7 +269,7 @@ void menuDocuments(int id_client, DBManager& db) {
                 } else {
                     try {
                         std::string client_id_str = std::to_string(id_client);
-                        db.desplegarRegistroTransacciones(client_id_str);
+                        db.exportLoanReport(client_id_str);
                     } catch (const std::invalid_argument& e) {
                         std::cout << "Número de cuenta inválido. Inténtelo de nuevo." << std::endl;
                     } catch (const std::out_of_range& e) {

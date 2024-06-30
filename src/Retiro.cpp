@@ -106,7 +106,7 @@ void Retiro::ejecutar() {
     // Registrar la transacción
     std::string registrarTransaccion = "INSERT INTO Transaction (transaction_type, currency, "
                                        "transaction_amount, origin_account, target_account, detail, "
-                                       "previous_qty, present_qty) VALUES ('RT', '" + moneda + "', "
+                                       "previous_qty, present_qty) VALUES ('RT', '" + tipoCuenta + "', "
                                        + std::to_string(monto) + ", " + std::to_string(cuentaOrigen) + ", " 
                                        + std::to_string(cuentaOrigen) + ", '" + detalles + "', " 
                                        + std::to_string(balanceAnterior) + ", "

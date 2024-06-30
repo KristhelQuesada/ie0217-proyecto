@@ -49,25 +49,6 @@ using namespace std;
 
 
 
-/*
---------------------------------
-             ENUMS
---------------------------------
-*/
-/**
- * @brief Enumeración de tipos de prestamo a consultar.
- * 
- * Esta enumeración lista las opciones validas que pueden ser
- * seleccionadas dentro del menu de calculateLoan()
- */
-enum loanTypes {
-    PERSONAL = 1,
-    PRENDARIO,
-    HIPOTECARIO,
-    LOAN_TYPE_MAX // para saber cuantas opciones tenemos
-};
-
-
 
 /*
 --------------------------------
@@ -109,7 +90,7 @@ std::string to_string_with_precision(double value, int precision);  // Funcion g
  * @return Un valor entero fuera del rango de las opciones permitidas
  * del menu
  */
-std::map<std::string, std::string> calculateLoan();                 // FUncion del menu principal
+std::map<std::string, std::string> calculateLoan();                 // Fucion del menu principal
 
 
 
@@ -120,7 +101,65 @@ std::map<std::string, std::string> calculateLoan();                 // FUncion d
  * @return Un valor entero fuera del rango de las opciones permitidas
  * del menu
  */
-std::map<std::string, std::string> calculateCDP();                 // FUncion del menu principal
+std::map<std::string, std::string> calculateCDP();                 // Funcion del menu principal
+
+
+
+/**
+ * @brief Funcion que retorna el rango del tipo de interes abonado.
+ * @param input loanType: 
+ * @return Un valor entero fuera del rango de las opciones permitidas
+ * del menu
+ */
+double verifyInterest(const string& loanType);
+
+
+
+
+/**
+ * @brief Funcion que retorna el rango del tipo de interes abonado.
+ * @param input loanType: 
+ * @return Un valor entero fuera del rango de las opciones permitidas
+ * del menu
+ */
+std::pair<double, double> getInterestRateRange(const string& loanType);
+
+
+
+
+/**
+ * @brief Funcion que retorna el rango del tipo de interes abonado.
+ * @param input loanType: 
+ * @return Un valor entero fuera del rango de las opciones permitidas
+ * del menu
+ */
+double verifyDesiredAmount(const string& loanType);
+
+
+
+
+/**
+ * @brief Funcion que retorna el rango del tipo de interes abonado.
+ * @param input loanType: 
+ * @return Un valor entero fuera del rango de las opciones permitidas
+ * del menu
+ */
+double getAmountLimit(const string& loanType);
+
+
+
+/**
+ * @brief Funcion que retorna el rango del tipo de interes abonado.
+ * @param input loanType: 
+ * @return Un valor entero fuera del rango de las opciones permitidas
+ * del menu
+ */
+std::string verifyCurrency();
+
+double verifyTerm();
+
+
+
 
 
 

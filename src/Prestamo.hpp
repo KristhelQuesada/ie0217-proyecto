@@ -45,7 +45,6 @@ private:
     int id_client;
     DBManager& db;
     // Atributo que contiene la informacion de un prestams en especifico
-    std::map<std::string, std::string> relatedInfo;
     std::map<std::string, std::string> loadedValues;
 
 public:
@@ -82,7 +81,6 @@ public:
      * Este método filtra los prestamos de un cliente.
     */
     void searchLoans();
-
 };
 
 #endif // PRESTAMO_HPP

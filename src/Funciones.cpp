@@ -1,10 +1,26 @@
 #include "Funciones.hpp"
-#include "Transaccion.hpp"
-#include "AbonoPrestamo.hpp"
-//#include "Prestamo.hpp"
 #include <cmath> // Para usar la función pow(base, exponential)
 #include <iomanip> // precision de los datos
 using namespace std;
+
+// DEFINES DE PRESTAMO
+#define MAX_PERSONAL_LOAN 8000000.0;
+#define MAX_PRENDARIO_LOAN 15000000.0;
+#define MAX_HIPOTECARIO_LOAN 50000000.0;
+
+// ENUMS
+/**
+ * @brief Enumeración de tipos de prestamo a consultar.
+ * 
+ * Esta enumeración lista las opciones validas que pueden ser
+ * seleccionadas dentro del menu de calculateLoan()
+ */
+enum loanTypes {
+    PERSONAL = 1,
+    PRENDARIO,
+    HIPOTECARIO,
+    LOAN_TYPE_MAX // para saber cuantas opciones tenemos
+};
 
 // https://www.geeksforgeeks.org/processing-strings-using-stdistringstream/
 // Funcion que verifica la opcion ingresada en el menu
@@ -78,25 +94,30 @@ string to_string_with_precision(double value, int precision) {
 // un credito a tasa fija.
 map<string, string> calculateLoan(){
     // Variables
-    int option;
     double p, i, n, r;                  // inputs
     double monthly_payment, repayment;  // outputs
-    string input, loan_type, currency;  // str inputs
+    string loan_type, currency;  // str inputs
     map<string, string> data;           // return data
-    bool isValid = false;
 
     // Determinar el tipo de prestamo
+    // Declarar e inicializar variables
+    string input;
+    bool isValid = false;
+    int option;
+
+    // Impresion del menu
     cout << "\n---------------------------------------------------------------------" << endl;
     cout << "|                         TIPO DE PRESTAMO                          |" << endl;
     cout << "---------------------------------------------------------------------" << endl;
-    cout << "|     1. Personal    |     2. Prendario     |    3. Hipotecario     |" << endl;
+    cout << "|  1. Personal  |  2. Prendario   |  3. Hipotecario   |  4. Salir   |" << endl;
     cout << "---------------------------------------------------------------------" << endl;
-    cout << "Indique el tipo de prestamo: ";
-    cin >> input;
-    option = verifyMenuOption(input, LOAN_TYPE_MAX);
-    cin.ignore();
 
-    while (!isValid) {
+    while (isValid == false) {
+        cout << "Indique el tipo de prestamo: ";
+        cin >> input;
+        option = verifyMenuOption(input, LOAN_TYPE_MAX);
+        cin.ignore();
+
         switch (option) {
             case PERSONAL:
                 loan_type = "PE";
@@ -116,17 +137,16 @@ map<string, string> calculateLoan(){
         }
     }
 
-    // Solicitud de monto, plazo e interes
-    cout << "\n\n>> INGRESE:" << endl;
-    cout << "Tipo de cambio (USD/CRC): ";
-    cin >> currency;
-    cin.ignore();
-    cout << "Monto solicitado (" << currency << "): ";
-    cin >> p;
-    cout << "Plazo (meses): ";
-    cin >> n;
-    cout << "Tasa de interes (%): ";
-    cin >> i;
+    cout << loan_type << endl;
+
+    // Determinar el tipo de cambio, monto, plazo e interes
+    cout << "\n\n > Ingrese:" << endl;
+    currency = verifyCurrency();
+    cout << currency << endl;
+    p = verifyDesiredAmount(loan_type);
+    cout << p << endl;
+    i = verifyInterest(loan_type);
+    n = verifyTerm();
 
     // Calculo de tasa de interes periodica
     r = i/(100*12);
@@ -136,7 +156,7 @@ map<string, string> calculateLoan(){
     repayment = p + monthly_payment*n;
 
     // Impresion de resultados
-    cout << "\n>> LOS RESULTADOS DEL PRESTAMO SOLICITADO SON:" <<  endl;
+    cout << "\n > Los resultados del prestamo solicitado son" <<  endl;
     cout << "- Cuota mensual: "
          << to_string_with_precision(monthly_payment, 2)
          << " (" << currency << ")."
@@ -144,10 +164,10 @@ map<string, string> calculateLoan(){
          << to_string_with_precision(repayment, 2) << " (" << currency << ")." << endl;
 
     // Creacion del mapa
-    data["loan_term"] = to_string_with_precision(n, 0);
     data["id_loan_type"] = loan_type;
     data["currency"] = currency;
     data["principal"] = to_string_with_precision(p, 2);
+    data["loan_term"] = to_string_with_precision(n, 0);
     data["interest_rate"] = to_string_with_precision(i, 0);
     data["monthly_payment"] = to_string_with_precision(monthly_payment, 2);
     data["total_repayment"] = to_string_with_precision(repayment, 2);
@@ -199,4 +219,160 @@ map<string, string> calculateCDP() {
 
     // Retornar los datos calculados
     return data;
+}
+
+
+
+double verifyInterest(const string& loanType) {
+    // Declaracion e inicializacion de variables
+    int interestRate;
+    bool validInterest = false;
+
+    // Obtener el rango de tasas de interés basado en el tipo de préstamo
+    auto interestRateRange = getInterestRateRange(loanType);
+    int defaultInterestRate = interestRateRange.second; // se escoje por default el mas grande
+
+    // Asegurarse que se obtiene el interes correcto
+    while (validInterest == false) {
+        // Solicitar al usuario que seleccione una tasa de interés
+        cout << "Tasa de interés entre " << interestRateRange.first << "-" 
+             << interestRateRange.second << "% (Dejar en blanco para tasa predeterminada de " 
+             << defaultInterestRate << "%): ";
+        string input;
+        getline(cin, input);
+
+        if (input.empty()) {
+            interestRate = defaultInterestRate;
+            validInterest = true;
+        } else {
+            interestRate = stod(input);
+
+            if (interestRate < interestRateRange.first || interestRate > interestRateRange.second) {
+                cout << "La tasa de interés seleccionada está "
+                     << "fuera del rango permitido, intente nuevamente." << endl;
+            } else {
+                validInterest = true;
+            }
+        }
+    }
+
+    return interestRate;
+}
+
+
+
+
+pair<double, double> getInterestRateRange(const string& loanType) {
+    if (loanType == "HP") { // Préstamos Hipotecarios
+        return {5.00, 20.00};
+    } else if (loanType == "PR") { // Préstamos Prendarios
+        return {10.00, 15.00};
+    } else if (loanType == "PE") { // Préstamos Personales
+        return {16.00, 22.00};
+    } else {
+        throw std::invalid_argument("Tipo de préstamo no válido");
+    }
+}
+
+
+
+
+double verifyDesiredAmount(const string& loanType) {
+    // Declaracion e inicializacion de variables
+    string input;
+    double desiredAmount;
+    bool validAmount = false;
+
+    // Obtener el rango de tasas de interés basado en el tipo de préstamo
+    auto maxLimit = getAmountLimit(loanType);
+    cout << maxLimit << endl;
+
+    // Asegurarse que se solicita un prestamo menor al maximo permitido
+    while (validAmount == false) {
+        try {
+            // Solicitar al usuario que seleccione el monto
+            cout << "Indique el monto solicitado por el cliente: ";
+            string input;
+            getline(cin, input);
+
+            desiredAmount = stod(input);
+
+            cout << maxLimit << endl;
+            cout << desiredAmount << endl;
+
+            if (desiredAmount < maxLimit) {
+                validAmount = true;
+            } else {
+                cout << "El monto solicitado está fuera del rango "
+                     << "permitido, intente nuevamente." << endl;
+            }
+        } catch (const std::invalid_argument& e) {
+            cout << "El monto ingresado no debe contener caracteres. Intente de nuevo." << endl;
+        }
+    }
+
+    return desiredAmount;
+}
+
+
+
+
+double getAmountLimit(const string& loanType) {
+    if (loanType == "HP") { // Préstamos Hipotecarios
+        return MAX_HIPOTECARIO_LOAN;
+    } else if (loanType == "PR") { // Préstamos Prendarios
+        return MAX_PRENDARIO_LOAN;
+    } else if (loanType == "PE") { // Préstamos Personales
+        return MAX_PERSONAL_LOAN;
+    } else {
+        throw std::invalid_argument("Tipo de préstamo no válido");
+    }
+}
+
+
+
+
+string verifyCurrency() {
+    string moneda; // Variable a retornar
+    bool validCurrency = false;
+
+    while (validCurrency == false) {
+        cout << "Ingrese la moneda (CRC o USD): ";
+        getline(std::cin, moneda);
+
+        if (moneda != "CRC" && moneda != "USD") {
+            std::cout << "Moneda inválida. Inténtelo de nuevo.\n";
+        } else {
+            validCurrency = true;
+        }
+    }
+
+    return moneda;
+}
+
+
+
+// Función para pedir un entero al usuario y convertirlo a double con dos decimales
+double verifyTerm() {
+    int valorEntero;
+    double valorDouble;
+    bool valid_term = false;
+
+    while (!valid_term) {
+        cout << "Ingrese el plazo: ";
+        cin >> valorEntero;
+
+        if (cin.fail()) {
+            cin.clear(); // Limpiar el estado de error
+            cin.ignore(); // Limpiar el buffer
+            cout << "El plazo no puede contener decimales, intente de nuevo" << std::endl;
+        } else {
+            cin.ignore(); // Limpiar el buffer
+            break;
+        }
+    }
+
+    // Convertir el entero a double y configurar para mostrar dos decimales
+    valorDouble = static_cast<double>(valorEntero);
+    return valorDouble;
 }

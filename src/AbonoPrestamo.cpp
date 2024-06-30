@@ -63,9 +63,10 @@ void AbonoPrestamo::ejecutar() {
             pago = pagoMensual;
         }
 
+        double cuotasRestantes = loanTerm - cuotasPagadas;
 
         // 3. Confirmar transaccion
-        cout << "Cuantas cuotas desea abonar (" << cuotasPagadas << " restantes): ";
+        cout << "Cuantas cuotas desea abonar (" << cuotasRestantes << " restantes): ";
         cin >> cuotasPagar;
         pago = pagoMensual * (cuotasPagar); // multa solo a una cuota
 

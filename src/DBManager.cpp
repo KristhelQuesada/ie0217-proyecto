@@ -426,10 +426,10 @@ void DBManager::manejarErrores(const sql::SQLException &e) {
 ------------------------------------------------------------------------------------
 */
 void DBManager::desplegarRegistroTransacciones(string& accountID) {
-    //string consulta = "SELECT * FROM Transaction WHERE origin_account=" + accountID +
-    //                  " OR target_account=" + accountID + ";";
+    string consulta = "SELECT * FROM Transaction WHERE origin_account=" + accountID +
+                      " OR target_account=" + accountID + ";";
 
-    cout << "Ejecutando consulta: " << consulta << endl; // pending to delete/comment
+    //cout << "Ejecutando consulta: " << consulta << endl; // pending to delete/comment
 
     try {
         sql::Statement *stmt = con->createStatement();

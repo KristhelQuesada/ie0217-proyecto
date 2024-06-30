@@ -154,18 +154,8 @@ public:
     ------------------------------------------------------------------------------------
     */
     void ejecutarSQL(const std::string& comandoSQL);
-    void ejecutarTransactionSQL(const std::vector<string>& querySet);
+    void ejecutarTransactionSQL(const std::vector<std::string>& querySet);
 
-
-
-
-    /*
-    ------------------------------------------------------------------------------------
-                       Funcion que permiten verificar pertenencias
-    ------------------------------------------------------------------------------------
-    */
-    string determinarCuentaID(string& idCliente);
-    bool verificarPertenencia(const string& tabla, const string& idColumna, const std::string& idAccount);
 
 
 

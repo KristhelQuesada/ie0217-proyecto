@@ -147,7 +147,7 @@ map<string, string> calculateLoan(){
     cout << "\n\n > Ingrese:" << endl;
     currency = verifyCurrency();
     cout << currency << endl;
-    p = verifyDesiredAmount(loan_type);
+    p = verifyDesiredAmount(loan_type, currency);
     cout << p << endl;
     i = verifyInterest(loan_type);
     n = verifyTerm();
@@ -343,6 +343,8 @@ double getAmountLimit(const string& loanType, const string& currency) {
         } else {
             throw std::invalid_argument("Tipo de préstamo no válido");
         }
+    } else {
+        throw std::invalid_argument("Tipo de cambio no válida");
     }
 }
 

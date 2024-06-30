@@ -126,9 +126,9 @@ public:
 
     bool confirmarMetodoDePago();
 
-    double getNewBalanceAccount(const double& pago);
-    double getCurrencyChange(const string& divisaPrestamo);
-    bool confirmarFondos(const double& pagoConv);
+    double getNewBalanceAccount(double& pago);
+    double getCurrencyChange(std::string& divisaPrestamo);
+    bool confirmarFondos(double& pagoConv);
 
 };
 
